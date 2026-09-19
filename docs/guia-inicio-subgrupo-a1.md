@@ -1,6 +1,6 @@
 # 🔧 Guía de Inicio: Subgrupo A1 (Módulo Técnico - PWA Celular)
 
-**Integrantes**: Agustín Perez, Elías Enriquez, Marcos De Santis, Thiago Frete, Aaron Barrios.  
+**Integrantes**: *A definir por el equipo*  
 **Rama de trabajo**: `a1`
 
 ---

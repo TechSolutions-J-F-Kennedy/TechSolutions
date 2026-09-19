@@ -1,6 +1,6 @@
 # 📱 Guía de Inicio: Subgrupo A2 (Módulo Cliente - PWA Marketplace Celular)
 
-**Integrantes**: Axel Barrionuevo, Tobías Frete, Lautaro Pogonza, Mateo Marín.  
+**Integrantes**: *A definir por el equipo*  
 **Rama de trabajo**: `a2`
 
 ---
@@ -29,7 +29,7 @@ El Módulo A2 ofrece la experiencia PWA para los clientes que necesitan solicita
   4. `Finalizado` (Trabajo concluido y validado).
   5. `Cancelado` (En caso de anulación del pedido).
 
-### 4. comprobante Digital Estimado
+### 4. Comprobante Digital Estimado
 - **Muestra**: Detalle de mano de obra, materiales empleados (extraídos automáticamente del registro del técnico) y el monto total a abonar.
 - **Acción**: Botón "Descargar / Guardar Comprobante".
 

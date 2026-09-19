@@ -1,6 +1,6 @@
 # 📦 Guía de Inicio: Subgrupo A3 (Módulo Depósito / Stock - PWA Cámara QR)
 
-**Integrantes**: Máximo Pignataro, Dylan Jimenez, Santino Duarte.  
+**Integrantes**: *A definir por el equipo*  
 **Rama de trabajo**: `a3`
 
 ---

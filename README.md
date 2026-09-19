@@ -12,9 +12,9 @@ Este proyecto es una plataforma distribuida de servicios técnicos a domicilio (
 | :--- | :--- | :--- |
 | **Líder General / Dueño Repo** | Thiago Frete (`@itsthaigr`) | `main` / `develop` |
 | **Líder Base de Datos & Cloud** | Aaron Barrios (`@Faceleskhan22`) | `develop` |
-| **Subgrupo A1: Módulo Técnico (PWA)** | Agustín Perez, Elías Enriquez, Marcos De Santis, Thiago Frete, Aaron Barrios | `a1` |
-| **Subgrupo A2: Módulo Cliente (PWA)** | Axel Barrionuevo, Tobías Frete, Lautaro Pogonza, Mateo Marín | `a2` |
-| **Subgrupo A3: Módulo Depósito / Stock (PWA)** | Máximo Pignataro, Dylan Jimenez, Santino Duarte | `a3` |
+| **Subgrupo A1: Módulo Técnico (PWA)** | *A definir por el equipo* | `a1` |
+| **Subgrupo A2: Módulo Cliente (PWA)** | *A definir por el equipo* | `a2` |
+| **Subgrupo A3: Módulo Depósito / Stock (PWA)** | *A definir por el equipo* | `a3` |
 
 ---
 
