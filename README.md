@@ -8,13 +8,22 @@ Este proyecto es una plataforma distribuida de servicios técnicos a domicilio (
 
 ## 👥 Organización del Equipo y Liderazgo
 
-| Rol / Módulo | Integrantes | Rama Base |
-| :--- | :--- | :--- |
-| **Líder General / Dueño Repo** | Thiago Frete (`@itsthaigr`) | `main` / `develop` |
-| **Líder Base de Datos & Cloud** | Aaron Barrios (`@Faceleskhan22`) | `develop` |
-| **Subgrupo A1: Módulo Técnico (PWA)** | *A definir por el equipo* | `a1` |
-| **Subgrupo A2: Módulo Cliente (PWA)** | *A definir por el equipo* | `a2` |
-| **Subgrupo A3: Módulo Depósito / Stock (PWA)** | *A definir por el equipo* | `a3` |
+| Módulo / Rol | Nombre y Apellido | Usuario GitHub | Función / Liderazgo | Rama |
+| :--- | :--- | :--- | :--- | :--- |
+| **Liderazgo General** | Thiago Frete | `@itsthaigr` | Líder General / Repo Owner | `main` / `develop` |
+| **Base de Datos & Cloud** | Aaron Barrios | `@Faceleskhan22` | Líder DB & Cloud | `develop` |
+| **Subgrupo A1: Módulo Técnico** | *Sofia Pignataro* | `@Sofia Pignataro` | **Líder A1** | `a1` |
+| | *Santiago Perez* | `@Santiago-j-Perez` | Desarrollador | `a1` |
+| | *Sol Marin* | `@sistemasolarss` | Desarrollador | `a1` |
+| | *De Santis Brenda* | `@brendadsantis` | Desarrollador | `a1` |
+| **Subgrupo A2: Módulo Cliente** | *Tobias Frete* | `@fretetobias21` | **Líder A2** | `a2` |
+| | *Thiago Frete* | `@itsthaigr` | Desarrollador | `a2` |
+| | *Aaron Barrios* | `@Faceleskhan22` | Desarrollador | `a2` |
+| | *Santiago Pogonza* | `@pogonzasantiago55-png` | Desarrollador | `a2` |
+| **Subgrupo A3: Módulo Depósito / Stock** | *Santino Enriquez* | `@enriquezsantinonicolas-beep` | **Líder A3** | `a3` |
+| | *Juan Jimenez* | `@juanjimenezjb` | Desarrollador | `a3` |
+| | *Lucas Barrionuevo* | `@lucasbarrionuevo534-ship-it` | Desarrollador | `a3` |
+| | *Gabriel Duarte* | `@Shoret07` | Desarrollador | `a3` |
 
 ---
 
