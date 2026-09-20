@@ -2,28 +2,63 @@
 
 Bienvenido al repositorio central del proyecto **Kennedy Tech Solutions** (E.E.S.T. N°5 - 7° Año, 2026).
 
-Este proyecto es una plataforma distribuida de servicios técnicos a domicilio (reparación de computadoras, instalación de redes, servicio técnico en el sitio) estructurada en 3 Módulos PWA y un Panel de Administración Web.
+Este proyecto es una plataforma distribuida de servicios técnicos a domicilio (reparación de computadoras, instalación de redes, servicio técnico en el sitio) estructurada en 3 Módulo PWA y un Panel de Administración Web.
 
 ---
 
 ## 👥 Organización del Equipo y Liderazgo
 
-| Módulo / Rol | Nombre y Apellido | Usuario GitHub | Función / Liderazgo | Rama |
+| Módulo / Rol | Nombre y Apellido | Usuario GitHub | Función / Liderazgo | Rama Individual |
 | :--- | :--- | :--- | :--- | :--- |
 | **Liderazgo General** | Thiago Frete | `@itsthaigr` | Líder General / Repo Owner | `main` / `develop` |
 | **Base de Datos & Cloud** | Aaron Barrios | `@Faceleskhan22` | Líder DB & Cloud | `develop` |
-| **Subgrupo A1: Módulo Técnico** | *Sofia Pignataro* | `@Sofia Pignataro` | **Líder A1** | `a1` |
-| | *Santiago Perez* | `@Santiago-j-Perez` | Desarrollador | `a1` |
-| | *Sol Marin* | `@sistemasolarss` | Desarrollador | `a1` |
-| | *De Santis Brenda* | `@brendadsantis` | Desarrollador | `a1` |
-| **Subgrupo A2: Módulo Cliente** | *Tobias Frete* | `@fretetobias21` | **Líder A2** | `a2` |
-| | *Thiago Frete* | `@itsthaigr` | Desarrollador | `a2` |
-| | *Aaron Barrios* | `@Faceleskhan22` | Desarrollador | `a2` |
-| | *Santiago Pogonza* | `@pogonzasantiago55-png` | Desarrollador | `a2` |
-| **Subgrupo A3: Módulo Depósito / Stock** | *Santino Enriquez* | `@enriquezsantinonicolas-beep` | **Líder A3** | `a3` |
-| | *Juan Jimenez* | `@juanjimenezjb` | Desarrollador | `a3` |
-| | *Lucas Barrionuevo* | `@lucasbarrionuevo534-ship-it` | Desarrollador | `a3` |
-| | *Gabriel Duarte* | `@Shoret07` | Desarrollador | `a3` |
+| **Subgrupo A1: Módulo Técnico** | *Sofia Pignataro* | `@Sofia Pignataro` | **Líder A1** | `a1-pignataro` |
+| | *Santiago Perez* | `@Santiago-j-Perez` | Desarrollador | `a1-perez` |
+| | *Sol Marin* | `@sistemasolarss` | Desarrollador | `a1-marin` |
+| | *De Santis Brenda* | `@brendadsantis` | Desarrollador | `a1-desantis` |
+| **Subgrupo A2: Módulo Cliente** | *Tobias Frete* | `@fretetobias21` | **Líder A2** | `a2-frete-tobias` |
+| | *Thiago Frete* | `@itsthaigr` | Desarrollador | `a2-frete-thiago` |
+| | *Aaron Barrios* | `@Faceleskhan22` | Desarrollador | `a2-barrios` |
+| | *Santiago Pogonza* | `@pogonzasantiago55-png` | Desarrollador | `a2-pogonza` |
+| **Subgrupo A3: Módulo Depósito / Stock** | *Santino Enriquez* | `@enriquezsantinonicolas-beep` | **Líder A3** | `a3-enriquez` |
+| | *Juan Jimenez* | `@juanjimenezjb` | Desarrollador | `a3-jimenez` |
+| | *Lucas Barrionuevo* | `@lucasbarrionuevo534-ship-it` | Desarrollador | `a3-barrionuevo` |
+| | *Gabriel Duarte* | `@Shoret07` | Desarrollador | `a3-duarte` |
+
+---
+
+## 🌿 Gobernanza de Git & Jerarquía de Ramas
+
+Para garantizar la integridad del código, el repositorio cuenta con reglas de protección de ramas en GitHub (**Branch Protection Rules**):
+
+```text
+main  (Producción Estable) [Protegida - Solo PRs aprobados]
+ └── develop  (Rama de Integración Continua) [Protegida - Solo PRs aprobados]
+      │
+      ├── a1  (Rama del Subgrupo A1 - Módulo Técnico) [Protegida - Solo PRs a Líder A1]
+      │    ├── a1-pignataro  (Sofia Pignataro - Líder A1)
+      │    ├── a1-perez      (Santiago Pérez)
+      │    ├── a1-marin      (Sol Marín)
+      │    └── a1-desantis   (Brenda De Santis)
+      │
+      ├── a2  (Rama del Subgrupo A2 - Módulo Cliente) [Protegida - Solo PRs a Líder A2]
+      │    ├── a2-frete-tobias  (Tobías Frete - Líder A2)
+      │    ├── a2-frete-thiago  (Thiago Frete)
+      │    ├── a2-barrios       (Aaron Barrios)
+      │    └── a2-pogonza       (Santiago Pogonza)
+      │
+      └── a3  (Rama del Subgrupo A3 - Módulo Depósito / Stock) [Protegida - Solo PRs a Líder A3]
+           ├── a3-enriquez      (Santino Enríquez - Líder A3)
+           ├── a3-jimenez       (Juan Jiménez)
+           ├── a3-barrionuevo   (Lucas Barrionuevo)
+           └── a3-duarte        (Gabriel Duarte)
+```
+
+### 📋 Reglas del Flujo de Trabajo
+1. **Pusheo directo bloqueado:** Nadie puede pushear directamente a `main`, `develop`, `a1`, `a2` ni `a3`.
+2. **Pull Requests Individuales:** Cada desarrollador trabaja en su rama individual (`aX-apellido`) y abre PR dirigida a la rama de su subgrupo (`aX`).
+3. **Revisión del Líder:** El líder de subgrupo revisa la PR, aprueba el código y hace el merge en `aX`.
+4. **Integración en `develop`:** Los líderes de subgrupo abren PR desde `aX` hacia `develop` para la revisión docente e integración de Sprint.
 
 ---
 
