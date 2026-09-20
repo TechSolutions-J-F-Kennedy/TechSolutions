@@ -31,6 +31,7 @@ Para conocer los flujos de trabajo, arquitectura e instrucciones de desarrollo, 
 7. 🚀 [**Guía de Despliegue Vercel (Thiago Frete)**](docs/guia-despliegue-vercel-thiago.md) — Guía paso a paso para publicar la PWA en HTTPS.
 8. 🔀 [**Guía de Git y Flujo de Trabajo**](docs/guia-git-flujo-trabajo.md) — Reglas de ramas, Pull Requests y revisiones de código.
 9. 📷 [**Imagen de Organización de Grupos**](docs/recursos/grupos-kennedy.jpg) — Ficha original de distribución del curso.
+10. 🎨 [**Guía de Estilos Interactiva (HTML)**](docs/kennedy-tech-solutions-guia-estilos.html) — Sistema de diseño visual, componentes UI, paleta de colores, tipografías, botones, formularios, tarjetas y maquetas interactiva para Desktop y PWA Móvil.
 
 ---
 
