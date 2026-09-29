@@ -35,30 +35,27 @@ Para garantizar la integridad del código, el repositorio cuenta con reglas de p
 main  (Producción Estable) [Protegida - Solo PRs aprobados]
  └── develop  (Rama de Integración Continua) [Protegida - Solo PRs aprobados]
       │
-      ├── a1  (Rama del Subgrupo A1 - Módulo Técnico) [Protegida - Solo PRs a Líder A1]
-      │    ├── a1-pignataro  (Sofia Pignataro - Líder A1)
-      │    ├── a1-perez      (Santiago Pérez)
-      │    ├── a1-marin      (Sol Marín)
-      │    └── a1-desantis   (Brenda De Santis)
+      ├── a1-principal-pignataro  (Rama Principal Subgrupo A1 - Sofia Pignataro - Líder A1)
+      │    ├── a1-perez            (Santiago Pérez)
+      │    ├── a1-marin            (Sol Marín)
+      │    └── a1-desantis         (Brenda De Santis)
       │
-      ├── a2  (Rama del Subgrupo A2 - Módulo Cliente) [Protegida - Solo PRs a Líder A2]
-      │    ├── a2-frete-tobias  (Tobías Frete - Líder A2)
-      │    ├── a2-frete-thiago  (Thiago Frete)
-      │    ├── a2-barrios       (Aaron Barrios)
-      │    └── a2-pogonza       (Santiago Pogonza)
+      ├── a2-principal-frete-tobias  (Rama Principal Subgrupo A2 - Tobías Frete - Líder A2)
+      │    ├── a2-frete-thiago     (Thiago Frete)
+      │    ├── a2-barrios          (Aaron Barrios)
+      │    └── a2-pogonza          (Santiago Pogonza)
       │
-      └── a3  (Rama del Subgrupo A3 - Módulo Depósito / Stock) [Protegida - Solo PRs a Líder A3]
-           ├── a3-enriquez      (Santino Enríquez - Líder A3)
-           ├── a3-jimenez       (Juan Jiménez)
-           ├── a3-barrionuevo   (Lucas Barrionuevo)
-           └── a3-duarte        (Gabriel Duarte)
+      └── a3-principal-enriquez  (Rama Principal Subgrupo A3 - Santino Enríquez - Líder A3)
+           ├── a3-jimenez          (Juan Jiménez)
+           ├── a3-barrionuevo      (Lucas Barrionuevo)
+           └── a3-duarte           (Gabriel Duarte)
 ```
 
 ### 📋 Reglas del Flujo de Trabajo
-1. **Pusheo directo bloqueado:** Nadie puede pushear directamente a `main`, `develop`, `a1`, `a2` ni `a3`.
-2. **Pull Requests Individuales:** Cada desarrollador trabaja en su rama individual (`aX-apellido`) y abre PR dirigida a la rama de su subgrupo (`aX`).
-3. **Revisión del Líder:** El líder de subgrupo revisa la PR, aprueba el código y hace el merge en `aX`.
-4. **Integración en `develop`:** Los líderes de subgrupo abren PR desde `aX` hacia `develop` para la revisión docente e integración de Sprint.
+1. **Pusheo directo bloqueado:** Nadie puede pushear directamente a `main` ni a `develop`.
+2. **Pull Requests Individuales:** Cada desarrollador del subgrupo abre PR hacia la rama principal de su líder (`a1-principal-pignataro`, `a2-principal-frete-tobias`, `a3-principal-enriquez`).
+3. **Revisión del Líder:** El líder de subgrupo revisa la PR, aprueba el código y hace el merge en su rama principal (`aX-principal-apellido`).
+4. **Integración en `develop`:** Los líderes de subgrupo abren PR desde su rama principal hacia `develop` para la revisión docente e integración de Sprint.
 
 ---
 
