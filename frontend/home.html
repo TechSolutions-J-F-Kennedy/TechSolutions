@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Inicio — Kennedy Tech Solutions</title>
+
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="home-styles.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+
+    <!-- Capa oscura para cuando se abre el menú -->
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+
+    <!-- Menú Desplegable Lateral (Drawer) -->
+    <aside id="side-drawer" class="side-drawer">
+      <div class="drawer-header">
+        <div class="user-avatar">
+          <i data-lucide="user"></i>
+        </div>
+        <div class="user-info">
+          <strong>Juan Pérez</strong>
+          <small>cliente@ejemplo.com</small>
+        </div>
+      </div>
+
+      <nav class="drawer-nav">
+        <a href="#" class="drawer-item active">
+          <i data-lucide="house"></i> Inicio
+        </a>
+        <a href="#" class="drawer-item">
+          <i data-lucide="clipboard-list"></i> Mis Solicitudes
+        </a>
+        <a href="#" class="drawer-item">
+          <i data-lucide="user-round"></i> Mi Perfil
+        </a>
+        <a href="#" class="drawer-item">
+          <i data-lucide="map-pin"></i> Mis Direcciones
+        </a>
+        <a href="#" class="drawer-item">
+          <i data-lucide="settings"></i> Configuración
+        </a>
+      </nav>
+
+      <div class="drawer-footer">
+        <a href="index.html" class="drawer-item logout">
+          <i data-lucide="log-out"></i> Cerrar sesión
+        </a>
+      </div>
+    </aside>
+
+    <!-- Encabezado Móvil de la App -->
+    <header class="phone-head">
+      <div class="head-top">
+        <button id="menu-btn" class="icon-btn" aria-label="Abrir menú">
+          <i data-lucide="menu"></i>
+        </button>
+        <div class="brand">
+          <small>KENNEDY TECH</small>
+          <h4>Solicitar Técnico</h4>
+        </div>
+        <button class="icon-btn" aria-label="Notificaciones">
+          <i data-lucide="bell"></i>
+        </button>
+      </div>
+
+      <!-- Buscador -->
+      <div class="search-box">
+        <i data-lucide="search" class="search-icon"></i>
+        <input type="text" placeholder="Buscar por nombre, especialidad o zona...">
+      </div>
+    </header>
+
+    <!-- Cuerpo Principal -->
+    <main class="phone-body">
+
+      <!-- Categorías de Servicio (Deslizables en móvil) -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-title">Categorías</span>
+        </div>
+        
+        <div class="categories-scroll">
+          <button class="chip-filter active">
+            <i data-lucide="grid"></i> Todos
+          </button>
+          <button class="chip-filter">
+            <i data-lucide="laptop"></i> Reparación PC
+          </button>
+          <button class="chip-filter">
+            <i data-lucide="wifi"></i> Redes / Wi-Fi
+          </button>
+          <button class="chip-filter">
+            <i data-lucide="printer"></i> Impresoras
+          </button>
+          <button class="chip-filter">
+            <i data-lucide="shield-check"></i> Antivirus
+          </button>
+        </div>
+      </section>
+
+      <!-- Ubicación Actual para el Servicio -->
+      <section class="section">
+        <div class="location-banner">
+          <div class="location-info">
+            <i data-lucide="map-pin"></i>
+            <div>
+              <small>Ubicación del servicio</small>
+              <strong>Av. Principal 1234, CABA</strong>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm">Cambiar</button>
+        </div>
+      </section>
+
+      <!-- Lista de Técnicos Disponibles -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-title">Técnicos Disponibles</span>
+          <span class="count-badge">3 cerca tuyo</span>
+        </div>
+
+        <div class="tech-list">
+
+          <!-- Técnico 1 -->
+          <div class="tech-card">
+            <div class="tech-header">
+              <div class="tech-avatar">LM</div>
+              <div class="tech-details">
+                <h4>Lucía Martínez</h4>
+                <div class="rating">
+                  <span class="stars">★ 4.9</span>
+                  <small>(32 servicios)</small>
+                </div>
+              </div>
+              <span class="status-badge available">Disponible</span>
+            </div>
+
+            <p class="tech-spec">
+              Especialista en Diagnóstico PC, Redes y Mantenimiento Preventivo.
+            </p>
+
+            <div class="tech-meta">
+              <span><i data-lucide="map-pin"></i> A 1.2 km</span>
+              <span><i data-lucide="clock"></i> Llama hoy</span>
+            </div>
+
+            <button class="btn btn-primary btn-touch-sm">
+              <i data-lucide="plus"></i> Solicitar servicio
+            </button>
+          </div>
+
+          <!-- Técnico 2 -->
+          <div class="tech-card">
+            <div class="tech-header">
+              <div class="tech-avatar alt">PR</div>
+              <div class="tech-details">
+                <h4>Pedro Rodríguez</h4>
+                <div class="rating">
+                  <span class="stars">★ 4.7</span>
+                  <small>(19 servicios)</small>
+                </div>
+              </div>
+              <span class="status-badge available">Disponible</span>
+            </div>
+
+            <p class="tech-spec">
+              Instalación de Routers, Cableado Estructurado y Fibra Óptica.
+            </p>
+
+            <div class="tech-meta">
+              <span><i data-lucide="map-pin"></i> A 2.5 km</span>
+              <span><i data-lucide="clock"></i> En camino</span>
+            </div>
+
+            <button class="btn btn-primary btn-touch-sm">
+              <i data-lucide="plus"></i> Solicitar servicio
+            </button>
+          </div>
+
+          <!-- Técnico 3 -->
+          <div class="tech-card">
+            <div class="tech-header">
+              <div class="tech-avatar alt2">MS</div>
+              <div class="tech-details">
+                <h4>Martín Silva</h4>
+                <div class="rating">
+                  <span class="stars">★ 4.8</span>
+                  <small>(41 servicios)</small>
+                </div>
+              </div>
+              <span class="status-badge busy">En servicio</span>
+            </div>
+
+            <p class="tech-spec">
+              Mantenimiento de impresoras industriales, tóner y hardware.
+            </p>
+
+            <div class="tech-meta">
+              <span><i data-lucide="map-pin"></i> A 3.8 km</span>
+              <span><i data-lucide="clock"></i> Resp. en 30m</span>
+            </div>
+
+            <button class="btn btn-ghost btn-touch-sm">
+              <i data-lucide="calendar"></i> Agendar turno
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Barra de Navegación Inferior (PWA Fix) -->
+    <nav class="bottom-nav">
+      <div class="nav-item active">
+        <i data-lucide="house"></i>
+        <span>Inicio</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="clipboard-list"></i>
+        <span>Pedidos</span>
+      </div>
+      <a href="perfil.html">
+      <div class="nav-item">
+        <i data-lucide="user"></i>
+        <span>Perfil</span>
+      </div>
+      </a>
+    </nav>
+
+  </div>
+
+  <script>
+    // Inicializar iconos de Lucide
+    lucide.createIcons();
+
+    // Control del Menú Desplegable Lateral
+    const menuBtn = document.getElementById('menu-btn');
+    const sideDrawer = document.getElementById('side-drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+
+    function openMenu() {
+      sideDrawer.classList.add('open');
+      drawerOverlay.classList.add('active');
+    }
+
+    function closeMenu() {
+      sideDrawer.classList.remove('open');
+      drawerOverlay.classList.remove('active');
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    drawerOverlay.addEventListener('click', closeMenu);
+
+    // Selección interactiva de categorías
+    const filterChips = document.querySelectorAll('.chip-filter');
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        filterChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
