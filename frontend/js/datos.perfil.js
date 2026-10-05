@@ -56,11 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. Configurar el botón de Cerrar Sesión
   const logoutBtn = document.querySelector('.btn-danger-ghost');
   if (logoutBtn) {
-    // Quitar el onclick inline y asignarlo mediante evento
     logoutBtn.removeAttribute('onclick');
     logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem('usuario'); // Limpiar la sesión
-      window.location.href = 'index.html'; // Redirigir al acceso
+      localStorage.removeItem('usuario'); 
+      window.location.href = 'index.html'; 
     });
   }
 });

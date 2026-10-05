@@ -17,6 +17,7 @@
   --secondary-400: #20C997;
   --secondary-500: #0FA77A;
   --secondary-600: #0B8664;
+  --secondary-700: #09684e;
 
   --accent-400: #FACC15;
   --accent-500: #EAB308;
@@ -66,6 +67,8 @@ button, input {
   font: inherit;
 }
 
+.text-center { text-align: center; }
+
 /* Contenedor PWA */
 .mobile-container {
   width: 100%;
@@ -76,7 +79,7 @@ button, input {
   flex-direction: column;
   position: relative;
   overflow-x: hidden;
-  padding-bottom: 70px; /* espacio para bottom nav */
+  padding-bottom: 70px;
 }
 
 /* Encabezado */
@@ -152,9 +155,166 @@ button, input {
   padding: 16px;
   display: flex;
   flex-direction: column;
+}
+
+/* Sistema de Vistas (Tabs internas) */
+.view-section {
+  display: none;
+  flex-direction: column;
   gap: 18px;
 }
 
+.view-section.active {
+  display: flex;
+}
+
+/* Tarjeta de Bienvenida */
+.welcome-card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+}
+
+.welcome-subtitle {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--primary-600);
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.welcome-title {
+  font-size: 20px;
+  color: var(--neutral-900);
+  margin-bottom: 6px;
+}
+
+.welcome-text {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.section-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin: -4px 0 6px 0;
+}
+
+/* Grid de Categorías Principales */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.category-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-card:active {
+  transform: scale(0.97);
+  border-color: var(--primary-500);
+  background: var(--primary-50);
+}
+
+.cat-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--primary-50);
+  color: var(--primary-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cat-icon-wrapper i {
+  width: 22px;
+  height: 22px;
+}
+
+.category-card span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--neutral-800);
+  text-align: center;
+}
+
+/* Separador & Botón Explorar */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--neutral-400);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin: 8px 0;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border);
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+.btn-outline-primary {
+  background: white;
+  color: var(--primary-600);
+  border: 1.5px solid var(--primary-500);
+}
+
+.btn-touch {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+/* Barra de Retorno en la vista de lista */
+.back-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+}
+
+.btn-back {
+  background: transparent;
+  border: 0;
+  color: var(--primary-600);
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* Secciones y Encabezados generales */
 .section {
   display: flex;
   flex-direction: column;
@@ -390,7 +550,7 @@ button, input {
   padding: 10px;
 }
 
-/* Menú Desplegable Lateral (Off-canvas Drawer) */
+/* Drawer / Off-canvas */
 .drawer-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -491,7 +651,7 @@ button, input {
   color: var(--muted);
 }
 
-/* Navegación Inferior (PWA Fix) */
+/* Navegación Inferior */
 .bottom-nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;

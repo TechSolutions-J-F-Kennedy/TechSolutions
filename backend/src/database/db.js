@@ -18,6 +18,12 @@ const connection = mysql.createPool({
     // Nombre de la base de datos específica que contiene nuestras tablas
     database: process.env.DB_NAME || "app_moviles",
 
+    port: Number(process.env.DB_PORT) || 23461,
+
+    ssl: {
+    rejectUnauthorized: false // Permite la conexión SSL requerida por Aiven
+  },
+
     // Si la piscina está llena, las nuevas peticiones esperan pacientemente a que se libere un socket (true)
     waitForConnections: true,
 
