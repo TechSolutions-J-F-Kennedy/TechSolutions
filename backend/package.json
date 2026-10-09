@@ -4,16 +4,34 @@
   "description": "Directorio reservado para los servicios de backend y API REST:\r - Servidor Node.js / Express API REST.\r - Modelos y controladores de base de datos.\r - Configuración de servicios Cloud (Aiven / Supabase).",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1"
+=======
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+>>>>>>> origin/a2-frete-thiago
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+<<<<<<< HEAD
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^18.0.5",
     "express": "^5.2.1",
     "mysql2": "^3.24.5"
+=======
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "mysql2": "^3.24.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+>>>>>>> origin/a2-frete-thiago
   }
 }

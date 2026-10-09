@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Flujo de Solicitud y Seguimiento — Kennedy Tech Solutions</title>
+
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="servicios-styles.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+    
+    <!-- Encabezado de la App -->
+    <header class="phone-head">
+      <div class="head-top">
+        <a href="home.html" class="icon-btn" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </a>
+        <div class="brand">
+          <small>KENNEDY TECH</small>
+          <h4 id="page-title">Solicitar servicio</h4>
+        </div>
+        <button class="icon-btn" aria-label="Ayuda">
+          <i data-lucide="help-circle"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Cuerpo Principal de la App -->
+    <main class="phone-body">
+
+      <!-- ================= 2. FORMULARIO DE SOLICITUD A DEMANDA ================= -->
+      <section id="sec-solicitud" class="flow-section">
+        
+        <div class="mobile-card">
+          <h4>Detalles de la asistencia</h4>
+          <p>Completá la información para que el técnico más cercano pueda tomar tu orden.</p>
+        </div>
+
+        <form class="auth-form" onsubmit="event.preventDefault(); switchSection('sec-seguimiento', 'Seguimiento #1042');">
+          
+          <div class="field">
+            <label for="address">Dirección del trabajo</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="map-pin" class="input-icon"></i>
+              <input type="text" id="address" value="Av. Principal 1234, CABA" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="category">Categoría del problema</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="wrench" class="input-icon"></i>
+              <select id="category" class="custom-select" required>
+                <option value="pc">Computación / PC</option>
+                <option value="redes">Redes y Wi-Fi</option>
+                <option value="servidores">Servidores</option>
+                <option value="camaras">Cámaras de Seguridad</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="description">Descripción breve del fallo</label>
+            <textarea id="description" class="custom-textarea" rows="3" placeholder="Ej.: El equipo no enciende y emite un pitido intermitente..." required></textarea>
+          </div>
+
+          <!-- Carga de Foto -->
+          <div class="field">
+            <label>Adjuntar foto ilustrativa (opcional)</label>
+            <div class="upload-box" onclick="document.getElementById('photo-input').click();">
+              <i data-lucide="camera" class="upload-icon"></i>
+              <span id="upload-label">Tomar foto o subir archivo</span>
+              <input type="file" id="photo-input" accept="image/*" class="hidden-input" onchange="previewFile()">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-touch">
+            <i data-lucide="send"></i> Confirmar Solicitud
+          </button>
+
+        </form>
+      </section>
+
+
+      <!-- ================= 3 Y 4. SEGUIMIENTO EN TIEMPO REAL Y COMPROBANTE ================= -->
+      <section id="sec-seguimiento" class="flow-section hidden">
+
+        <!-- Banner de Estado Actual -->
+        <div class="status-card">
+          <div class="status-icon-wrap">
+            <i data-lucide="truck"></i>
+          </div>
+          <div>
+            <small>Estado actual</small>
+            <h4 id="current-status-text">Técnico en camino</h4>
+          </div>
+        </div>
+
+        <!-- Timeline de 5 Estados -->
+        <div class="timeline-card">
+          <span class="section-title">Progreso del servicio</span>
+
+          <div class="timeline">
+            <!-- Estado 1 -->
+            <div class="timeline-step completed">
+              <div class="step-icon"><i data-lucide="check"></i></div>
+              <div class="step-content">
+                <strong>Solicitado</strong>
+                <small>Esperando asignación</small>
+              </div>
+            </div>
+
+            <!-- Estado 2 -->
+            <div class="timeline-step completed">
+              <div class="step-icon"><i data-lucide="check"></i></div>
+              <div class="step-content">
+                <strong>Asignado</strong>
+                <small>Técnico: Lucía Martínez</small>
+              </div>
+            </div>
+
+            <!-- Estado 3 -->
+            <div class="timeline-step active">
+              <div class="step-icon"><i data-lucide="navigation"></i></div>
+              <div class="step-content">
+                <strong>En Camino / En Sitio</strong>
+                <small>Arribo estimado: 15 min</small>
+              </div>
+            </div>
+
+            <!-- Estado 4 -->
+            <div class="timeline-step">
+              <div class="step-icon"><i data-lucide="clock"></i></div>
+              <div class="step-content">
+                <strong>Finalizado</strong>
+                <small>Trabajo concluido</small>
+              </div>
+            </div>
+
+            <!-- Estado 5 (Alternativo) -->
+            <div class="timeline-step canceled-step">
+              <div class="step-icon"><i data-lucide="x"></i></div>
+              <div class="step-content">
+                <strong>Cancelado</strong>
+                <small>En caso de anulación</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón interactivo para simular el avance a "Finalizado" -->
+        <button class="btn btn-ghost btn-touch-sm" onclick="simularFinalizado()">
+          <i data-lucide="play-circle"></i> Simular que el técnico finalizó el trabajo
+        </button>
+
+        <!-- 4. Comprobante Digital Estimado -->
+        <div id="receipt-card" class="receipt-card hidden">
+          <div class="receipt-header">
+            <i data-lucide="file-check"></i>
+            <div>
+              <h4>Comprobante Digital</h4>
+              <small>Orden #1042 · Finalizado</small>
+            </div>
+          </div>
+
+          <div class="receipt-body">
+            <div class="receipt-line">
+              <span>Mano de obra (Diagnóstico y reparación)</span>
+              <strong>$15.000</strong>
+            </div>
+            <div class="receipt-line">
+              <span>Filtro y Pasta Térmica (Materiales)</span>
+              <strong>$4.500</strong>
+            </div>
+            <div class="receipt-line">
+              <span>Conector RJ45 (x2)</span>
+              <strong>$1.000</strong>
+            </div>
+            <hr class="receipt-divider">
+            <div class="receipt-line total">
+              <span>Monto total a abonar</span>
+              <strong>$20.500</strong>
+            </div>
+          </div>
+
+          <button class="btn btn-secondary btn-touch" onclick="alert('Descargando comprobante en PDF...'); openRatingModal();">
+            <i data-lucide="download"></i> Guardar Comprobante
+          </button>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Navegación Inferior -->
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="location.href='home.html'">
+        <i data-lucide="house"></i>
+        <span>Inicio</span>
+      </div>
+      <div class="nav-item active">
+        <i data-lucide="clipboard-list"></i>
+        <span>Pedidos</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="user"></i>
+        <span>Perfil</span>
+      </div>
+    </nav>
+
+  </div>
+
+
+  <!-- ================= 5. DIÁLOGO EMERGENTE DE CALIFICACIÓN ================= -->
+  <div id="rating-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="tech-avatar-lg">LM</div>
+        <h4>Calificar atención</h4>
+        <p>¿Qué tal fue el servicio brindado por <strong>Lucía Martínez</strong>?</p>
+      </div>
+
+      <div class="rating-stars-input">
+        <span class="star-btn" onclick="setRating(1)">★</span>
+        <span class="star-btn" onclick="setRating(2)">★</span>
+        <span class="star-btn" onclick="setRating(3)">★</span>
+        <span class="star-btn" onclick="setRating(4)">★</span>
+        <span class="star-btn active" onclick="setRating(5)">★</span>
+      </div>
+
+      <div class="field" style="margin-top: 14px;">
+        <textarea id="review-text" class="custom-textarea" rows="3" placeholder="Escribí un comentario sobre la puntualidad, trato o solución..."></textarea>
+      </div>
+
+      <button class="btn btn-primary btn-touch" onclick="closeRatingModal()">
+        <i data-lucide="check-circle"></i> Confirmar Valoración
+      </button>
+    </div>
+  </div>
+
+
+  <script>
+    // Inicializar iconos
+    lucide.createIcons();
+
+    // Navegación entre vistas
+    function switchSection(sectionId, titleText) {
+      document.querySelectorAll('.flow-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(sectionId).classList.remove('hidden');
+      document.getElementById('page-title').textContent = titleText;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Previsualización simple de imagen
+    function previewFile() {
+      const input = document.getElementById('photo-input');
+      const label = document.getElementById('upload-label');
+      if (input.files && input.files[0]) {
+        label.textContent = "Foto cargada: " + input.files[0].name;
+      }
+    }
+
+    // Simulación del técnico finalizando el trabajo
+    function simularFinalizado() {
+      document.getElementById('current-status-text').textContent = "Servicio Finalizado";
+      
+      // Actualizar timeline
+      const steps = document.querySelectorAll('.timeline-step');
+      steps[2].classList.remove('active');
+      steps[2].classList.add('completed');
+      steps[3].classList.add('completed', 'active');
+
+      // Mostrar comprobante digital
+      document.getElementById('receipt-card').classList.remove('hidden');
+    }
+
+    // Modal de Calificación
+    function openRatingModal() {
+      document.getElementById('rating-modal').classList.add('active');
+    }
+
+    function closeRatingModal() {
+      document.getElementById('rating-modal').classList.remove('active');
+      alert('¡Gracias! Tu valoración ha actualizado la reputación pública del técnico.');
+      location.href = 'home.html';
+    }
+
+    function setRating(stars) {
+      const starBtns = document.querySelectorAll('.star-btn');
+      starBtns.forEach((btn, idx) => {
+        if (idx < stars) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
