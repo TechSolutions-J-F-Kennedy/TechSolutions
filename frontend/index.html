@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Ingresar · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/login.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body class="login">
+    <div class="app">
+      <div class="brand">
+        <div class="ico">
+          <i data-lucide="wrench"></i>
+        </div>
+
+        <div class="logo">Kennedy<span>Tech Solutions</span></div>
+        <p>Gestión de servicios técnicos</p>
+      </div>
+
+      <div class="card">
+        <label class="f">Correo electrónico</label>
+        <input class="input" id="u" type="email" placeholder="tecnico@ejemplo.com">
+
+        <label class="f">Contraseña</label>
+        <input class="input" id="p" type="password" placeholder="••••••••">
+
+        <button class="btn btn-primary full" id="btn-login">
+          <i data-lucide="log-in"></i> Iniciar sesión
+        </button>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+      const entrar = () => {
+        const v = $('#u').value.split('@')[0].trim();
+        L.user = v ? v[0].toUpperCase() + v.slice(1) : 'Pepe';
+        (typeof go == 'function' ? go : (u) => location.href = u)('inicio.html');
+      };
+
+      $('#btn-login').onclick = entrar;
+      $('#p').onkeydown = (e) => {
+        if (e.key == 'Enter') entrar();
+      };
+    </script>
+  </body>
+</html>
+

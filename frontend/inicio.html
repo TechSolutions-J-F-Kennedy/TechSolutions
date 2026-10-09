@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Inicio · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/inicio.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="head">
+        <div class="row">
+          <div>
+            <small>PANEL TÉCNICO</small>
+            <h1 id="h"></h1>
+          </div>
+
+          <div class="sw">
+            <span id="sl"></span>
+            <label class="switch">
+              <input type="checkbox" id="sw">
+              <i></i>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <h2>Pedido actual</h2>
+
+        <div class="card pedido">
+          <div class="row">
+            <b id="sv"></b>
+            <span id="b"></span>
+          </div>
+
+          <div class="kv">
+            <i data-lucide="user-round"></i>
+            <div>
+              <b>Cliente</b>
+              <span id="c"></span>
+            </div>
+          </div>
+
+          <div class="kv">
+            <i data-lucide="map-pin"></i>
+            <div>
+              <b>Ubicación</b>
+              <span id="ub"></span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary full" id="ver" style="margin-top: 8px">
+            <i data-lucide="eye"></i> Ver
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet" id="sh">
+      <div class="panel">
+        <div class="grab"></div>
+
+        <div class="row">
+          <h3 id="sid"></h3>
+          <span id="sb"></span>
+        </div>
+
+        <p class="m" id="ssv"></p>
+
+        <div class="kv">
+          <i data-lucide="user-round"></i>
+          <div>
+            <b>Cliente</b>
+            <span id="sc"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="phone"></i>
+          <div>
+            <b>Teléfono</b>
+            <span id="st"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <b>Ubicación</b>
+            <span id="su"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="clock"></i>
+          <div>
+            <b>Horario</b>
+            <span id="sh2"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="package"></i>
+          <div>
+            <b>Materiales</b>
+            <span id="sm"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="file-text"></i>
+          <div>
+            <b>Detalle</b>
+            <span id="sd"></span>
+          </div>
+        </div>
+
+        <div class="map">
+          <i data-lucide="map"></i>
+        </div>
+
+        <button class="btn btn-ghost full" id="x" style="margin-top: 6px">
+          <i data-lucide="x"></i> Cerrar
+        </button>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+      const P = PEDIDO;
+      const t = (i, v) => $(i).textContent = v;
+
+      t('#h', 'Hola ' + user());
+      t('#sv', P.servicio + ' ' + P.id);
+      t('#c', P.cliente);
+      t('#ub', P.ubicacion);
+      $('#b').innerHTML = st(estado());
+
+      t('#sid', 'Pedido ' + P.id);
+      t('#ssv', P.servicio);
+      $('#sb').innerHTML = st(estado());
+      t('#sc', P.cliente);
+      t('#st', P.telefono);
+      t('#su', P.ubicacion);
+      t('#sh2', P.horario);
+      t('#sm', P.materiales);
+      t('#sd', P.detalle);
+
+      $('#ver').onclick = () => $('#sh').classList.add('on');
+      $('#x').onclick = () => $('#sh').classList.remove('on');
+      $('#sh').onclick = (e) => {
+        if (e.target.id == 'sh') $('#sh').classList.remove('on');
+      };
+
+      const sw = $('#sw');
+      const sl = () => t('#sl', sw.checked ? 'Disponible' : 'No disponible');
+
+      sw.checked = L.sw != '0';
+      sl();
+
+      sw.onchange = () => {
+        L.sw = sw.checked ? 1 : 0;
+        sl();
+      };
+    </script>
+  </body>
+</html>
+

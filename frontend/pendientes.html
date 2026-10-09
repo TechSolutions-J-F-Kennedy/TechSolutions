@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Tareas · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/pendientes.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="head">
+        <small>AGENDA</small>
+        <h1>Tareas</h1>
+      </div>
+
+      <div class="wrap">
+        <h2>
+          Tareas (hoy)
+          <b class="cnt" id="n1"></b>
+        </h2>
+        <div class="card" id="hoy"></div>
+
+        <h2>
+          Tareas pendientes
+          <b class="cnt" id="n2"></b>
+        </h2>
+        <div class="card" id="pen"></div>
+
+        <h2>
+          Tareas finalizadas
+          <b class="cnt" id="n3"></b>
+        </h2>
+        <div class="card" id="fin"></div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+      const T = [{ t: PEDIDO.servicio + ' · ' + PEDIDO.cliente, e: estado() }, ...OTRAS];
+
+      const f = (id, n, a) => {
+        $(id).innerHTML = a.length
+          ? a
+              .map(
+                (x) =>
+                  `<div class="it"><i data-lucide="${x.e == 'Finalizado' ? 'circle-check' : 'clipboard-list'}"></i><span>${x.t}</span>${st(x.e)}</div>`
+              )
+              .join('')
+          : '<p class="m">Sin tareas</p>';
+        $(n).textContent = a.length;
+      };
+
+      f('#hoy', '#n1', T.slice(0, 2));
+      f('#pen', '#n2', T.filter((x) => x.e != 'Finalizado'));
+      f('#fin', '#n3', T.filter((x) => x.e == 'Finalizado'));
+    </script>
+  </body>
+</html>
+

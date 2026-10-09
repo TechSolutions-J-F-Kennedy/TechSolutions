@@ -1,0 +1,30 @@
+.g {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.g .card {
+  text-align: center;
+  margin: 0;
+  color: var(--n500);
+  padding: 20px 12px;
+}
+
+.g svg {
+  width: 28px;
+  height: 28px;
+  color: var(--p6);
+  margin-bottom: 8px;
+}
+
+.g b {
+  display: block;
+  font-size: 13px;
+  color: var(--n900);
+}
+
+.g small {
+  font-size: 11px;
+}
+
