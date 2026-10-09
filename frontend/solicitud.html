@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Solicitá un servicio técnico en TechSolutions.">
+
+    <title>Solicitar servicio | TechSolutions</title>
+
+    <link rel="stylesheet" href="css/solicitud.css">
+    <script src="js/solicitud.js" defer></script>
+</head>
+
+<body>
+    <main class="app">
+
+        <header class="encabezado">
+            <a href="index.html" class="volver" aria-label="Volver al inicio">←</a>
+
+            <div>
+                <p class="etiqueta">TECHSOLUTIONS</p>
+                <h1>Solicitar servicio</h1>
+                <p class="m">Contanos qué problema necesitás resolver.</p>
+            </div>
+        </header>
+
+        <section class="card">
+
+            <div class="paso">
+                <span class="icono">📍</span>
+
+                <div>
+                    <h2>¿Dónde necesitás el servicio?</h2>
+                    <p class="m">Indicá la dirección donde se realizará el trabajo.</p>
+                </div>
+            </div>
+
+            <form id="formSolicitud">
+
+               
+                <div class="campo">
+                    <label for="direccion">Dirección del trabajo *</label>
+
+                    <input
+                        type="text"
+                        id="direccion"
+                        name="direccion"
+                        placeholder="Ej. Av. Mitre 123, Quilmes"
+                        maxlength="200"
+                        autocomplete="street-address"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="descripcion">Descripción del problema *</label>
+
+                    <textarea
+                        id="descripcion"
+                        name="descripcion"
+                        placeholder="Describí brevemente qué sucede y qué necesitás reparar..."
+                        rows="5"
+                        maxlength="1000"
+                        required
+                    ></textarea>
+
+                    <div class="contador">
+                        <span>Agregá los detalles necesarios.</span>
+                        <span id="contadorTexto">0/1000</span>
+                    </div>
+                </div>
+
+
+                <div class="campo">
+                    <label for="foto">
+                        Foto ilustrativa
+                        <span class="opcional">(opcional)</span>
+                    </label>
+
+                    <label for="foto" class="zona-foto" id="zonaFoto">
+                        <span class="foto-icono">📷</span>
+                        <strong>Seleccionar una foto</strong>
+                        <span class="m">JPG, PNG o WEBP · Máximo 5 MB</span>
+                    </label>
+
+                   
+                    <input
+                        type="file"
+                        id="foto"
+                        name="foto"
+                        accept="image/jpeg,image/png,image/webp"
+                    >
+
+                
+                    <div id="vistaPrevia" class="vista-previa" hidden>
+                        <img
+                            id="imagenPrevia"
+                            alt="Vista previa de la foto seleccionada"
+                        >
+
+                        <div class="datos-foto">
+                            <span id="nombreFoto"></span>
+
+                            <button
+                                type="button"
+                                id="quitarFoto"
+                                class="quitar-foto"
+                            >
+                                Quitar foto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+        
+                <div class="aviso">
+                    <span>ℹ️</span>
+
+                    <p>
+                        Al confirmar, la solicitud se registrará con estado
+                        <strong>Solicitado</strong> y quedará pendiente de atención
+                        por parte de la red de técnicos.
+                    </p>
+                </div>
+
+                
+                <p
+                    id="mensaje"
+                    class="mensaje"
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                ></p>
+
+                
+                <button type="submit" id="btnConfirmar" class="btn full">
+                    Confirmar Solicitud
+                    <span>→</span>
+                </button>
+
+                <p class="nota">
+                    Revisá los datos antes de confirmar.
+                </p>
+
+            </form>
+        </section>
+
+        <footer>
+            <span class="punto"></span>
+            Tu próximo servicio empieza acá.
+        </footer>
+
+    </main>
+</body>
+</html>
