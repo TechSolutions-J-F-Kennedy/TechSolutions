@@ -1,5 +1,3 @@
-<<<<<<< HEAD
 node_modules/
-=======
->>>>>>> origin/a2-frete-thiago
+**/node_modules/
 .env
