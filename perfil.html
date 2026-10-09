@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Perfil · Kennedy Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="perfil.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app">
+    <div class="head hero">
+      <div class="av" id="av"></div>
+      <h1 id="n"></h1>
+      <span class="chip"><i data-lucide="hard-hat"></i> Técnico</span>
+    </div>
+    <div class="wrap">
+      <div class="card" id="vista">
+        <div class="kv">
+          <i data-lucide="briefcase"></i>
+          <div>
+            <b>Rol</b>
+            <span id="vr"></span>
+          </div>
+        </div>
+        <div class="kv">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <b>Zona</b>
+            <span id="vz"></span>
+          </div>
+        </div>
+        <div class="kv">
+          <i data-lucide="phone"></i>
+          <div>
+            <b>Teléfono</b>
+            <span id="vt"></span>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="form" hidden>
+        <div class="field">
+          <label>Nombre</label>
+          <input class="input" id="fn">
+        </div>
+        <div class="field">
+          <label>Rol</label>
+          <input class="input" id="fr">
+        </div>
+        <div class="field">
+          <label>Zona</label>
+          <input class="input" id="fz">
+        </div>
+        <div class="field" style="margin:0">
+          <label>Teléfono</label>
+          <input class="input" id="ft" type="tel">
+        </div>
+      </div>
+      <div class="btns" id="bv">
+        <button class="btn btn-ghost" id="ed"><i data-lucide="pencil"></i> Editar</button>
+        <button class="btn btn-danger" id="ce"><i data-lucide="log-out"></i> Cerrar sesión</button>
+      </div>
+      <div class="btns" id="be" hidden>
+        <button class="btn btn-primary" id="sv"><i data-lucide="check"></i> Guardar cambios</button>
+        <button class="btn btn-ghost" id="cn"><i data-lucide="x"></i> Cancelar</button>
+      </div>
+    </div>
+  </div>
+  <div class="sheet" id="cf">
+    <div class="panel cf">
+      <div class="grab"></div>
+      <div class="warn"><i data-lucide="triangle-alert"></i></div>
+      <h3>¿Estás seguro?</h3>
+      <p class="m">¿Deseas cambiar estos datos? Se reemplazarán los datos actuales de tu perfil.</p>
+      <div class="btns">
+        <button class="btn btn-ghost" id="no">Cancelar</button>
+        <button class="btn btn-primary" id="ok">Sí, cambiar</button>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+  <script>
+    const D = function () {
+      return {
+        rol: 'Técnico de campo',
+        zona: 'Montevideo',
+        tel: '+598 99 000 000',
+        ...JSON.parse(L.perfil || '{}')
+      };
+    };
+
+    function render() {
+      const d = D();
+
+      $('#av').textContent = user()[0].toUpperCase();
+      $('#n').textContent = user();
+      $('#vr').textContent = d.rol;
+      $('#vz').textContent = d.zona;
+      $('#vt').textContent = d.tel;
+    }
+
+    function modo(e) {
+      $('#vista').hidden = e;
+      $('#form').hidden = !e;
+      $('#bv').hidden = e;
+      $('#be').hidden = !e;
+    }
+
+    render();
+
+    $('#ed').onclick = function () {
+      const d = D();
+
+      $('#fn').value = user();
+      $('#fr').value = d.rol;
+      $('#fz').value = d.zona;
+      $('#ft').value = d.tel;
+      modo(true);
+    };
+
+    $('#cn').onclick = function () {
+      modo(false);
+    };
+
+    $('#sv').onclick = function () {
+      if (!$('#fn').value.trim()) {
+        $('#fn').focus();
+        return;
+      }
+
+      $('#cf').classList.add('on');
+    };
+
+    $('#no').onclick = function () {
+      $('#cf').classList.remove('on');
+    };
+
+    $('#cf').onclick = function (e) {
+      if (e.target.id == 'cf') {
+        $('#cf').classList.remove('on');
+      }
+    };
+
+    $('#ok').onclick = function () {
+      L.user = $('#fn').value.trim();
+
+      L.perfil = JSON.stringify({
+        rol: $('#fr').value.trim(),
+        zona: $('#fz').value.trim(),
+        tel: $('#ft').value.trim()
+      });
+
+      $('#cf').classList.remove('on');
+      modo(false);
+      render();
+    };
+
+    $('#ce').onclick = function () {
+      L.clear();
+      go('index.html');
+    };
+  </script>
+</body>
+</html>

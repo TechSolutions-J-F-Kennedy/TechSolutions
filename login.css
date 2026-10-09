@@ -1,0 +1,70 @@
+body.login {
+  background:
+    radial-gradient(circle at 15% 0,rgba(32,201,151,.28),transparent 40%),
+    linear-gradient(160deg,var(--p9),var(--p7));
+}
+
+.login .app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+}
+
+.brand {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 26px;
+}
+
+.ico {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+}
+
+.ico svg {
+  width: 34px;
+  height: 34px;
+  color: var(--s3);
+}
+
+.logo {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.05;
+}
+
+.logo span {
+  color: var(--s3);
+  display: block;
+}
+
+.brand p {
+  color: var(--p100);
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.login .card {
+  padding: 22px;
+  border: 0;
+}
+
+.f {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--n700);
+  margin-bottom: 6px;
+}
+
+.login .input {
+  margin-bottom: 14px;
+}

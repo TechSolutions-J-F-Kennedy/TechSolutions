@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Chat · Kennedy Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="chat.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app">
+    <div class="head">
+      <small>MENSAJES</small>
+      <h1>Chats</h1>
+      <div class="search">
+        <i data-lucide="search"></i>
+        <input id="q" placeholder="Buscar chat" autocomplete="off">
+      </div>
+    </div>
+    <div id="ls"></div>
+  </div>
+  <div class="conv" id="cv">
+    <div class="ch">
+      <button class="ib" id="bk"><i data-lucide="arrow-left"></i></button>
+      <div class="av" id="cav"></div>
+      <div class="who">
+        <b id="cn"></b>
+        <small id="cs"></small>
+      </div>
+    </div>
+    <div class="cm" id="cm"></div>
+    <div class="cb">
+      <input class="input" id="t" placeholder="Escribe un mensaje" autocomplete="off">
+      <button class="btn btn-primary" id="sd"><i data-lucide="send"></i></button>
+    </div>
+  </div>
+  <script src="app.js"></script>
+  <script>
+    (function () {
+      const D = 864e5;
+      const now = Date.now();
+
+      const seed = function () {
+        return [
+          {
+            id: 1,
+            name: 'Central de servicios',
+            init: 'CS',
+            unread: 1,
+            msgs: [
+              { m: 0, x: 'Buen día, ¿ya revisaste el pedido #1042?', ts: now - D - 108e5 },
+              { m: 1, x: 'Sí, salgo en unos minutos.', ts: now - D - 104e5 },
+              { m: 0, x: 'Perfecto. Avisame cuando llegues al domicilio.', ts: now - 72e5 }
+            ]
+          },
+          {
+            id: 2,
+            name: 'Lucía Martínez',
+            init: 'LM',
+            unread: 0,
+            msgs: [
+              { m: 0, x: '¿Tenés un tester de repuesto?', ts: now - 2 * D },
+              { m: 1, x: 'Sí, te lo llevo mañana.', ts: now - 2 * D + 6e5 }
+            ]
+          },
+          {
+            id: 3,
+            name: 'Pedro Ramos',
+            init: 'PR',
+            unread: 0,
+            msgs: [
+              { m: 0, x: 'Ya dejé los materiales en el depósito.', ts: now - 3 * D }
+            ]
+          },
+          {
+            id: 4,
+            name: 'Juan Pérez · Cliente',
+            init: 'JP',
+            unread: 0,
+            msgs: [
+              { m: 0, x: 'Gracias por venir, quedó funcionando.', ts: now - 4 * D }
+            ]
+          }
+        ];
+      };
+
+      let C = JSON.parse(L.chats || 'null') || seed();
+      let open = null;
+
+      const save = function () {
+        L.chats = JSON.stringify(C);
+      };
+
+      save();
+
+      const p2 = function (n) {
+        return String(n).padStart(2, '0');
+      };
+
+      const hm = function (t) {
+        const d = new Date(t);
+        return p2(d.getHours()) + ':' + p2(d.getMinutes());
+      };
+
+      const day = function (t) {
+        const a = new Date(t);
+        const b = new Date();
+
+        a.setHours(0, 0, 0, 0);
+        b.setHours(0, 0, 0, 0);
+
+        return Math.round((b - a) / D);
+      };
+
+      const dm = function (t) {
+        const d = new Date(t);
+        return p2(d.getDate()) + '/' + p2(d.getMonth() + 1);
+      };
+
+      const lab = function (t) {
+        if (day(t) == 0) {
+          return 'Hoy';
+        }
+
+        if (day(t) == 1) {
+          return 'Ayer';
+        }
+
+        return dm(t) + '/' + new Date(t).getFullYear();
+      };
+
+      const when = function (t) {
+        if (day(t) == 0) {
+          return hm(t);
+        }
+
+        if (day(t) == 1) {
+          return 'Ayer';
+        }
+
+        return dm(t);
+      };
+
+      const last = function (c) {
+        return c.msgs[c.msgs.length - 1];
+      };
+
+      const esc = function (s) {
+        return s.replace(/[&<>]/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c];
+        });
+      };
+
+      function list() {
+        const q = $('#q').value.toLowerCase();
+
+        const a = C.filter(function (c) {
+          return c.name.toLowerCase().includes(q);
+        }).sort(function (x, y) {
+          return last(y).ts - last(x).ts;
+        });
+
+        if (a.length) {
+          $('#ls').innerHTML = a.map(function (c) {
+            const l = last(c);
+
+            return '<div class="row2" data-id="' + c.id + '">' +
+              '<div class="av">' + c.init + '</div>' +
+              '<div class="mid">' +
+                '<div class="r">' +
+                  '<b>' + esc(c.name) + '</b>' +
+                  '<small class="' + (c.unread ? 'u' : '') + '">' + when(l.ts) + '</small>' +
+                '</div>' +
+                '<div class="r">' +
+                  '<span class="pv">' + (l.m ? '<i data-lucide="check-check"></i>' : '') + esc(l.x) + '</span>' +
+                  (c.unread ? '<em>' + c.unread + '</em>' : '') +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          }).join('');
+        } else {
+          $('#ls').innerHTML = '<p class="m" style="text-align:center;margin-top:30px">No hay chats</p>';
+        }
+
+        lucide.createIcons();
+      }
+
+      function conv() {
+        const c = C.find(function (x) {
+          return x.id == open;
+        });
+
+        let h = '';
+        let pd = '';
+
+        c.msgs.forEach(function (m) {
+          const d = lab(m.ts);
+
+          if (d != pd) {
+            h += '<div class="day"><span>' + d + '</span></div>';
+            pd = d;
+          }
+
+          h += '<div class="b ' + (m.m ? 'me' : 'th') + '">' +
+            esc(m.x) +
+            '<small>' + hm(m.ts) + (m.m ? '<i data-lucide="check-check"></i>' : '') + '</small>' +
+          '</div>';
+        });
+
+        $('#cm').innerHTML = h;
+        lucide.createIcons();
+        $('#cm').scrollTop = $('#cm').scrollHeight;
+      }
+
+      function openC(id) {
+        open = id;
+
+        const c = C.find(function (x) {
+          return x.id == id;
+        });
+
+        c.unread = 0;
+        save();
+
+        $('#cav').textContent = c.init;
+        $('#cn').textContent = c.name;
+        $('#cs').textContent = 'en línea';
+
+        conv();
+        $('#cv').classList.add('on');
+      }
+
+      const R = [
+        'Entendido 👍',
+        'Perfecto, gracias.',
+        'Dale, quedo atento.',
+        'Ok, avisame cualquier novedad.',
+        'Recibido.'
+      ];
+
+      function send() {
+        const v = $('#t').value.trim();
+
+        if (!v || !open) {
+          return;
+        }
+
+        const id = open;
+
+        const c = C.find(function (x) {
+          return x.id == id;
+        });
+
+        c.msgs.push({ m: 1, x: v, ts: Date.now() });
+        $('#t').value = '';
+        save();
+        conv();
+
+        setTimeout(function () {
+          if (open == id) {
+            $('#cs').textContent = 'escribiendo…';
+          }
+        }, 500);
+
+        setTimeout(function () {
+          c.msgs.push({ m: 0, x: R[Math.floor(Math.random() * R.length)], ts: Date.now() });
+
+          if (open == id) {
+            $('#cs').textContent = 'en línea';
+            conv();
+          } else {
+            c.unread++;
+            list();
+          }
+
+          save();
+        }, 1800);
+      }
+
+      $('#ls').onclick = function (e) {
+        const r = e.target.closest('.row2');
+
+        if (r) {
+          openC(+r.dataset.id);
+        }
+      };
+
+      $('#bk').onclick = function () {
+        open = null;
+        $('#cv').classList.remove('on');
+        list();
+      };
+
+      $('#q').oninput = list;
+      $('#sd').onclick = send;
+
+      $('#t').onkeydown = function (e) {
+        if (e.key == 'Enter') {
+          send();
+        }
+      };
+
+      list();
+    })();
+  </script>
+</body>
+</html>

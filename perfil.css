@@ -1,0 +1,93 @@
+.hero {
+  text-align: center;
+  padding-bottom: 36px;
+}
+
+.av {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  border: 2px solid var(--s3);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 12px;
+  font: 700 36px 'Space Grotesk';
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 99px;
+  background: rgba(255,255,255,.12);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.chip svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btns {
+  display: grid;
+  gap: 10px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--n500);
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  margin-bottom: 6px;
+}
+
+.btns .btn {
+  width: 100%;
+}
+
+.warn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--wal);
+  color: var(--wa);
+  display: grid;
+  place-items: center;
+  margin: 6px auto 12px;
+}
+
+.warn svg {
+  width: 28px;
+  height: 28px;
+}
+
+.cf {
+  text-align: center;
+}
+
+.cf h3 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.cf .m {
+  margin-bottom: 18px;
+}
+
+.cf .btns {
+  grid-template-columns: 1fr 1fr;
+}

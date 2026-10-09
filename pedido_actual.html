@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang=es>
+<head>
+  <meta charset=utf-8>
+  <meta name=viewport content='width=device-width,initial-scale=1'>
+  <title>Pedido actual</title>
+  <link rel=stylesheet href=style.css>
+</head>
+<body>
+  <div class=app>
+    <div class=row>
+      <h1>Pedido actual</h1>
+      <span id=b></span>
+    </div>
+    <div class=card style="margin-top:14px">
+      <p><b>Cliente</b></p>
+      <p class=m id=c></p>
+      <p style="margin-top:8px"><b>Ubicación</b></p>
+      <p class=m id=ub></p>
+      <p style="margin-top:8px"><b>Horario</b></p>
+      <p class=m id=ho></p>
+      <p style="margin-top:8px"><b>Materiales</b></p>
+      <p class=m id=ma></p>
+    </div>
+    <div class=card>
+      <div class=row>
+        <b>Estado</b>
+        <button class="btn o" id=ch>Cambiar estado</button>
+      </div>
+    </div>
+    <div class=map>📍<b>Mapa</b></div>
+    <div class=sheet id=sh>
+      <div id=op></div>
+    </div>
+  </div>
+  <script src=app.js></script>
+  <script>
+    $('#c').textContent = PEDIDO.cliente;
+    $('#ub').textContent = PEDIDO.ubicacion;
+    $('#ho').textContent = PEDIDO.horario;
+    $('#ma').textContent = PEDIDO.materiales;
+
+    const r = function () {
+      $('#b').innerHTML = badge(estado());
+    };
+
+    r();
+
+    $('#op').innerHTML = ESTADOS.map(function (e) {
+      return '<button class="btn o">' + e + '</button>';
+    }).join('');
+
+    $('#ch').onclick = function () {
+      $('#sh').classList.add('on');
+    };
+
+    $('#op').querySelectorAll('button').forEach(function (b) {
+      b.onclick = function () {
+        localStorage.estado = b.textContent;
+        r();
+        $('#sh').classList.remove('on');
+      };
+    });
+
+    $('#sh').onclick = function (e) {
+      if (e.target.id == 'sh') {
+        e.target.classList.remove('on');
+      }
+    };
+
+    nav('Inicio');
+  </script>
+</body>
+</html>
