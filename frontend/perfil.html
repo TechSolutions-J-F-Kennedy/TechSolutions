@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mi Perfil — Kennedy Tech Solutions</title>
+
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="perfil-styles.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+    
+    <!-- Encabezado Móvil de la App -->
+    <header class="phone-head">
+      <div class="head-top">
+        <a href="home.html" class="icon-btn" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </a>
+        <div class="brand">
+          <small>KENNEDY TECH</small>
+          <h4>Mi Perfil</h4>
+        </div>
+        <button class="icon-btn" aria-label="Ajustes">
+          <i data-lucide="settings"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Cuerpo Principal de la App -->
+    <main class="phone-body">
+
+      <!-- Tarjeta de Usuario / Resumen de Perfil -->
+      <section class="profile-card">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar">JP</div>
+          <button class="edit-avatar-btn" aria-label="Cambiar foto">
+            <i data-lucide="camera"></i>
+          </button>
+        </div>
+        <h3 class="user-name">Juan Pérez</h3>
+        <p class="user-email">juan.perez@ejemplo.com</p>
+        <span class="user-badge"><i data-lucide="user-check"></i> Cliente Verificado</span>
+      </section>
+
+      <!-- Pestañas / Pillas de Selección -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-datos', this)">
+          <i data-lucide="user"></i> Datos
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-direcciones', this)">
+          <i data-lucide="map-pin"></i> Direcciones
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-historial', this)">
+          <i data-lucide="history"></i> Historial
+        </button>
+      </div>
+
+      <!-- ================= 1. TAB DATOS PERSONALES ================= -->
+      <section id="tab-datos" class="tab-content active">
+        <form class="auth-form" onsubmit="event.preventDefault(); alert('¡Datos guardados con éxito!');">
+          
+          <div class="field">
+            <label for="username">Nombre de usuario</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="user" class="input-icon"></i>
+              <input type="text" id="username" value="juanperez" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">Correo electrónico</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="mail" class="input-icon"></i>
+              <input type="email" id="email" value="juan.perez@ejemplo.com" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="phone">Teléfono celular</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="phone" class="input-icon"></i>
+              <input type="tel" id="phone" value="+54 11 4567-8901">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password">Contraseña</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input type="password" id="password" value="••••••••">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-touch">
+            <i data-lucide="save"></i> Guardar Cambios
+          </button>
+
+        </form>
+      </section>
+
+      <!-- ================= 2. TAB DIRECCIONES ================= -->
+      <section id="tab-direcciones" class="tab-content">
+        <div class="section-header">
+          <span class="section-title">Direcciones Guardadas</span>
+          <button class="btn btn-ghost btn-sm" onclick="alert('Formulario para agregar nueva dirección');">
+            <i data-lucide="plus"></i> Nueva
+          </button>
+        </div>
+
+        <div class="address-list">
+          
+          <!-- Dirección 1 (Principal) -->
+          <div class="address-card active">
+            <div class="address-icon">
+              <i data-lucide="home"></i>
+            </div>
+            <div class="address-details">
+              <strong>Casa (Principal)</strong>
+              <p>Av. Principal 1234, Piso 2 B</p>
+              <small>CABA, Buenos Aires</small>
+            </div>
+            <span class="check-badge"><i data-lucide="check"></i></span>
+          </div>
+
+          <!-- Dirección 2 -->
+          <div class="address-card">
+            <div class="address-icon">
+              <i data-lucide="briefcase"></i>
+            </div>
+            <div class="address-details">
+              <strong>Oficina Norte</strong>
+              <p>Calle Comercial 456, Oficina 301</p>
+              <small>Vicente López, Buenos Aires</small>
+            </div>
+            <button class="btn btn-ghost btn-icon-sm" aria-label="Opciones">
+              <i data-lucide="more-vertical"></i>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= 3. TAB HISTORIAL DE SERVICIOS ================= -->
+      <section id="tab-historial" class="tab-content">
+        <span class="section-title">Últimos Servicios</span>
+
+        <div class="history-list">
+
+          <!-- Servicio 1 -->
+          <div class="history-card">
+            <div class="history-header">
+              <div>
+                <strong>Reparación de PC</strong>
+                <small>Solicitud #1042 · 15 Sep 2026</small>
+              </div>
+              <span class="status-chip success">Finalizado</span>
+            </div>
+            <div class="history-body">
+              <p><i data-lucide="user"></i> Técnico: Lucía Martínez</p>
+              <p><i data-lucide="dollar-sign"></i> Monto: $20.500</p>
+            </div>
+            <div class="history-footer">
+              <span class="rating-display">★ ★ ★ ★ ★ (5.0)</span>
+              <button class="btn btn-ghost btn-sm" onclick="location.href='servicios.html'">Ver Detalle</button>
+            </div>
+          </div>
+
+          <!-- Servicio 2 -->
+          <div class="history-card">
+            <div class="history-header">
+              <div>
+                <strong>Instalación de Red</strong>
+                <small>Solicitud #0988 · 02 Ago 2026</small>
+              </div>
+              <span class="status-chip success">Finalizado</span>
+            </div>
+            <div class="history-body">
+              <p><i data-lucide="user"></i> Técnico: Pedro Rodríguez</p>
+              <p><i data-lucide="dollar-sign"></i> Monto: $18.000</p>
+            </div>
+            <div class="history-footer">
+              <span class="rating-display">★ ★ ★ ★ ☆ (4.0)</span>
+              <button class="btn btn-ghost btn-sm" onclick="location.href='servicios.html'">Ver Detalle</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Cerrar Sesión -->
+      <button class="btn btn-danger-ghost btn-touch" onclick="location.href='index.html'" style="margin-top: 12px;">
+        <i data-lucide="log-out"></i> Cerrar Sesión
+      </button>
+
+    </main>
+
+    <!-- Navegación Inferior -->
+    <nav class="bottom-nav">
+      <a href="home.html">
+      <div class="nav-item" onclick="location.href='home.html'">
+        <i data-lucide="house"></i>
+        <span>Inicio</span>
+      </div>
+      </a>
+      <div class="nav-item" onclick="location.href='servicios.html'">
+        <i data-lucide="clipboard-list"></i>
+        <span>Pedidos</span>
+      </div>
+      <div class="nav-item active">
+        <i data-lucide="user"></i>
+        <span>Perfil</span>
+      </div>
+    </nav>
+
+  </div>
+
+  <script src="js/datos.perfil.js"></script>
+</body>
+</html>
