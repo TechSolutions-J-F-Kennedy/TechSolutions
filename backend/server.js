@@ -2,11 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
 require("dotenv").config();
+const path = require("path");
 
 const app = express();
+const solicitudesRoutes = require("./src/routes/solicitudes.routes");
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, "../frontend")));
 app.use(express.json());
+app.use("/api/solicitudes", solicitudesRoutes);
 
 const db = mysql.createPool({
     host: process.env.DB_HOST,
@@ -25,6 +29,7 @@ app.get("/", (req, res) => {
         mensaje: "Backend funcionando correctamente"
     });
 });
+
 
 
 
@@ -65,6 +70,9 @@ app.get("/api/Usuarios", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(PORT, () => {
     console.log(`Servidor iniciado en http://localhost:${PORT}`);

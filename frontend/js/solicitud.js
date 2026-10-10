@@ -186,6 +186,54 @@ form.addEventListener("submit", async (evento) => {
         "Los datos son válidos. El formulario está listo para conectarse al servidor.",
         "exito"
     );
+        const datos = new FormData();
+
+    datos.append("id_usuario", localStorage.getItem("usuarioId") || "");
+    datos.append("direccion", direccionValor);
+    datos.append("descripcion", descripcionValor);
+
+    if (archivo) {
+        datos.append("foto", archivo);
+    }
+
+    btnConfirmar.disabled = true;
+    btnConfirmar.textContent = "Enviando solicitud...";
+
+    try {
+        const respuesta = await fetch(
+            "http://localhost:3000/api/solicitudes",
+            {
+                method: "POST",
+                body: datos
+            }
+        );
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(resultado.mensaje || "No se pudo crear la solicitud.");
+        }
+
+        mostrarMensaje(
+            `¡Solicitud #${resultado.solicitud.id} creada correctamente! Estado: ${resultado.solicitud.estado}.`,
+            "exito"
+        );
+
+        form.reset();
+        contadorTexto.textContent = "0/1000";
+        limpiarFoto();
+
+    } catch (error) {
+        console.error("Error al enviar la solicitud:", error);
+
+        mostrarMensaje(
+            error.message || "No se pudo conectar con el servidor.",
+            "error"
+        );
+    } finally {
+        btnConfirmar.disabled = false;
+        btnConfirmar.innerHTML = 'Confirmar Solicitud <span>→</span>';
+    }
 });
 
 
