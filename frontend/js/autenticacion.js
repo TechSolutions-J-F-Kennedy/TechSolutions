@@ -88,7 +88,15 @@ if (loginForm) {
       if (response.ok) {
         alert('¡Bienvenido, ' + data.usuario.nombre + '!');
         localStorage.setItem('usuario', JSON.stringify(data.usuario));
-        window.location.href = 'perfil.html';
+        if (data.usuario.rol==="usuario"){
+          window.location.href = 'home.html';
+        }
+        else if(data.usuario.rol==="tecnico"){
+
+        }
+        else if(data.usuario.rol==="deposito"){
+          
+        }
       } else {
         alert('Error: ' + (data.error || 'Credenciales inválidas'));
       }

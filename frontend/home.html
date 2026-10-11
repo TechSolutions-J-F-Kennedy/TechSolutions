@@ -19,18 +19,16 @@
 
   <div class="mobile-container">
 
-    <!-- Capa oscura para cuando se abre el menú -->
     <div id="drawer-overlay" class="drawer-overlay"></div>
 
-    <!-- Menú Desplegable Lateral (Drawer) -->
     <aside id="side-drawer" class="side-drawer">
       <div class="drawer-header">
         <div class="user-avatar">
           <i data-lucide="user"></i>
         </div>
         <div class="user-info">
-          <strong>Juan Pérez</strong>
-          <small>cliente@ejemplo.com</small>
+          <strong id="drawer-user-name">Juan Pérez</strong>
+          <small id="drawer-user-email">cliente@ejemplo.com</small>
         </div>
       </div>
 
@@ -41,7 +39,7 @@
         <a href="#" class="drawer-item">
           <i data-lucide="clipboard-list"></i> Mis Solicitudes
         </a>
-        <a href="#" class="drawer-item">
+        <a href="perfil.html" class="drawer-item">
           <i data-lucide="user-round"></i> Mi Perfil
         </a>
         <a href="#" class="drawer-item">
@@ -59,7 +57,6 @@
       </div>
     </aside>
 
-    <!-- Encabezado Móvil de la App -->
     <header class="phone-head">
       <div class="head-top">
         <button id="menu-btn" class="icon-btn" aria-label="Abrir menú">
@@ -74,156 +71,234 @@
         </button>
       </div>
 
-      <!-- Buscador -->
       <div class="search-box">
         <i data-lucide="search" class="search-icon"></i>
-        <input type="text" placeholder="Buscar por nombre, especialidad o zona...">
+        <input type="text" id="global-search" placeholder="Buscar técnico, especialidad o categoría...">
       </div>
     </header>
 
-    <!-- Cuerpo Principal -->
     <main class="phone-body">
 
-      <!-- Categorías de Servicio (Deslizables en móvil) -->
-      <section class="section">
-        <div class="section-header">
-          <span class="section-title">Categorías</span>
-        </div>
+      <div id="view-welcome" class="view-section active">
         
-        <div class="categories-scroll">
-          <button class="chip-filter active">
-            <i data-lucide="grid"></i> Todos
-          </button>
-          <button class="chip-filter">
-            <i data-lucide="laptop"></i> Reparación PC
-          </button>
-          <button class="chip-filter">
-            <i data-lucide="wifi"></i> Redes / Wi-Fi
-          </button>
-          <button class="chip-filter">
-            <i data-lucide="printer"></i> Impresoras
-          </button>
-          <button class="chip-filter">
-            <i data-lucide="shield-check"></i> Antivirus
-          </button>
-        </div>
-      </section>
+        <section class="welcome-card">
+          <small class="welcome-subtitle">¡HOLA DE NUEVO!</small>
+          <!-- ID para modificar el nombre con el Backend -->
+          <h2 class="welcome-title">Bienvenido, <span id="user-display-name">Juan</span> 👋</h2>
+          <p class="welcome-text">¿Con qué problema técnico podemos ayudarte hoy?</p>
+        </section>
 
-      <!-- Ubicación Actual para el Servicio -->
-      <section class="section">
-        <div class="location-banner">
-          <div class="location-info">
-            <i data-lucide="map-pin"></i>
-            <div>
-              <small>Ubicación del servicio</small>
-              <strong>Av. Principal 1234, CABA</strong>
-            </div>
+        <section class="section">
+          <div class="section-header">
+            <span class="section-title">Encuentra tu técnico</span>
           </div>
-          <button class="btn btn-ghost btn-sm">Cambiar</button>
+
+          <p class="section-desc">Selecciona el tipo de servicio que necesitas:</p>
+
+         <div class="category-grid">
+  <button class="category-card" data-category="reparación-pc">
+    <div class="cat-icon-wrapper">
+      <i data-lucide="laptop"></i>
+    </div>
+    <span>Reparación PC</span>
+  </button>
+
+  <button class="category-card" data-category="redes">
+    <div class="cat-icon-wrapper">
+      <i data-lucide="wifi"></i>
+    </div>
+    <span>Redes / Wi-Fi</span>
+  </button>
+
+  <button class="category-card" data-category="software">
+    <div class="cat-icon-wrapper">
+      <i data-lucide="shield-check"></i>
+    </div>
+    <span>Software</span>
+  </button>
+
+  <button class="category-card" data-category="electricidad">
+    <div class="cat-icon-wrapper">
+      <i data-lucide="zap"></i>
+    </div>
+    <span>Electricista</span>
+  </button>
+
+  <button class="category-card" data-category="plomeria-gas">
+    <div class="cat-icon-wrapper">
+      <i data-lucide="droplet"></i>
+    </div>
+    <span>Plomería / Gas</span>
+  </button>
+
+  <button class="category-card" data-category="electrodomesticos">
+    <div class="cat-icon-wrapper">
+      <i data-lucide="tv"></i>
+    </div>
+    <span>Electrodomésticos</span>
+  </button>
+</div>
+        </section>
+
+        <!-- Botón para Explorar General -->
+        <section class="section text-center">
+          <div class="divider"><span>O TAMBIÉN</span></div>
+          <button id="btn-explore-all" class="btn btn-outline-primary btn-touch">
+            <i data-lucide="compass"></i> Explorar todos los técnicos
+          </button>
+        </section>
+
+      </div>
+
+
+      <div id="view-tech-list" class="view-section">
+
+        <!-- Barra de retorno -->
+        <div class="back-bar">
+          <button id="btn-back-home" class="btn-back">
+            <i data-lucide="arrow-left"></i> Volver
+          </button>
+          <span id="active-filter-label" class="filter-label">Todos los técnicos</span>
         </div>
-      </section>
 
-      <!-- Lista de Técnicos Disponibles -->
-      <section class="section">
-        <div class="section-header">
-          <span class="section-title">Técnicos Disponibles</span>
-          <span class="count-badge">3 cerca tuyo</span>
-        </div>
-
-        <div class="tech-list">
-
-          <!-- Técnico 1 -->
-          <div class="tech-card">
-            <div class="tech-header">
-              <div class="tech-avatar">LM</div>
-              <div class="tech-details">
-                <h4>Lucía Martínez</h4>
-                <div class="rating">
-                  <span class="stars">★ 4.9</span>
-                  <small>(32 servicios)</small>
-                </div>
+        <!-- Ubicación Actual para el Servicio -->
+        <section class="section">
+          <div class="location-banner">
+            <div class="location-info">
+              <i data-lucide="map-pin"></i>
+              <div>
+                <small>Ubicación del servicio</small>
+                <strong>Av. Principal 1234, CABA</strong>
               </div>
-              <span class="status-badge available">Disponible</span>
             </div>
+            <button class="btn btn-ghost btn-sm">Cambiar</button>
+          </div>
+        </section>
 
-            <p class="tech-spec">
-              Especialista en Diagnóstico PC, Redes y Mantenimiento Preventivo.
-            </p>
+        <section class="section">
+          <div class="categories-scroll">
+  <button class="chip-filter active" data-filter="Todos">
+    <i data-lucide="grid"></i> Todos
+  </button>
+  <button class="chip-filter" data-filter="reparacion-pc">
+    <i data-lucide="laptop"></i> Reparación PC
+  </button>
+  <button class="chip-filter" data-filter="redes">
+    <i data-lucide="wifi"></i> Redes / Wi-Fi
+  </button>
+  <button class="chip-filter" data-filter="software">
+    <i data-lucide="shield-check"></i> Software
+  </button>
+  <button class="chip-filter" data-filter="electricidad">
+    <i data-lucide="zap"></i> Electricista
+  </button>
+  <button class="chip-filter" data-filter="plomeria-gas">
+    <i data-lucide="droplet"></i> Plomería
+  </button>
+  <button class="chip-filter" data-filter="electrodomesticos">
+    <i data-lucide="tv"></i> Electrodomésticos
+  </button>
+</div>
+        </section>
 
-            <div class="tech-meta">
-              <span><i data-lucide="map-pin"></i> A 1.2 km</span>
-              <span><i data-lucide="clock"></i> Llama hoy</span>
-            </div>
-
-            <button class="btn btn-primary btn-touch-sm">
-              <i data-lucide="plus"></i> Solicitar servicio
-            </button>
+        <section class="section">
+          <div class="section-header">
+            <span class="section-title">Técnicos Disponibles</span>
+            <span class="count-badge" id="tech-count">3 disponibles</span>
           </div>
 
-          <!-- Técnico 2 -->
-          <div class="tech-card">
-            <div class="tech-header">
-              <div class="tech-avatar alt">PR</div>
-              <div class="tech-details">
-                <h4>Pedro Rodríguez</h4>
-                <div class="rating">
-                  <span class="stars">★ 4.7</span>
-                  <small>(19 servicios)</small>
+          <div class="tech-list" id="tech-list-container">
+
+            <!-- Técnico 1 -->
+            <div class="tech-card" data-category="Reparación PC">
+              <div class="tech-header">
+                <div class="tech-avatar">LM</div>
+                <div class="tech-details">
+                  <h4>Lucía Martínez</h4>
+                  <div class="rating">
+                    <span class="stars">★ 4.9</span>
+                    <small>(32 servicios)</small>
+                  </div>
                 </div>
+                <span class="status-badge available">Disponible</span>
               </div>
-              <span class="status-badge available">Disponible</span>
+
+              <p class="tech-spec">
+                Especialista en Diagnóstico PC, Redes y Mantenimiento Preventivo.
+              </p>
+
+              <div class="tech-meta">
+                <span><i data-lucide="clock"></i> Disponible hoy</span>
+              </div>
+
+              <button class="btn btn-primary btn-touch-sm">
+                <i data-lucide="plus"></i> Solicitar servicio
+              </button>
             </div>
 
-            <p class="tech-spec">
-              Instalación de Routers, Cableado Estructurado y Fibra Óptica.
-            </p>
-
-            <div class="tech-meta">
-              <span><i data-lucide="map-pin"></i> A 2.5 km</span>
-              <span><i data-lucide="clock"></i> En camino</span>
-            </div>
-
-            <button class="btn btn-primary btn-touch-sm">
-              <i data-lucide="plus"></i> Solicitar servicio
-            </button>
-          </div>
-
-          <!-- Técnico 3 -->
-          <div class="tech-card">
-            <div class="tech-header">
-              <div class="tech-avatar alt2">MS</div>
-              <div class="tech-details">
-                <h4>Martín Silva</h4>
-                <div class="rating">
-                  <span class="stars">★ 4.8</span>
-                  <small>(41 servicios)</small>
+            <!-- Técnico 2 -->
+            <div class="tech-card" data-category="Redes / Wi-Fi">
+              <div class="tech-header">
+                <div class="tech-avatar alt">PR</div>
+                <div class="tech-details">
+                  <h4>Pedro Rodríguez</h4>
+                  <div class="rating">
+                    <span class="stars">★ 4.7</span>
+                    <small>(19 servicios)</small>
+                  </div>
                 </div>
+                <span class="status-badge available">Disponible</span>
               </div>
-              <span class="status-badge busy">En servicio</span>
+
+              <p class="tech-spec">
+                Instalación de Routers, Cableado Estructurado y Fibra Óptica.
+              </p>
+
+              <div class="tech-meta">
+                <span><i data-lucide="clock"></i> En camino</span>
+              </div>
+
+              <button class="btn btn-primary btn-touch-sm">
+                <i data-lucide="plus"></i> Solicitar servicio
+              </button>
             </div>
 
-            <p class="tech-spec">
-              Mantenimiento de impresoras industriales, tóner y hardware.
-            </p>
+            <!-- Técnico 3 -->
+            <div class="tech-card" data-category="Impresoras">
+              <div class="tech-header">
+                <div class="tech-avatar alt2">MS</div>
+                <div class="tech-details">
+                  <h4>Martín Silva</h4>
+                  <div class="rating">
+                    <span class="stars">★ 4.8</span>
+                    <small>(41 servicios)</small>
+                  </div>
+                </div>
+                <span class="status-badge busy">En servicio</span>
+              </div>
 
-            <div class="tech-meta">
-              <span><i data-lucide="map-pin"></i> A 3.8 km</span>
-              <span><i data-lucide="clock"></i> Resp. en 30m</span>
+              <p class="tech-spec">
+                Mantenimiento de impresoras industriales, tóner y hardware.
+              </p>
+
+              <div class="tech-meta">
+                <span><i data-lucide="clock"></i> Resp. en 30m</span>
+              </div>
+
+              <button class="btn btn-ghost btn-touch-sm">
+                <i data-lucide="calendar"></i> Agendar turno
+              </button>
             </div>
 
-            <button class="btn btn-ghost btn-touch-sm">
-              <i data-lucide="calendar"></i> Agendar turno
-            </button>
           </div>
+        </section>
 
-        </div>
-      </section>
+      </div>
 
     </main>
 
-    <!-- Barra de Navegación Inferior (PWA Fix) -->
     <nav class="bottom-nav">
-      <div class="nav-item active">
+      <div id="nav-btn-home" class="nav-item active">
         <i data-lucide="house"></i>
         <span>Inicio</span>
       </div>
@@ -231,46 +306,17 @@
         <i data-lucide="clipboard-list"></i>
         <span>Pedidos</span>
       </div>
-      <a href="perfil.html">
-      <div class="nav-item">
-        <i data-lucide="user"></i>
-        <span>Perfil</span>
-      </div>
+      <a href="perfil.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item">
+          <i data-lucide="user"></i>
+          <span>Perfil</span>
+        </div>
       </a>
     </nav>
 
   </div>
 
-  <script>
-    // Inicializar iconos de Lucide
-    lucide.createIcons();
-
-    // Control del Menú Desplegable Lateral
-    const menuBtn = document.getElementById('menu-btn');
-    const sideDrawer = document.getElementById('side-drawer');
-    const drawerOverlay = document.getElementById('drawer-overlay');
-
-    function openMenu() {
-      sideDrawer.classList.add('open');
-      drawerOverlay.classList.add('active');
-    }
-
-    function closeMenu() {
-      sideDrawer.classList.remove('open');
-      drawerOverlay.classList.remove('active');
-    }
-
-    menuBtn.addEventListener('click', openMenu);
-    drawerOverlay.addEventListener('click', closeMenu);
-
-    // Selección interactiva de categorías
-    const filterChips = document.querySelectorAll('.chip-filter');
-    filterChips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        filterChips.forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-      });
-    });
+  <script src="js/home.filtro.js">
   </script>
 </body>
 </html>
