@@ -165,18 +165,22 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
 }
 
-  async function obtenerTecnicos(categoria = 'todos') {
-    if (!contenedor) return;
-
+  async function obtenerTecnicos(categoria = "todos") {
     try {
       contenedor.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--muted);">Cargando técnicos...</p>';
 
-      const response = await fetch('http://localhost:3000/api/tecnicos/verTecnicos', {
+      let response;
+      if(categoria.toLowerCase() === "todos"){
+        response = await fetch("http://localhost:3000/api/tecnicos/verTodosLosTecnicos");
+      }
+      else{
+        response = await fetch('http://localhost:3000/api/tecnicos/verTecnicosCategoria', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ categoria })
-      });
-
+        });
+      }
+      
       const data = await response.json();
 
       if (response.ok) {
