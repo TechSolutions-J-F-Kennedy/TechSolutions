@@ -3,6 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import usuariosRoutes from "./src/routes/usuario.routes.js";
 import tecnicosRoutes from "./src/routes/tecnico.routes.js";
+import path from 'path';
+
+// Servir archivos estáticos del frontend
 
 dotenv.config();
 const app = express();
@@ -15,3 +18,10 @@ app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/tecnicos", tecnicosRoutes);
 
 app.listen(3000, () => console.log("🚀 Servidor activo en puerto 3000"));
+
+app.use(express.static('public'));
+
+// Servir el HTML principal en la raíz /
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve('public/index.html'));
+});
