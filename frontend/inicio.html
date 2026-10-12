@@ -13,6 +13,7 @@
       rel="stylesheet"
     >
     <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/pendientes.css">
     <link rel="stylesheet" href="css/inicio.css">
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
@@ -23,13 +24,13 @@
         <div class="row">
           <div>
             <small>PANEL TÉCNICO</small>
-            <h1 id="h"></h1>
+            <h1 id="saludo"></h1>
           </div>
 
           <div class="sw">
-            <span id="sl"></span>
+            <span id="switch-texto"></span>
             <label class="switch">
-              <input type="checkbox" id="sw">
+              <input type="checkbox" id="switch-disponible">
               <i></i>
             </label>
           </div>
@@ -37,61 +38,27 @@
       </div>
 
       <div class="wrap">
-        <h2>Pedido actual</h2>
+        <h2>Servicios Pendientes</h2>
+        <p id="mensaje-lista"></p>
 
-        <div class="card pedido">
-          <div class="row">
-            <b id="sv"></b>
-            <span id="b"></span>
-          </div>
-
-          <div class="kv">
-            <i data-lucide="user-round"></i>
-            <div>
-              <b>Cliente</b>
-              <span id="c"></span>
-            </div>
-          </div>
-
-          <div class="kv">
-            <i data-lucide="map-pin"></i>
-            <div>
-              <b>Ubicación</b>
-              <span id="ub"></span>
-            </div>
-          </div>
-
-          <button class="btn btn-primary full" id="ver" style="margin-top: 8px">
-            <i data-lucide="eye"></i> Ver
-          </button>
-        </div>
+        <!-- Acá el JS agrega una tarjeta por cada servicio pendiente -->
+        <div id="lista-pedidos"></div>
       </div>
     </div>
 
-    <div class="sheet" id="sh">
-      <div class="panel">
-        <div class="grab"></div>
-
+    <!-- Molde de tarjeta: se clona una vez por servicio -->
+    <template id="template-pedido">
+      <div class="card pedido">
         <div class="row">
-          <h3 id="sid"></h3>
-          <span id="sb"></span>
+          <b data-campo="servicio"></b>
+          <span data-campo="estado"></span>
         </div>
-
-        <p class="m" id="ssv"></p>
 
         <div class="kv">
           <i data-lucide="user-round"></i>
           <div>
             <b>Cliente</b>
-            <span id="sc"></span>
-          </div>
-        </div>
-
-        <div class="kv">
-          <i data-lucide="phone"></i>
-          <div>
-            <b>Teléfono</b>
-            <span id="st"></span>
+            <span data-campo="cliente"></span>
           </div>
         </div>
 
@@ -99,7 +66,49 @@
           <i data-lucide="map-pin"></i>
           <div>
             <b>Ubicación</b>
-            <span id="su"></span>
+            <span data-campo="ubicacion"></span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary full" data-accion="ver" style="margin-top: 8px">
+          <i data-lucide="eye"></i> Ver
+        </button>
+      </div>
+    </template>
+
+    <!-- Detalle del pedido (bottom sheet) -->
+    <div class="sheet" id="detalle-pedido">
+      <div class="panel">
+        <div class="grab"></div>
+
+        <div class="row">
+          <h3 data-campo="numero"></h3>
+          <span data-campo="estado"></span>
+        </div>
+
+        <p class="m" data-campo="servicio"></p>
+
+        <div class="kv">
+          <i data-lucide="user-round"></i>
+          <div>
+            <b>Cliente</b>
+            <span data-campo="cliente"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="phone"></i>
+          <div>
+            <b>Teléfono</b>
+            <span data-campo="telefono"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <b>Ubicación</b>
+            <span data-campo="ubicacion"></span>
           </div>
         </div>
 
@@ -107,7 +116,7 @@
           <i data-lucide="clock"></i>
           <div>
             <b>Horario</b>
-            <span id="sh2"></span>
+            <span data-campo="horario"></span>
           </div>
         </div>
 
@@ -115,7 +124,7 @@
           <i data-lucide="package"></i>
           <div>
             <b>Materiales</b>
-            <span id="sm"></span>
+            <span data-campo="materiales"></span>
           </div>
         </div>
 
@@ -123,7 +132,7 @@
           <i data-lucide="file-text"></i>
           <div>
             <b>Detalle</b>
-            <span id="sd"></span>
+            <span data-campo="descripcion"></span>
           </div>
         </div>
 
@@ -131,50 +140,15 @@
           <i data-lucide="map"></i>
         </div>
 
-        <button class="btn btn-ghost full" id="x" style="margin-top: 6px">
+        <button class="btn btn-ghost full" id="btn-cerrar-detalle" style="margin-top: 6px">
           <i data-lucide="x"></i> Cerrar
         </button>
       </div>
     </div>
 
+    <script>lucide.createIcons();</script>
     <script src="js/app.js"></script>
-    <script>
-      const P = PEDIDO;
-      const t = (i, v) => $(i).textContent = v;
-
-      t('#h', 'Hola ' + user());
-      t('#sv', P.servicio + ' ' + P.id);
-      t('#c', P.cliente);
-      t('#ub', P.ubicacion);
-      $('#b').innerHTML = st(estado());
-
-      t('#sid', 'Pedido ' + P.id);
-      t('#ssv', P.servicio);
-      $('#sb').innerHTML = st(estado());
-      t('#sc', P.cliente);
-      t('#st', P.telefono);
-      t('#su', P.ubicacion);
-      t('#sh2', P.horario);
-      t('#sm', P.materiales);
-      t('#sd', P.detalle);
-
-      $('#ver').onclick = () => $('#sh').classList.add('on');
-      $('#x').onclick = () => $('#sh').classList.remove('on');
-      $('#sh').onclick = (e) => {
-        if (e.target.id == 'sh') $('#sh').classList.remove('on');
-      };
-
-      const sw = $('#sw');
-      const sl = () => t('#sl', sw.checked ? 'Disponible' : 'No disponible');
-
-      sw.checked = L.sw != '0';
-      sl();
-
-      sw.onchange = () => {
-        L.sw = sw.checked ? 1 : 0;
-        sl();
-      };
-    </script>
+    <script src="js/tecnico.inicio.js"></script>
   </body>
 </html>
 

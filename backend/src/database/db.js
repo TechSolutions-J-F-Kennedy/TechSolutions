@@ -1,31 +1,28 @@
 // src/database/db.js
-import mysql from "mysql2/promise"; // 1. Importa la versión de mysql2 basada en Promesas (async/await)
-import dotenv from "dotenv";        // 2. Importa dotenv para leer el archivo de variables .env
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config();                     // 3. Ejecuta la lectura de variables de entorno
+// Forzar a dotenv a encontrar el archivo .env en la raíz del backend
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
-// 4. Crea y exporta la piscina de conexiones reutilizables
+// Imprimir en consola para depuración local
+console.log("🔌 Conectando a la base de datos en:", process.env.DB_HOST);
+
 const connection = mysql.createPool({
-    // Dirección IP o dominio donde se hospeda MariaDB ("localhost" si es en tu computadora)
-    host: process.env.DB_HOST || "localhost",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT) || 23461,
 
-    // Usuario registrado en la base de datos con permisos (por defecto en XAMPP/WAMP es "root")
-    user: process.env.DB_USER || "root",
+  ssl: {
+    rejectUnauthorized: false // Requiere Aiven para conexiones SSL
+  },
 
-    // Contraseña del usuario de la BD (en XAMPP/WAMP suele estar vacía "")
-    password: process.env.DB_PASSWORD || "",
-
-    // Nombre de la base de datos específica que contiene nuestras tablas
-    database: process.env.DB_NAME || "app_moviles",
-
-    // Si la piscina está llena, las nuevas peticiones esperan pacientemente a que se libere un socket (true)
-    waitForConnections: true,
-
-    // Cantidad máxima de conexiones TCP abiertas en simultáneo que mantendrá el pool en memoria
-    connectionLimit: 10,
-
-    // Límite máximo de peticiones en cola de espera cuando el pool está lleno (0 = cola ilimitada)
-    queueLimit: 0
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
 export default connection;

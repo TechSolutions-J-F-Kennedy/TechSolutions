@@ -21,6 +21,13 @@ const OTRAS = [
 
 const user = () => L.user || 'Pepe';
 const estado = () => L.estado || 'Pendiente';
+const usuarioGuardado = () => {
+  try {
+    return JSON.parse(L.getItem('usuario'));
+  } catch {
+    return null;
+  }
+};
 const CLS = {
   Pendiente: 'pending',
   Yendo: 'progress',
@@ -28,7 +35,7 @@ const CLS = {
   Finalizado: 'success'
 };
 const st = (e) => `<span class="status ${CLS[e]}">${e}</span>`;
-const NT = ['pendientes', 'herramientas', 'inicio', 'perfil', 'chat'];
+const NT = ['tareas', 'herramientas', 'inicio', 'perfil', 'chat'];
 
 function navFx(f, t, p, anim) {
   const n = document.querySelector('nav');
@@ -62,7 +69,7 @@ function navFx(f, t, p, anim) {
 
 const ORDER = {
   index: -1,
-  pendientes: 0,
+  tareas: 0,
   herramientas: 1,
   inicio: 2,
   pedido_actual: 2.5,
@@ -73,7 +80,7 @@ const ORDER = {
 const pg = (u) => ((u || location.pathname).split('/').pop().replace('.html', '')) || 'index';
 const cur = ORDER[pg()];
 
-if (!L.user && pg() != 'index') location.href = 'index.html';
+if (!L.user && !usuarioGuardado() && pg() != 'index') location.href = 'index.html';
 
 const EMB = location.search.includes('e=1');
 const HT = document.documentElement;
@@ -108,7 +115,7 @@ document.addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
   if (!document.body.classList.contains('login')) {
     const l = [
-      ['pendientes', 'clipboard-list', 'Tareas'],
+      ['tareas', 'clipboard-list', 'Tareas'],
       ['herramientas', 'wrench', 'Herram.'],
       ['inicio', 'house', 'Inicio'],
       ['perfil', 'user', 'Perfil'],
@@ -161,7 +168,7 @@ if (!EMB) {
 
   if (!document.body.classList.contains('login')) {
     (function () {
-      const T = ['pendientes', 'herramientas', 'inicio', 'perfil', 'chat'];
+      const T = ['tareas', 'herramientas', 'inicio', 'perfil', 'chat'];
       const pd = pg() == 'pedido_actual';
       const i = T.indexOf(pd ? 'inicio' : pg());
       const nbr = (d) => (pd ? (d > 0 ? 'inicio' : null) : T[i - d] || null);
