@@ -25,7 +25,7 @@ export const postSesion = async (req, res) => {
         }
 
         // Buscar el usuario en la BD
-        const usuarioEncontrado = await inicioSesion({ email, password });
+        const usuarioEncontrado = await inicioSesion({ email: email.trim(), password });
 
         // Si no se encontró ningún registro
         if (!usuarioEncontrado) {
