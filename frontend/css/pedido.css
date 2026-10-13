@@ -1,0 +1,33 @@
+.back-b {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--p100);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.back-b svg {
+  width: 16px;
+  height: 16px;
+}
+
+.head .row {
+  align-items: flex-end;
+}
+
+.opts {
+  display: grid;
+  gap: 10px;
+}
+
+.opts .btn {
+  justify-content: flex-start;
+}
+
+.panel h3 {
+  margin-bottom: 14px;
+}
+
