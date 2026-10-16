@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Tareas · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/pendientes.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="head">
+        <small>AGENDA</small>
+        <h1>Tareas</h1>
+      </div>
+
+      <div class="wrap">
+        <p class="m" id="mensaje-historial">Cargando historial...</p>
+
+        <section>
+          <h2>Hoy <b class="cnt" id="cantidad-hoy">0</b></h2>
+          <div class="card" id="tareas-hoy"></div>
+        </section>
+
+        <section>
+          <h2>Esta semana <b class="cnt" id="cantidad-semana">0</b></h2>
+          <div class="card" id="tareas-semana"></div>
+        </section>
+
+        <section>
+          <h2>Este mes <b class="cnt" id="cantidad-mes">0</b></h2>
+          <div class="card" id="tareas-mes"></div>
+        </section>
+
+        <section>
+          <h2>Anteriores <b class="cnt" id="cantidad-anteriores">0</b></h2>
+          <div class="card" id="tareas-anteriores"></div>
+        </section>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/tecnico.tareas.js"></script>
+  </body>
+</html>
