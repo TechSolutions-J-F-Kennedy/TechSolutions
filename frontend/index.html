@@ -13,7 +13,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -90,9 +90,12 @@
         <div class="field">
           <label for="reg-address">Dirección</label>
           <div class="input-icon-wrapper">
-            <i data-lucide="map-pin" class="input-icon"></i>
-            <input type="text" id="reg-address" placeholder="Calle y número" required>
+          <i data-lucide="map-pin" class="input-icon"></i>
+          <input type="text" id="reg-address" placeholder="Escribe tu calle y altura..." autocomplete="off">
+          <ul id="address-suggestions" class="suggestions-list"></ul>
           </div>
+          
+          
         </div>
 
 
@@ -116,7 +119,7 @@
         <div class="field">
           <label for="reg-confirm-password">Confirmar contraseña</label>
           <div class="input-icon-wrapper">
-            <i data-lucide="lock-check" class="input-icon"></i>
+            <i data-lucide="lock-keyhole" class="input-icon"></i>
             <input type="password" id="reg-confirm-password" placeholder="••••••••" required>
           </div>
         </div>
