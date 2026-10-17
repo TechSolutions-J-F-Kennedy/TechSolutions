@@ -1,28 +1,98 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-    <!-- Agrega esto en el <head> o antes de cerrar el <body> de tu HTML -->
-     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>alaska: inicio de sesion</title>
+    <title>Alaska | Lector QR</title>
     <link rel="stylesheet" href="alaska.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="qr-page">
     <header>
         <nav class="nav">
             <img src="newlogo.png" id="img_logo" alt="Logo">
             <h1>ALASKA</h1>
         </nav>
     </header>
-      <section>
-        
-      </section>
-    <footer><h3>bla bla blabla</h3></footer>
+
+    <main>
+        <section class="qr-section" aria-labelledby="qr-titulo">
+            <div class="qr-heading">
+                <p class="qr-eyebrow">ALASKA / ESCANEO</p>
+                <h2 id="qr-titulo">Escanea tu código QR</h2>
+                <p class="qr-lede">Usa la cámara para leer el código. El resultado aparecerá debajo del visor.</p>
+            </div>
+
+            <div class="qr-layout">
+                <div class="qr-reader-panel">
+                    <div class="qr-reader-label">
+                        <span class="qr-live-dot" aria-hidden="true"></span>
+                        <span>Lector en vivo</span>
+                    </div>
+                    <div id="reader" aria-label="Visor de cámara para escanear códigos QR"></div>
+                    <p id="resultado" class="qr-result" role="status" aria-live="polite">
+                        Esperando que permitas el acceso a la cámara.
+                    </p>
+                </div>
+
+                <aside class="qr-guide" aria-labelledby="qr-guia-titulo">
+                    <p class="qr-eyebrow">RÁPIDO Y SENCILLO</p>
+                    <h3 id="qr-guia-titulo">¿Cómo funciona?</h3>
+                    <ol class="qr-steps">
+                        <li>
+                            <span class="qr-step-number">01</span>
+                            <div>
+                                <h4>Permite la cámara</h4>
+                                <p>El navegador te pedirá permiso. Acéptalo para activar el visor.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="qr-step-number">02</span>
+                            <div>
+                                <h4>Enfoca el código</h4>
+                                <p>Coloca el QR dentro del recuadro y mantén el dispositivo quieto.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="qr-step-number">03</span>
+                            <div>
+                                <h4>Consulta el resultado</h4>
+                                <p>Al detectarlo, el contenido del código aparecerá bajo la cámara.</p>
+                            </div>
+                        </li>
+                    </ol>
+                    <p class="qr-tip">Consejo: busca buena iluminación y evita reflejos sobre el QR.</p>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <footer><h3>ALASKA · LECTOR QR</h3></footer>
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script>
+        const resultado = document.getElementById("resultado");
+
+        // Escanea hasta 10 veces por segundo y ajusta el recuadro al espacio disponible.
+        const lector = new Html5QrcodeScanner("reader", {
+            fps: 10,
+            qrbox: (ancho, alto) => {
+                const lado = Math.min(360, Math.floor(ancho * 0.8), Math.floor(alto * 0.8));
+                return { width: lado, height: lado };
+            }
+        });
+
+        // Cuando encuentra un QR, muestra el texto o enlace que contiene.
+        lector.render(
+            (textoLeido) => {
+                resultado.textContent = `Código detectado: ${textoLeido}`;
+            },
+            () => {
+                // Los fallos de lectura durante la búsqueda son normales; se espera otro fotograma.
+            }
+        );
+    </script>
 </body>
 </html>
