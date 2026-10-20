@@ -6,6 +6,8 @@ import usuariosRoutes from "./src/routes/usuario.routes.js";
 import tecnicosRoutes from "./src/routes/tecnico.routes.js";
 import serviciosRoutes from "./src/routes/servicio.routes.js"; 
 import pedidosRoutes from "./src/routes/pedido.routes.js"; 
+import mensajesRoutes from "./src/routes/mensaje.routes.js"; 
+
 
 dotenv.config();
 const app = express();
@@ -21,6 +23,7 @@ app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/tecnicos", tecnicosRoutes);
 app.use("/api", serviciosRoutes); // Montamos las rutas de servicios (/api/tecnicos/:id/disponibilidad y /api/servicios/solicitar)
 app.use("/api/pedidos", pedidosRoutes); 
+app.use("/api/mensajes", mensajesRoutes); 
 
 // 3. Servir el HTML principal en la raíz /
 app.get("/", (req, res) => {

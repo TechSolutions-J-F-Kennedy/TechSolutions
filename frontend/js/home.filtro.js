@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nombreReal = tecnico.nombre || tecnico.nombre_real || 'Técnico';
     const apellido = tecnico.apellido || '';
     
+    
     const iniciales = (nombreReal && apellido) 
       ? `${nombreReal[0]}${apellido[0]}`.toUpperCase() 
       : nombreReal.slice(0, 2).toUpperCase();
@@ -150,6 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="tech-avatar">${iniciales}</div>
           <div class="tech-details">
             <h4>${nombreReal} ${apellido}</h4>
+           <button class="btn btn-ghost btn-touch-sm" onclick="abrirChatConTecnico('${tecnico.id}', '${nombreReal} ${apellido}')">
+  <i data-lucide="message-square"></i> Enviar mensaje
+</button>
             <div class="rating">
               <span class="stars">★ ${tecnico.reputacion_promedio || '5.0'}</span>
               <small>(${categoriaNombre})</small>
@@ -249,6 +253,14 @@ function abrirModalReserva(id, nombre, iniciales, categoria) {
   
   if (window.lucide) lucide.createIcons();
 }
+
+
+function abrirChatConTecnico(tecnicoId, nombreCompleto) {
+  localStorage.setItem('chatActivo_tecnicoId', tecnicoId);
+  localStorage.setItem('chatActivo_nombreTecnico', nombreCompleto);
+  window.location.href = 'chat.html';
+}
+
 
 // Evento para cerrar modal
 const btnCloseModal = document.getElementById('btn-close-modal');
