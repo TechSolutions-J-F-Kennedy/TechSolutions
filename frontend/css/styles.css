@@ -302,3 +302,59 @@ button, input, select, textarea {
     padding: 24px 18px;
   }
 }
+
+/* ==========================================
+   AUTOCOMPLETADO DE DIRECCIONES (NOMINATIM)
+   ========================================== */
+
+/* 1. Contenedor del input con posicionamiento relativo */
+/* 1. Asegura que el contenedor sirva de ancla */
+.input-icon-wrapper {
+  position: relative !important;
+  width: 100%;
+}
+
+/* 2. Quita los puntos de viñeta por defecto del <ul> */
+#address-suggestions,
+.suggestions-list {
+  position: absolute !important;
+  top: 100% !important; /* Aparece pegado debajo del input */
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  background-color: #ffffff !important;
+  border: 1px solid var(--border, #e2e8f0) !important;
+  border-radius: 10px !important;
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  margin: 4px 0 0 0 !important;
+  padding: 0 !important;
+  list-style: none !important; /* Quita los viñetas de lista */
+  z-index: 1000 !important; /* Hace que flote por encima de los otros inputs */
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15) !important;
+}
+
+/* 3. Estilo para cada ítem de dirección */
+#address-suggestions li,
+.suggestions-list li {
+  padding: 10px 12px !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  color: var(--neutral-800, #1e293b) !important;
+  cursor: pointer !important;
+  border-bottom: 1px solid var(--border, #f1f5f9) !important;
+  text-align: left !important;
+}
+
+#address-suggestions li:last-child,
+.suggestions-list li:last-child {
+  border-bottom: none !important;
+}
+
+/* 4. Efecto al pasar el mouse */
+#address-suggestions li:hover,
+.suggestions-list li:hover {
+  background-color: var(--primary-50, #e8f1ff) !important;
+  color: var(--primary-600, #1d4ed8) !important;
+}

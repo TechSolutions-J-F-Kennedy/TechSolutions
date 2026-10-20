@@ -13,7 +13,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="servicios-styles.css">
+  <link rel="stylesheet" href="../css/servicios-styles.css">
 </head>
 <body>
 
@@ -204,18 +204,28 @@
 
     <!-- Navegación Inferior -->
     <nav class="bottom-nav">
-      <div class="nav-item" onclick="location.href='home.html'">
+      <a href="home.html" style="text-decoration: none; color: inherit;">
+      <div id="nav-btn-home" class="nav-item">
         <i data-lucide="house"></i>
         <span>Inicio</span>
       </div>
-      <div class="nav-item active">
+      </a>
+       <div class="nav-item active">
+        <i data-lucide="clipboard-list"></i>
+        <span>Solicitar</span>
+      </div>
+      <a href="pedidos.html" style="text-decoration: none; color: inherit;">
+      <div class="nav-item ">
         <i data-lucide="clipboard-list"></i>
         <span>Pedidos</span>
       </div>
-      <div class="nav-item">
-        <i data-lucide="user"></i>
-        <span>Perfil</span>
-      </div>
+      </a>
+      <a href="perfil.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item">
+          <i data-lucide="user"></i>
+          <span>Perfil</span>
+        </div>
+      </a>
     </nav>
 
   </div>

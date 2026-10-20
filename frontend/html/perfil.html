@@ -13,7 +13,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="perfil-styles.css">
+  <link rel="stylesheet" href="../css/perfil-styles.css">
 </head>
 <body>
 
@@ -205,24 +205,32 @@
 
     <!-- Navegación Inferior -->
     <nav class="bottom-nav">
-      <a href="home.html">
-      <div class="nav-item" onclick="location.href='home.html'">
+      <a href="home.html" style="text-decoration: none; color: inherit;">
+      <div id="nav-btn-home" class="nav-item">
         <i data-lucide="house"></i>
         <span>Inicio</span>
       </div>
       </a>
-      <div class="nav-item" onclick="location.href='servicios.html'">
+      <a href="servicios.html" style="text-decoration: none; color: inherit;">
+       <div class="nav-item">
+        <i data-lucide="clipboard-list"></i>
+        <span>Solicitar</span>
+      </div>
+      </a>
+      <a href="pedidos.html" style="text-decoration: none; color: inherit;">
+      <div class="nav-item ">
         <i data-lucide="clipboard-list"></i>
         <span>Pedidos</span>
       </div>
-      <div class="nav-item active">
-        <i data-lucide="user"></i>
-        <span>Perfil</span>
-      </div>
+      </a>
+        <div class="nav-item active">
+          <i data-lucide="user"></i>
+          <span>Perfil</span>
+        </div>
     </nav>
 
   </div>
 
-  <script src="js/datos.perfil.js"></script>
+  <script src="../js/datos.perfil.js"></script>
 </body>
 </html>

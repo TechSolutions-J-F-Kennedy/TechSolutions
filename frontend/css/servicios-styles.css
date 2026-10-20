@@ -373,3 +373,220 @@ button, input, select, textarea {
 
 .nav-item i { width: 18px; height: 18px; }
 .nav-item.active { color: var(--primary-600); }
+
+
+/* ==========================================
+   ESTILOS DE PEDIDOS INTEGRADOS AL :ROOT
+   ========================================== */
+
+.contenedor-pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Tarjeta del Pedido */
+.pedido-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Header */
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tech-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tech-avatar-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-500);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.tech-text-info h4 {
+  font-size: 14px;
+  color: var(--neutral-900);
+  margin-bottom: 2px;
+}
+
+.tech-text-info small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Badges de Estado usando la paleta oficial */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.status-badge i, 
+.status-badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+.badge-confirmed {
+  background: var(--secondary-100);
+  color: var(--secondary-700);
+}
+
+.badge-pending {
+  background: #FEF3C7;
+  color: #B45309;
+}
+
+.badge-canceled {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+.badge-finished {
+  background: var(--neutral-100);
+  color: var(--neutral-600);
+}
+
+/* Descripción */
+.pedido-desc {
+  font-size: 12px;
+  color: var(--neutral-700);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Detalles (Grid) */
+.pedido-details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--neutral-50);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.detail-group {
+  display: flex;
+  gap: 16px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--neutral-600);
+  font-weight: 600;
+}
+
+.detail-row i, 
+.detail-row svg {
+  width: 14px;
+  height: 14px;
+  color: var(--primary-500);
+  flex-shrink: 0;
+}
+
+/* Footer y Botones de Acción */
+.pedido-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.pedido-id {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--neutral-400);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pedido-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  border: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-action i, 
+.btn-action svg {
+  width: 13px;
+  height: 13px;
+}
+
+.btn-action.primary {
+  background: var(--primary-500);
+  color: white;
+}
+
+.btn-action.danger {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+.btn-action:active {
+  opacity: 0.8;
+}
+
+/* Estado Vacío */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.empty-state i, 
+.empty-state svg {
+  width: 36px;
+  height: 36px;
+  color: var(--neutral-400);
+}
+
+.empty-state p {
+  font-size: 12.5px;
+  margin: 0;
+}
