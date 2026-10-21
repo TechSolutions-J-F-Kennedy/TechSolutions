@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+const API_URL = location.port === '3000' ? '' : 'http://localhost:3000'; // '' = mismo servidor (sirve desde el celular)
 
 // Página de inicio según el rol guardado en la tabla Usuarios
 const INICIO_POR_ROL = {

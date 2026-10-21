@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+const API_URL = location.port === '3000' ? '' : 'http://localhost:3000'; // '' = mismo servidor (sirve desde el celular)
 
 function obtenerTecnico() {
     try {
