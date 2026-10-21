@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import tecnicosRoutes from "./src/routes/tecnico.routes.js";
 import usuariosRoutes from "./src/routes/usuario.routes.js";
 import chatRoutes from "./src/routes/chat.routes.js";
+import clientesRoutes from "./src/routes/cliente.routes.js";
 
 dotenv.config();
 const app = express();
@@ -16,10 +17,11 @@ const PORT = process.env.PORT || 3000;
 const carpetaFrontend = path.join(path.dirname(fileURLToPath(import.meta.url)), "../frontend");
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "1mb" })); // 1mb para poder recibir la foto de perfil
 app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/tecnicos", tecnicosRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/clientes", clientesRoutes);
 
 app.get("/api", (req, res) => {
     res.json({ status: "OK", mensaje: "Servidor Backend corriendo correctamente" });

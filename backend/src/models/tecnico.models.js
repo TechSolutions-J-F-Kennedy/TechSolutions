@@ -1,5 +1,6 @@
 //Define las funciones que ejecutan las consultas SQL en la base de datos:
 import connection from "../database/db.js";
+import { encriptarPassword } from "../utils/passwords.js";
 
 //Obtener todos los servicios de un técnico específico
 export const getTodosLosServiciosByTecnico = async ({tecnicoId }) => {
@@ -42,7 +43,7 @@ export const actualizarPerfilTecnico = async (tecnicoId, { nombre_real, apellido
 
     const passwordSql = password ? ', password = ?' : '';
     const valores = [nombre_real, apellido, email, telefono, categoria];
-    if (password) valores.push(password);
+    if (password) valores.push(await encriptarPassword(password));
     valores.push(tecnicoId);
 
     await connection.query(
@@ -76,5 +77,12 @@ export const getServicioDeTecnico = async (tecnicoId, servicioId) => {
 export const actualizarEstadoServicio = async (tecnicoId, servicioId, estado) => {
     const sql = 'UPDATE Servicios SET Estado = ? WHERE id = ? AND tecnico_id = ?';
     const [resultado] = await connection.query(sql, [estado, servicioId, tecnicoId]);
+    return resultado.affectedRows > 0;
+};
+
+//Guardar (o quitar con null) la foto del trabajo terminado de un servicio del técnico
+export const actualizarFotoServicio = async (tecnicoId, servicioId, foto) => {
+    const sql = 'UPDATE Servicios SET foto_final = ? WHERE id = ? AND tecnico_id = ?';
+    const [resultado] = await connection.query(sql, [foto, servicioId, tecnicoId]);
     return resultado.affectedRows > 0;
 };

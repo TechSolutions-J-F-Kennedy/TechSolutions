@@ -1,16 +1,11 @@
-import { getRolUsuario, getConversacionesByUsuario, getMensajesConversacion, crearMensaje } from "../models/chat.models.js";
+import { getRolUsuario, getConversacionesByUsuario, getMensajesConversacion, crearMensaje, chatAceptaFotos, getImagenMensaje } from "../models/chat.models.js";
+import { enviarImagenBase64 } from "./usuario.controllers.js";
+import { enviarEvento, abrirConexion } from "../utils/tiempoReal.js";
+
+//Foto del chat: JPG/PNG/WEBP en base64 de hasta ~375 KB (el frontend la achica antes)
+const FOTO_VALIDA = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
 
 const ROLES_CHAT = ["tecnico", "usuario"];
-
-//Conexiones abiertas en tiempo real: id de usuario -> respuestas (una por pestaña abierta)
-const conexiones = new Map();
-
-const enviarEvento = (usuarioId, evento, datos) => {
-    const abiertas = conexiones.get(String(usuarioId));
-    if (!abiertas) return;
-    const texto = `event: ${evento}\ndata: ${JSON.stringify(datos)}\n\n`;
-    abiertas.forEach((res) => res.write(texto));
-};
 
 //A partir de dos ids, saber quién es el técnico y quién el usuario
 const armarPareja = async (idA, idB) => {
@@ -20,30 +15,8 @@ const armarPareja = async (idA, idB) => {
     return null;
 };
 
-//GET /api/chat/:id/tiempo-real  (Server-Sent Events)
-export const getTiempoReal = (req, res) => {
-    const id = String(req.params.id);
-
-    res.writeHead(200, {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive"
-    });
-    res.write("event: conectado\ndata: {}\n\n");
-
-    if (!conexiones.has(id)) conexiones.set(id, new Set());
-    conexiones.get(id).add(res);
-
-    //Mensaje vacío cada 25 segundos para que la conexión no se corte
-    const latido = setInterval(() => res.write(": ping\n\n"), 25000);
-
-    req.on("close", () => {
-        clearInterval(latido);
-        const abiertas = conexiones.get(id);
-        abiertas.delete(res);
-        if (abiertas.size === 0) conexiones.delete(id);
-    });
-};
+//GET /api/chat/:id/tiempo-real  (Server-Sent Events: chat y avisos de pedidos)
+export const getTiempoReal = (req, res) => abrirConexion(req.params.id, req, res);
 
 export const getConversaciones = async (req, res) => {
     try {
@@ -76,10 +49,18 @@ export const getMensajes = async (req, res) => {
 
 export const postMensaje = async (req, res) => {
     try {
-        const { emisor_id, receptor_id, mensaje } = req.body;
+        const { emisor_id, receptor_id, imagen } = req.body;
+        const mensaje = typeof req.body.mensaje === "string" ? req.body.mensaje.trim() : "";
 
-        if (!emisor_id || !receptor_id || typeof mensaje !== "string" || !mensaje.trim() || mensaje.length > 1000) {
+        //Se puede mandar texto, una foto, o las dos cosas
+        if (!emisor_id || !receptor_id || mensaje.length > 1000 || (!mensaje && !imagen)) {
             return res.status(400).json({ error: "Revisá el emisor, el receptor y el mensaje (máx. 1000 caracteres)" });
+        }
+        if (imagen && (typeof imagen !== "string" || imagen.length > 500000 || !FOTO_VALIDA.test(imagen))) {
+            return res.status(400).json({ error: "La foto tiene que ser una imagen JPG, PNG o WEBP de menos de 375 KB" });
+        }
+        if (imagen && !(await chatAceptaFotos())) {
+            return res.status(400).json({ error: "Todavía no se pueden mandar fotos: falta la columna 'imagen' en la tabla Mensajes" });
         }
 
         const pareja = await armarPareja(emisor_id, receptor_id);
@@ -91,7 +72,8 @@ export const postMensaje = async (req, res) => {
             usuario_id: pareja.usuario_id,
             tecnico_id: pareja.tecnico_id,
             remitente: pareja.rolA,
-            mensaje: mensaje.trim()
+            mensaje,
+            imagen: imagen || null
         });
 
         //Avisar al instante a los dos (el que envía puede tener otra pestaña abierta)
@@ -102,5 +84,15 @@ export const postMensaje = async (req, res) => {
     } catch (error) {
         console.error("Error al enviar el mensaje:", error);
         return res.status(500).json({ error: "Error al guardar el mensaje" });
+    }
+};
+
+//GET /api/chat/mensajes/:mensajeId/imagen -> la foto de un mensaje
+export const getImagen = async (req, res) => {
+    try {
+        enviarImagenBase64(res, await getImagenMensaje(req.params.mensajeId));
+    } catch (error) {
+        console.error("Error al enviar la foto del mensaje:", error);
+        res.status(404).end();
     }
 };

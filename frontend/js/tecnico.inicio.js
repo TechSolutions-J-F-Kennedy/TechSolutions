@@ -1,4 +1,4 @@
-const API_URL = location.port === '3000' ? '' : 'http://localhost:3000'; // '' = mismo servidor (sirve desde el celular)
+const API_URL = location.protocol === 'file:' || location.port === '5500' ? 'http://localhost:3000' : ''; // '' = el mismo servidor que entregó la página (compu, celu o internet)
 
 function obtenerTecnico() {
     try {
@@ -44,6 +44,9 @@ if (!tecnico) {
         panelDetalle.querySelector('[data-campo="descripcion"]').innerHTML = servicio.descripcion || 'No disponible';
         document.getElementById('btn-atender')
             .setAttribute('href', `pedido_actual.html?id=${encodeURIComponent(servicio.id)}`);
+        prepararAccionesPedido(servicio, {
+            chat: 'btn-chatear', llegar: 'btn-llegar', llamar: 'btn-llamar', mapa: 'mapa-pedido'
+        });
         panelDetalle.classList.add('on');
     }
 
@@ -161,5 +164,80 @@ if (!tecnico) {
         }
     });
 
+    /* ===== Pedidos nuevos de clientes cercanos ===== */
+    const listaCerca = document.getElementById('lista-cerca');
+    const mensajeCerca = document.getElementById('mensaje-cerca');
+    const esc = (s) =>
+        String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    function hace(fecha) {
+        const minutos = Math.max(0, Math.round((Date.now() - fecha) / 60000));
+        if (minutos < 1) return 'recién';
+        if (minutos < 60) return `hace ${minutos} min`;
+        const horas = Math.round(minutos / 60);
+        return horas < 24 ? `hace ${horas} h` : new Date(fecha).toLocaleDateString('es-AR');
+    }
+
+    async function cargarPedidosCerca() {
+        try {
+            const respuesta = await fetch(`${API_URL}/api/tecnicos/${encodeURIComponent(tecnico.id)}/solicitudes-cercanas`);
+            const datos = await respuesta.json();
+            if (!respuesta.ok) throw new Error(datos.error || 'No se pudieron cargar los pedidos cercanos.');
+
+            mensajeCerca.textContent = datos.payload.length ? '' : 'No hay pedidos nuevos cerca tuyo.';
+            listaCerca.innerHTML = datos.payload.map((s) => `
+                <div class="card pedido">
+                  <div class="row">
+                    <b>${esc(s.cliente || s.cliente_usuario || 'Cliente')}</b>
+                    <span class="status progress">a ${Number(s.distancia_km).toLocaleString('es-AR')} km</span>
+                  </div>
+                  <p class="m" style="margin: 8px 0">${esc(s.descripcion)}</p>
+                  <div class="kv">
+                    <i data-lucide="map-pin"></i>
+                    <div>
+                      <b>Ubicación · ${hace(s.fecha)}</b>
+                      <span>${esc(s.direccion)}</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary full" data-aceptar="${s.id}" style="margin-top: 8px">
+                    <i data-lucide="check"></i> Aceptar pedido
+                  </button>
+                </div>`).join('');
+            lucide.createIcons();
+        } catch (error) {
+            console.error('Error al cargar los pedidos cercanos:', error);
+            mensajeCerca.textContent = 'No se pudieron cargar los pedidos cercanos.';
+        }
+    }
+
+    listaCerca.addEventListener('click', async (evento) => {
+        const boton = evento.target.closest('[data-aceptar]');
+        if (!boton) return;
+        if (!window.confirm('¿Aceptás este pedido? Vas a quedar asignado como su técnico.')) return;
+
+        boton.disabled = true;
+        try {
+            const respuesta = await fetch(
+                `${API_URL}/api/tecnicos/${encodeURIComponent(tecnico.id)}/solicitudes/${encodeURIComponent(boton.dataset.aceptar)}/aceptar`,
+                { method: 'POST' }
+            );
+            const datos = await respuesta.json();
+            if (!respuesta.ok) throw new Error(datos.error || 'No se pudo aceptar el pedido.');
+            window.location.href = `pedido_actual.html?id=${encodeURIComponent(datos.servicio_id)}`;
+        } catch (error) {
+            console.error('Error al aceptar el pedido:', error);
+            window.alert(error.message || 'No se pudo aceptar el pedido.');
+            cargarPedidosCerca();
+        }
+    });
+
+    // Tiempo real: cuando entra un pedido cerca, o cuando otro técnico lo toma, se actualiza la lista
+    if (!EMB) {
+        const avisos = new EventSource(`${API_URL}/api/chat/${encodeURIComponent(tecnico.id)}/tiempo-real`);
+        avisos.addEventListener('solicitud-nueva', cargarPedidosCerca);
+        avisos.addEventListener('solicitud-tomada', cargarPedidosCerca);
+    }
+
+    cargarPedidosCerca();
     cargarServiciosPendientes();
 }

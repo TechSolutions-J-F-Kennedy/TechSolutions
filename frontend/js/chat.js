@@ -1,4 +1,4 @@
-const API_URL = location.port === '3000' ? '' : 'http://localhost:3000'; // '' = mismo servidor (sirve desde el celular)
+const API_URL = location.protocol === 'file:' || location.port === '5500' ? 'http://localhost:3000' : ''; // '' = el mismo servidor que entregó la página (compu, celu o internet)
 
 function obtenerUsuarioChat() {
     try {
@@ -19,6 +19,7 @@ if (!yo) {
     let conversaciones = [];
     let mensajes = [];
     let abierto = null;
+    let abrirAlCargar = new URLSearchParams(location.search).get('con');
 
     const p2 = (n) => String(n).padStart(2, '0');
     const hm = (t) => {
@@ -45,6 +46,9 @@ if (!yo) {
     const nombreDe = (c) => [c.nombre_real, c.apellido].filter(Boolean).join(' ') || c.nombre || 'Usuario';
     const inicialesDe = (c) =>
         nombreDe(c).split(' ').filter(Boolean).slice(0, 2).map((p) => p[0].toUpperCase()).join('');
+    // Iniciales de fondo y, encima, la foto de perfil (si no tiene foto, la imagen se borra sola)
+    const avatarDe = (c) =>
+        `${esc(inicialesDe(c))}<img src="${API_URL}/api/usuarios/${encodeURIComponent(c.id)}/foto/imagen" alt="" onerror="this.remove()">`;
     const etiquetaRol = (c) => (c.rol === 'usuario' ? ' · Cliente' : c.rol === 'tecnico' ? ' · Técnico' : '');
     // Mensajes propios: los que mandé con mi rol (tecnico o usuario)
     const esMio = (remitente) => remitente === yo.rol;
@@ -68,14 +72,14 @@ if (!yo) {
                       const mio = esMio(c.ultimo_remitente);
                       return `
                         <div class="row2" data-id="${c.id}">
-                          <div class="av">${esc(inicialesDe(c))}</div>
+                          <div class="av">${avatarDe(c)}</div>
                           <div class="mid">
                             <div class="r">
                               <b>${esc(nombreDe(c) + etiquetaRol(c))}</b>
                               <small class="${c.no_leidos ? 'u' : ''}">${when(c.ultima_fecha)}</small>
                             </div>
                             <div class="r">
-                              <span class="pv">${mio ? '<i data-lucide="check"></i>' : ''}${esc(c.ultimo_mensaje || 'Empezá la conversación')}</span>
+                              <span class="pv">${mio ? '<i data-lucide="check"></i>' : ''}${esc(c.ultimo_mensaje || (c.ultimo_tiene_imagen ? '📷 Foto' : 'Empezá la conversación'))}</span>
                               ${c.no_leidos ? `<em>${c.no_leidos}</em>` : ''}
                             </div>
                           </div>
@@ -99,7 +103,10 @@ if (!yo) {
                 pd = d;
             }
             const mio = esMio(m.remitente);
-            h += `<div class="b ${mio ? 'me' : 'th'}">${esc(m.mensaje)}<small>${hm(m.fecha)}${mio ? '<i data-lucide="check"></i>' : ''}</small></div>`;
+            const foto = m.tiene_imagen
+                ? `<a href="${API_URL}/api/chat/mensajes/${m.id}/imagen" target="_blank" rel="noopener"><img class="foto-msj" src="${API_URL}/api/chat/mensajes/${m.id}/imagen" alt="Foto" loading="lazy"></a>`
+                : '';
+            h += `<div class="b ${mio ? 'me' : 'th'}">${foto}${esc(m.mensaje)}<small>${hm(m.fecha)}${mio ? '<i data-lucide="check"></i>' : ''}</small></div>`;
         });
 
         $('#cm').innerHTML = h;
@@ -112,6 +119,12 @@ if (!yo) {
             const datos = await pedir(`/api/chat/${encodeURIComponent(yo.id)}/conversaciones`);
             conversaciones = datos.payload;
             list();
+
+            // chat.html?con=ID abre directo esa conversación (ej: desde el detalle de un pedido)
+            if (abrirAlCargar && !EMB) {
+                openC(abrirAlCargar);
+                abrirAlCargar = null;
+            }
         } catch (error) {
             console.error('Error al cargar los chats:', error);
             $('#ls').innerHTML = '<p class="m" style="text-align:center;margin-top:30px">No se pudieron cargar los chats</p>';
@@ -124,7 +137,7 @@ if (!yo) {
         abierto = id;
         c.no_leidos = 0;
 
-        $('#cav').textContent = inicialesDe(c);
+        $('#cav').innerHTML = avatarDe(c);
         $('#cn').textContent = nombreDe(c) + etiquetaRol(c);
         $('#cs').textContent = 'cargando…';
         mensajes = [];
@@ -173,6 +186,7 @@ if (!yo) {
         }
 
         c.ultimo_mensaje = m.mensaje;
+        c.ultimo_tiene_imagen = m.tiene_imagen;
         c.ultimo_remitente = m.remitente;
         c.ultima_fecha = m.fecha;
         conversaciones = [c, ...conversaciones.filter((x) => x !== c)];
@@ -197,6 +211,30 @@ if (!yo) {
             if (abierto) openC(abierto);
         });
     }
+
+    // Mandar una foto: se achica (lado más largo 1024px) y se envía como un mensaje
+    $('#foto-chat').addEventListener('change', async (evento) => {
+        const archivo = evento.target.files[0];
+        evento.target.value = '';
+        if (!archivo || !abierto) return;
+
+        $('#cs').textContent = 'enviando foto…';
+        try {
+            const imagen = await achicarImagen(archivo, 1024, false);
+            await pedir('/api/chat/mensajes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ emisor_id: yo.id, receptor_id: abierto, mensaje: $('#t').value.trim(), imagen })
+            });
+            $('#t').value = '';
+        } catch (error) {
+            console.error('Error al enviar la foto:', error);
+            window.alert(error.message || 'No se pudo enviar la foto.');
+        } finally {
+            const c = conversaciones.find((x) => x.id == abierto);
+            $('#cs').textContent = c?.rol === 'usuario' ? 'cliente' : c?.rol || '';
+        }
+    });
 
     $('#ls').onclick = (e) => {
         const r = e.target.closest('.row2');

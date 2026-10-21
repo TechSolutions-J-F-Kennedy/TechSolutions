@@ -16,6 +16,13 @@
     <link rel="stylesheet" href="css/pendientes.css">
     <link rel="stylesheet" href="css/inicio.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
   </head>
 
   <body>
@@ -38,6 +45,11 @@
       </div>
 
       <div class="wrap">
+        <h2>Pedidos cerca tuyo</h2>
+        <p class="m" id="mensaje-cerca">Buscando pedidos cerca...</p>
+        <!-- Acá el JS agrega los pedidos nuevos de clientes cercanos (se actualiza solo) -->
+        <div id="lista-cerca"></div>
+
         <h2>Servicios Pendientes</h2>
         <p id="mensaje-lista"></p>
 
@@ -136,9 +148,19 @@
           </div>
         </div>
 
-        <div class="map">
-          <i data-lucide="map"></i>
+        <div class="acciones">
+          <a class="btn btn-ghost" id="btn-chatear" href="chat.html">
+            <i data-lucide="message-circle"></i> Chatear
+          </a>
+          <a class="btn btn-ghost" id="btn-llegar" href="#" target="_blank" rel="noopener">
+            <i data-lucide="navigation"></i> Cómo llegar
+          </a>
+          <a class="btn btn-ghost" id="btn-llamar" href="#">
+            <i data-lucide="phone"></i> Llamar
+          </a>
         </div>
+
+        <iframe class="mapa" id="mapa-pedido" title="Mapa del pedido" loading="lazy"></iframe>
 
         <a class="btn btn-primary full" id="btn-atender" href="pedido_actual.html" style="margin-top: 6px">
           <i data-lucide="play"></i> Atender pedido

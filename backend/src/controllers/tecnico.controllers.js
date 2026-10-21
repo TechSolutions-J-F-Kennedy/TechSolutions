@@ -1,4 +1,7 @@
-import { getTodosLosServiciosByTecnico, getServiciosPendientesByTecnico, actualizarDisponibilidadTecnico, actualizarPerfilTecnico, getServicioDeTecnico, actualizarEstadoServicio } from "../models/tecnico.models.js";
+import { getTodosLosServiciosByTecnico, getServiciosPendientesByTecnico, actualizarDisponibilidadTecnico, actualizarPerfilTecnico, getServicioDeTecnico, actualizarEstadoServicio, actualizarFotoServicio } from "../models/tecnico.models.js";
+import connection from "../database/db.js";
+import { getSolicitudesCercanas, aceptarSolicitud, getTecnicosCercanosDeSolicitud } from "../models/solicitud.models.js";
+import { enviarEvento } from "../utils/tiempoReal.js";
 
 export const getServiciosPendientes = async (req, res) => {
     try {
@@ -119,5 +122,62 @@ export const patchEstadoServicio = async (req, res) => {
     } catch (error) {
         console.error("Error al actualizar el estado del servicio:", error);
         return res.status(500).json({ error: "Error al actualizar el estado" });
+    }
+};
+
+//Foto del trabajo terminado: imagen JPG/PNG/WEBP en base64, de hasta ~375 KB
+export const putFotoServicio = async (req, res) => {
+    try {
+        const { id, servicioId } = req.params;
+        const { foto } = req.body;
+
+        if (foto !== null && (typeof foto !== "string" || foto.length > 500000 || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(foto))) {
+            return res.status(400).json({ error: "La foto tiene que ser una imagen JPG, PNG o WEBP de menos de 375 KB" });
+        }
+
+        const actualizado = await actualizarFotoServicio(id, servicioId, foto);
+        if (!actualizado) {
+            return res.status(404).json({ error: "No se encontró el servicio" });
+        }
+        return res.json({ foto });
+    } catch (error) {
+        console.error("Error al guardar la foto del trabajo:", error);
+        return res.status(500).json({ error: "Error al guardar la foto del trabajo" });
+    }
+};
+
+//GET /api/tecnicos/:id/solicitudes-cercanas -> pedidos sin técnico cerca de su taller
+export const getSolicitudesCerca = async (req, res) => {
+    try {
+        return res.json({ payload: await getSolicitudesCercanas(req.params.id) });
+    } catch (error) {
+        console.error("Error al obtener los pedidos cercanos:", error);
+        return res.status(500).json({ error: "Error al consultar los pedidos cercanos" });
+    }
+};
+
+//POST /api/tecnicos/:id/solicitudes/:solicitudId/aceptar -> el técnico se queda con el pedido
+export const postAceptarSolicitud = async (req, res) => {
+    try {
+        const { id, solicitudId } = req.params;
+        const [tecnicos] = await connection.query("SELECT id FROM Usuarios WHERE id = ? AND rol = 'tecnico'", [id]);
+        if (tecnicos.length === 0) {
+            return res.status(404).json({ error: "No se encontró el técnico" });
+        }
+
+        const servicio = await aceptarSolicitud(Number(id), solicitudId);
+        if (!servicio) {
+            return res.status(409).json({ error: "Otro técnico ya aceptó este pedido" });
+        }
+
+        //Avisar: a los técnicos cercanos que se lo saquen de la lista, y al cliente que ya tiene técnico
+        const cercanos = await getTecnicosCercanosDeSolicitud(solicitudId);
+        cercanos.forEach((t) => enviarEvento(t.id, "solicitud-tomada", { id: Number(solicitudId) }));
+        enviarEvento(servicio.cliente_id, "pedido-asignado", { solicitud_id: Number(solicitudId), servicio_id: servicio.id });
+
+        return res.status(201).json({ servicio_id: servicio.id });
+    } catch (error) {
+        console.error("Error al aceptar el pedido:", error);
+        return res.status(500).json({ error: "Error al aceptar el pedido" });
     }
 };

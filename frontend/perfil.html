@@ -16,14 +16,28 @@
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/perfil.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
   </head>
 
   <body>
     <div class="app">
       <div class="head hero">
-        <div class="av" id="av"></div>
+        <div class="av-wrap">
+          <div class="av" id="av"></div>
+          <label class="av-cam" for="foto-input" title="Cambiar foto de perfil">
+            <i data-lucide="camera"></i>
+          </label>
+          <input type="file" id="foto-input" accept="image/*" hidden />
+        </div>
+        <button class="av-quitar" id="quitar-foto" type="button" hidden>Quitar foto</button>
         <h1 id="n"></h1>
-        <span class="chip"><i data-lucide="hard-hat"></i> Técnico</span>
+        <span class="chip" id="chip-rol"><i data-lucide="hard-hat"></i> Técnico</span>
       </div>
 
       <div class="wrap">
@@ -44,7 +58,7 @@
             </div>
           </div>
 
-          <div class="kv">
+          <div class="kv" id="fila-categoria">
             <i data-lucide="layers"></i>
             <div>
               <b>Categoría</b>
@@ -85,7 +99,7 @@
             <input class="input" id="email" type="email" autocomplete="email" required />
           </div>
 
-          <div class="field">
+          <div class="field" id="campo-categoria">
             <label>Categoría</label>
             <input class="input" id="categoria" required />
           </div>
@@ -139,6 +153,7 @@
     </div>
 
     <script src="js/app.js"></script>
+    <script src="js/fotos.js"></script>
     <script src="js/perfil.js"></script>
   </body>
 </html>
