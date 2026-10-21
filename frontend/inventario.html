@@ -1,34 +1,75 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Tabla desde JSON</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventario</title>
     <style>
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        h2 {
+            margin-bottom: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        th, td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eaf1ff;
+        }
+
+        .error {
+            color: #b91c1c;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 8px;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-    <h2>Registros desde un archivo JSON</h2>
+    <h2>Inventario - productos_stock</h2>
 
     <table>
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Código SKU</th>
+                <th>Código QR</th>
                 <th>Nombre</th>
-                <th>codigo</th>
+                <th>Descripción</th>
+                <th>Stock actual</th>
+                <th>Stock mínimo</th>
             </tr>
         </thead>
         <tbody id="cuerpo-tabla">
-            <!-- Los datos se inyectarán aquí mediante JavaScript -->
+            <tr>
+                <td colspan="7">Cargando productos...</td>
+            </tr>
         </tbody>
     </table>
 
-    <script src="stock.js">
-        
-    </script>
+    <div id="error-box" class="error"></div>
 
+    <script src="./js/stock.js"></script>
 </body>
 </html>
