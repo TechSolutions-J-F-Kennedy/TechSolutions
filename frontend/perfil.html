@@ -115,6 +115,34 @@
           </div>
         </div>
 
+        <!-- Solo técnicos: desde acá se calculan los pedidos cercanos que le llegan -->
+        <div class="card zona" id="zona" hidden>
+          <div class="kv">
+            <i data-lucide="map-pin"></i>
+            <div>
+              <b>Mi zona de trabajo</b>
+              <span id="zona-direccion">Cargando...</span>
+            </div>
+          </div>
+          <iframe class="mapa" id="zona-mapa" title="Mi zona de trabajo" loading="lazy" hidden></iframe>
+          <p class="m" id="zona-ayuda">Te llegan los pedidos de clientes que estén a 15 km o menos de este lugar.</p>
+
+          <div class="zona-botones">
+            <button class="btn btn-primary" id="zona-gps" type="button">
+              <i data-lucide="locate-fixed"></i> Usar mi ubicación
+            </button>
+            <button class="btn btn-ghost" id="zona-escribir" type="button">
+              <i data-lucide="pencil"></i> Escribir dirección
+            </button>
+          </div>
+
+          <form class="zona-form" id="zona-form" hidden>
+            <input class="input" id="zona-input" maxlength="200" autocomplete="street-address"
+              placeholder="Calle, número y localidad (ej: Maipú 320, Banfield)">
+            <button class="btn btn-primary" type="submit">Guardar</button>
+          </form>
+        </div>
+
         <div class="btns" id="bv">
           <button class="btn btn-ghost" id="ed">
             <i data-lucide="pencil"></i> Editar

@@ -1,7 +1,8 @@
-import { getTodosLosServiciosByTecnico, getServiciosPendientesByTecnico, actualizarDisponibilidadTecnico, actualizarPerfilTecnico, getServicioDeTecnico, actualizarEstadoServicio, actualizarFotoServicio } from "../models/tecnico.models.js";
+import { getTodosLosServiciosByTecnico, getServiciosPendientesByTecnico, actualizarDisponibilidadTecnico, actualizarPerfilTecnico, getServicioDeTecnico, actualizarEstadoServicio, actualizarFotoServicio, getUbicacionTecnico, guardarUbicacionTecnico } from "../models/tecnico.models.js";
 import connection from "../database/db.js";
 import { getSolicitudesCercanas, aceptarSolicitud, getTecnicosCercanosDeSolicitud } from "../models/solicitud.models.js";
 import { enviarEvento } from "../utils/tiempoReal.js";
+import { geocodificar, direccionDesdeCoordenadas, coordenadasValidas } from "../utils/geo.js";
 
 export const getServiciosPendientes = async (req, res) => {
     try {
@@ -179,5 +180,54 @@ export const postAceptarSolicitud = async (req, res) => {
     } catch (error) {
         console.error("Error al aceptar el pedido:", error);
         return res.status(500).json({ error: "Error al aceptar el pedido" });
+    }
+};
+
+//GET /api/tecnicos/:id/ubicacion -> dónde trabaja el técnico (de acá se calculan los pedidos cercanos)
+export const getUbicacion = async (req, res) => {
+    try {
+        return res.json({ payload: await getUbicacionTecnico(req.params.id) });
+    } catch (error) {
+        console.error("Error al obtener la ubicación del técnico:", error);
+        return res.status(500).json({ error: "Error al consultar tu ubicación" });
+    }
+};
+
+//PUT /api/tecnicos/:id/ubicacion
+//Body: { latitud, longitud } (GPS del celular) o { direccion } (escrita a mano)
+export const putUbicacion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [tecnicos] = await connection.query("SELECT id FROM Usuarios WHERE id = ? AND rol = 'tecnico'", [id]);
+        if (tecnicos.length === 0) {
+            return res.status(404).json({ error: "No se encontró el técnico" });
+        }
+
+        let lugar;
+        if (req.body.latitud !== undefined && req.body.longitud !== undefined) {
+            const latitud = Number(req.body.latitud);
+            const longitud = Number(req.body.longitud);
+            if (!coordenadasValidas(latitud, longitud)) {
+                return res.status(400).json({ error: "Esa ubicación no parece estar en Argentina" });
+            }
+            const direccion = (await direccionDesdeCoordenadas(latitud, longitud)) || `${latitud}, ${longitud}`;
+            lugar = { direccion, latitud, longitud };
+        } else {
+            const escrita = typeof req.body.direccion === "string" ? req.body.direccion.trim() : "";
+            if (!escrita || escrita.length > 200) {
+                return res.status(400).json({ error: "Escribí tu dirección (calle, número y localidad)" });
+            }
+            const encontrado = await geocodificar(escrita);
+            if (!encontrado) {
+                return res.status(400).json({ error: "No encontramos esa dirección en el mapa. Probá agregando la localidad (ej: Maipú 320, Banfield)" });
+            }
+            lugar = encontrado;
+        }
+
+        lugar.direccion = lugar.direccion.slice(0, 255);
+        return res.json({ payload: await guardarUbicacionTecnico(id, lugar) });
+    } catch (error) {
+        console.error("Error al guardar la ubicación del técnico:", error);
+        return res.status(500).json({ error: "Error al guardar tu ubicación" });
     }
 };

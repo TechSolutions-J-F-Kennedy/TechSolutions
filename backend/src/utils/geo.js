@@ -31,3 +31,27 @@ export const geocodificar = async (direccion) => {
     if (!lugar) return null;
     return { latitud: Number(lugar.lat), longitud: Number(lugar.lon), direccion: lugar.display_name };
 };
+
+//Al revés: a partir de coordenadas (por ejemplo, el GPS del celular) obtener la dirección escrita.
+//Devuelve el texto de la dirección o null si no la encuentra.
+export const direccionDesdeCoordenadas = async (latitud, longitud) => {
+    const url = "https://nominatim.openstreetmap.org/reverse?" + new URLSearchParams({
+        lat: String(latitud),
+        lon: String(longitud),
+        format: "json",
+        zoom: "18",
+        "accept-language": "es"
+    });
+    const respuesta = await fetch(url, {
+        headers: { "User-Agent": "KennedyTechSolutions/1.0 (proyecto escolar)" },
+        signal: AbortSignal.timeout(8000)
+    });
+    if (!respuesta.ok) throw new Error(`OpenStreetMap respondió ${respuesta.status}`);
+    const lugar = await respuesta.json();
+    return lugar?.display_name || null;
+};
+
+//¿Las coordenadas caen dentro de Argentina (aprox.)? Sirve para descartar datos inventados.
+export const coordenadasValidas = (latitud, longitud) =>
+    Number.isFinite(latitud) && Number.isFinite(longitud) &&
+    latitud >= -56 && latitud <= -21 && longitud >= -74 && longitud <= -53;

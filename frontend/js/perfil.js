@@ -191,6 +191,97 @@ if (!tecnico || !['tecnico', 'usuario'].includes(tecnico.rol) || !tecnico.id) {
         }
     }
 
+    /* ===== Mi zona de trabajo (solo técnicos) ===== */
+    const urlUbicacion = `${API_URL}/api/tecnicos/${encodeURIComponent(tecnico.id)}/ubicacion`;
+
+    function mostrarUbicacion(ubicacion) {
+        const tiene = ubicacion && ubicacion.latitud !== null && ubicacion.longitud !== null;
+        campo('zona-direccion').textContent = tiene
+            ? ubicacion.direccion_completa
+            : 'Todavía no marcaste dónde trabajás: no te van a llegar pedidos cercanos.';
+        campo('zona-mapa').hidden = !tiene;
+        if (tiene) {
+            campo('zona-mapa').src =
+                `https://maps.google.com/maps?q=${encodeURIComponent(`${ubicacion.latitud},${ubicacion.longitud}`)}&z=15&output=embed`;
+        }
+    }
+
+    async function guardarUbicacion(datos, boton) {
+        boton.disabled = true;
+        campo('zona-direccion').textContent = 'Buscando en el mapa...';
+        try {
+            const respuesta = await fetch(urlUbicacion, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
+            const resultado = await respuesta.json();
+            if (!respuesta.ok) throw new Error(resultado.error || 'No se pudo guardar tu ubicación.');
+            mostrarUbicacion(resultado.payload);
+            campo('zona-form').hidden = true;
+        } catch (error) {
+            console.error('Error al guardar la ubicación:', error);
+            window.alert(error.message || 'No se pudo guardar tu ubicación.');
+            cargarUbicacion();
+        } finally {
+            boton.disabled = false;
+        }
+    }
+
+    async function cargarUbicacion() {
+        try {
+            const respuesta = await fetch(urlUbicacion);
+            const datos = await respuesta.json();
+            if (!respuesta.ok) throw new Error(datos.error);
+            mostrarUbicacion(datos.payload);
+        } catch (error) {
+            console.error('No se pudo cargar la ubicación:', error);
+            campo('zona-direccion').textContent = 'No se pudo cargar tu ubicación.';
+        }
+    }
+
+    // GPS del celular: la ubicación más exacta (necesita https o localhost, y permiso del usuario)
+    campo('zona-gps').addEventListener('click', () => {
+        const boton = campo('zona-gps');
+        if (!navigator.geolocation) {
+            window.alert('Este navegador no puede usar el GPS. Escribí tu dirección.');
+            return;
+        }
+        boton.disabled = true;
+        campo('zona-direccion').textContent = 'Buscando tu ubicación...';
+        navigator.geolocation.getCurrentPosition(
+            (posicion) => guardarUbicacion(
+                { latitud: posicion.coords.latitude, longitud: posicion.coords.longitude },
+                boton
+            ),
+            (error) => {
+                boton.disabled = false;
+                cargarUbicacion();
+                window.alert(error.code === error.PERMISSION_DENIED
+                    ? 'No diste permiso para usar tu ubicación. Activalo en el navegador o escribí tu dirección.'
+                    : 'No se pudo obtener tu ubicación. Probá de nuevo o escribí tu dirección.');
+            },
+            { enableHighAccuracy: true, timeout: 15000 }
+        );
+    });
+
+    campo('zona-escribir').addEventListener('click', () => {
+        campo('zona-form').hidden = !campo('zona-form').hidden;
+        if (!campo('zona-form').hidden) campo('zona-input').focus();
+    });
+
+    campo('zona-form').addEventListener('submit', (evento) => {
+        evento.preventDefault();
+        const direccion = campo('zona-input').value.trim();
+        if (!direccion) return;
+        guardarUbicacion({ direccion }, evento.submitter || campo('zona-form').querySelector('button'));
+    });
+
+    if (esTecnico) {
+        campo('zona').hidden = false;
+        cargarUbicacion();
+    }
+
     mostrarPerfil();
     cargarFoto();
     lucide.createIcons();

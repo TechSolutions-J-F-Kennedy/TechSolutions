@@ -1,6 +1,6 @@
 // Mapea las URLs y verbos HTTP con las funciones del controlador:
 import express from "express";
-import { getServiciosPendientes, getTodosLosServicios, patchDisponibilidadTecnico, patchPerfilTecnico, getServicio, patchEstadoServicio, putFotoServicio, getSolicitudesCerca, postAceptarSolicitud } from "../controllers/tecnico.controllers.js";
+import { getServiciosPendientes, getTodosLosServicios, patchDisponibilidadTecnico, patchPerfilTecnico, getServicio, patchEstadoServicio, putFotoServicio, getSolicitudesCerca, postAceptarSolicitud, getUbicacion, putUbicacion } from "../controllers/tecnico.controllers.js";
 
 const router = express.Router();
 
@@ -13,6 +13,8 @@ router.get("/:id/servicios/:servicioId", getServicio);
 router.patch("/:id/servicios/:servicioId/estado", patchEstadoServicio);
 router.put("/:id/servicios/:servicioId/foto", putFotoServicio);
 router.patch("/:id/disponibilidad", patchDisponibilidadTecnico);
+router.get("/:id/ubicacion", getUbicacion);
+router.put("/:id/ubicacion", putUbicacion);
 router.patch("/:id/perfil", patchPerfilTecnico);
 
 export default router;

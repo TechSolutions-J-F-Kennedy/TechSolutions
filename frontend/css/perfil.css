@@ -140,3 +140,30 @@
   cursor: pointer;
   margin-bottom: 8px;
 }
+
+/* ===== Mi zona de trabajo (técnico) ===== */
+.zona .mapa {
+  margin-top: 4px;
+}
+
+.zona-botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.zona-botones .btn {
+  padding: 11px 8px;
+  font-size: 12px;
+}
+
+.zona-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.zona-form .btn {
+  flex: none;
+}

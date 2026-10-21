@@ -85,3 +85,33 @@ export const actualizarFotoServicio = async (tecnicoId, servicioId, foto) => {
     const [resultado] = await connection.query(sql, [foto, servicioId, tecnicoId]);
     return resultado.affectedRows > 0;
 };
+
+//Ubicación de trabajo del técnico: su dirección principal en direcciones_usuario
+export const getUbicacionTecnico = async (tecnicoId) => {
+    const [rows] = await connection.query(
+        `SELECT id, alias, direccion_completa, latitud, longitud
+        FROM direcciones_usuario
+        WHERE usuario_id = ?
+        ORDER BY es_principal DESC, id ASC LIMIT 1`,
+        [tecnicoId]
+    );
+    return rows[0] || null;
+};
+
+//Guardar la ubicación real del técnico (actualiza su dirección principal o crea una nueva)
+export const guardarUbicacionTecnico = async (tecnicoId, { direccion, latitud, longitud }) => {
+    const actual = await getUbicacionTecnico(tecnicoId);
+    if (actual) {
+        await connection.query(
+            "UPDATE direcciones_usuario SET direccion_completa = ?, latitud = ?, longitud = ?, es_principal = 1 WHERE id = ?",
+            [direccion, latitud, longitud, actual.id]
+        );
+    } else {
+        await connection.query(
+            `INSERT INTO direcciones_usuario (usuario_id, alias, direccion_completa, latitud, longitud, es_principal)
+            VALUES (?, 'Taller', ?, ?, ?, 1)`,
+            [tecnicoId, direccion, latitud, longitud]
+        );
+    }
+    return getUbicacionTecnico(tecnicoId);
+};
