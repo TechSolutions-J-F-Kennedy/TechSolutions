@@ -1,15 +1,11 @@
 //Consultas SQL sobre la tabla Usuarios (compartidas por todos los roles):
 import connection from "../database/db.js";
-import { encriptarPassword, estaEncriptada, verificarPassword } from "../utils/passwords.js";
+import { verificarPassword } from "../utils/passwords.js";
 
-//Roles que usan esta app. Las cuentas del panel web (rrhh, operaciones) se loguean con PHP,
-//que todavía compara la contraseña sin encriptar, así que a esas no se las encripta al entrar.
-const ROLES_APP = ["tecnico", "usuario"];
-
-//Registro de un cliente nuevo (la contraseña se guarda encriptada)
+//Registro de un cliente nuevo
 export const crearUsuario = async ({ nombre, email, password, telefono }) => {
     const sql = "INSERT INTO Usuarios (nombre, email, password, telefono, rol) VALUES (?, ?, ?, ?, 'usuario')";
-    const [resultado] = await connection.query(sql, [nombre, email, await encriptarPassword(password), telefono]);
+    const [resultado] = await connection.query(sql, [nombre, email, password, telefono]);
     return resultado.insertId;
 };
 
@@ -21,12 +17,6 @@ export const inicioSesion = async ({ email, password }) => {
 
     for (const usuario of candidatos) {
         if (!(await verificarPassword(password, usuario.password))) continue;
-
-        //Si la contraseña estaba guardada sin encriptar, aprovechamos para encriptarla
-        if (!estaEncriptada(usuario.password) && ROLES_APP.includes(usuario.rol)) {
-            await connection.query("UPDATE Usuarios SET password = ? WHERE id = ?", [await encriptarPassword(password), usuario.id]);
-        }
-
         delete usuario.password; // nunca se manda la contraseña al frontend
         return usuario;
     }

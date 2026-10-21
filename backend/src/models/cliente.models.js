@@ -1,6 +1,5 @@
 //Consultas SQL de las pantallas del cliente (rol 'usuario'):
 import connection from "../database/db.js";
-import { encriptarPassword } from "../utils/passwords.js";
 
 //Verificar que el id sea de un cliente
 export const esCliente = async (clienteId) => {
@@ -86,7 +85,7 @@ export const crearResena = async ({ servicio_id, cliente_id, tecnico_id, estrell
 export const actualizarPerfilCliente = async (clienteId, { nombre_real, apellido, email, telefono, password }) => {
     const passwordSql = password ? ", password = ?" : "";
     const valores = [nombre_real, apellido, email, telefono];
-    if (password) valores.push(await encriptarPassword(password));
+    if (password) valores.push(password);
     valores.push(clienteId);
 
     await connection.query(

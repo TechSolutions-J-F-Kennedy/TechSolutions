@@ -1,6 +1,5 @@
 //Define las funciones que ejecutan las consultas SQL en la base de datos:
 import connection from "../database/db.js";
-import { encriptarPassword } from "../utils/passwords.js";
 
 //Obtener todos los servicios de un técnico específico
 export const getTodosLosServiciosByTecnico = async ({tecnicoId }) => {
@@ -43,7 +42,7 @@ export const actualizarPerfilTecnico = async (tecnicoId, { nombre_real, apellido
 
     const passwordSql = password ? ', password = ?' : '';
     const valores = [nombre_real, apellido, email, telefono, categoria];
-    if (password) valores.push(await encriptarPassword(password));
+    if (password) valores.push(password);
     valores.push(tecnicoId);
 
     await connection.query(
