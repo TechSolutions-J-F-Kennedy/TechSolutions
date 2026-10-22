@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Inicio · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/pendientes.css">
+    <link rel="stylesheet" href="css/inicio.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="head">
+        <div class="row">
+          <div>
+            <small>PANEL TÉCNICO</small>
+            <h1 id="saludo"></h1>
+          </div>
+
+          <div class="sw">
+            <span id="switch-texto"></span>
+            <label class="switch">
+              <input type="checkbox" id="switch-disponible">
+              <i></i>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <h2>Servicios Pendientes</h2>
+        <p id="mensaje-lista"></p>
+
+        <!-- Acá el JS agrega una tarjeta por cada servicio pendiente -->
+        <div id="lista-pedidos"></div>
+      </div>
+    </div>
+
+    <!-- Molde de tarjeta: se clona una vez por servicio -->
+    <template id="template-pedido">
+      <div class="card pedido">
+        <div class="row">
+          <b data-campo="servicio"></b>
+          <span data-campo="estado"></span>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="user-round"></i>
+          <div>
+            <b>Cliente</b>
+            <span data-campo="cliente"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <b>Ubicación</b>
+            <span data-campo="ubicacion"></span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary full" data-accion="ver" style="margin-top: 8px">
+          <i data-lucide="eye"></i> Ver
+        </button>
+      </div>
+    </template>
+
+    <!-- Detalle del pedido (bottom sheet) -->
+    <div class="sheet" id="detalle-pedido">
+      <div class="panel">
+        <div class="grab"></div>
+
+        <div class="row">
+          <h3 data-campo="numero"></h3>
+          <span data-campo="estado"></span>
+        </div>
+
+        <p class="m" data-campo="servicio"></p>
+
+        <div class="kv">
+          <i data-lucide="user-round"></i>
+          <div>
+            <b>Cliente</b>
+            <span data-campo="cliente"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="phone"></i>
+          <div>
+            <b>Teléfono</b>
+            <span data-campo="telefono"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <b>Ubicación</b>
+            <span data-campo="ubicacion"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="clock"></i>
+          <div>
+            <b>Horario</b>
+            <span data-campo="horario"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="package"></i>
+          <div>
+            <b>Materiales</b>
+            <span data-campo="materiales"></span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <i data-lucide="file-text"></i>
+          <div>
+            <b>Detalle</b>
+            <span data-campo="descripcion"></span>
+          </div>
+        </div>
+
+        <div class="map">
+          <i data-lucide="map"></i>
+        </div>
+
+        <button class="btn btn-ghost full" id="btn-cerrar-detalle" style="margin-top: 6px">
+          <i data-lucide="x"></i> Cerrar
+        </button>
+      </div>
+    </div>
+
+    <script>lucide.createIcons();</script>
+    <script src="js/app.js"></script>
+    <script src="js/tecnico.inicio.js"></script>
+  </body>
+</html>
+
