@@ -1,3 +1,4 @@
+//Importar y conectar el router en el servidor principal:
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -11,9 +12,11 @@ import mensajesRoutes from "./src/routes/mensaje.routes.js";
 
 dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/tecnicos", tecnicosRoutes);
 
 // 1. Servir archivos estáticos (CSS, JS del frontend, imágenes)
 app.use(express.static(path.resolve("../frontend")));
