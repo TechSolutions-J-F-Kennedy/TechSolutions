@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Variables de entorno y claves
+.env
+backend/.env
+*.env
+
+# Archivos de sistema / temporales
+.DS_Store
+Thumbs.db
+*.zip
+*.tar.gz
+
+# Uploads locales
+backend/uploads/*
+!backend/uploads/.gitkeep
