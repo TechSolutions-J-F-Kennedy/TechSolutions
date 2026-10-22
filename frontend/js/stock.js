@@ -29,6 +29,7 @@ const renderProductos = (productos) => {
       <td>${producto.descripcion ?? ''}</td>
       <td>${producto.stock_actual ?? 0}</td>
       <td>${producto.stock_minimo ?? 0}</td>
+      <td><button type="button">seleccionar</button></td>
     `;
 
     tbody.appendChild(fila);
