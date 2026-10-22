@@ -174,7 +174,7 @@ if (loginForm) {
 
         // Redirecciones según el Rol
         if (data.usuario.rol === "usuario") {
-          window.location.href = 'html/home.html';
+          window.location.href = 'html/grupo-2/home.html';
         } else if (data.usuario.rol === "tecnico") {
           window.location.href = 'html/tecnico-dashboard.html'; // Ajustar ruta deseada
         } else if (data.usuario.rol === "deposito") {
