@@ -1,10 +1,12 @@
 // Mapea las URLs y verbos HTTP con las funciones del controlador:
 import express from "express";
 import { getServiciosPendientes, getTodosLosServicios, patchDisponibilidadTecnico, patchPerfilTecnico, getServicio, patchEstadoServicio, putFotoServicio, getSolicitudesCerca, postAceptarSolicitud, getUbicacion, putUbicacion } from "../controllers/tecnico.controllers.js";
+import { postSesion } from "../controllers/usuario.controllers.js";
 
 const router = express.Router();
 
 // /api/tecnicos
+router.post("/login", postSesion); // mismo login que /api/usuarios/login (lo usa la versión de la rama principal)
 router.get("/:id/servicios-pendientes", getServiciosPendientes);
 router.get("/:id/solicitudes-cercanas", getSolicitudesCerca);
 router.post("/:id/solicitudes/:solicitudId/aceptar", postAceptarSolicitud);
