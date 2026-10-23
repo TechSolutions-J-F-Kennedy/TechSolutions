@@ -49,6 +49,6 @@ En las computadoras del colegio (sin MySQL local), utilizaremos la extensión of
 
 1. **`usuarios`**: Contiene clientes, técnicos y administradores (ID, nombre, email, rol, reputación_promedio).
 2. **`servicios`**: Registro de órdenes de trabajo (ID, cliente_id, tecnico_id, estado, descripcion, direccion, ubicacion_lat_long, fecha_creacion).
-3. **`productos_stock`**: Catálogo de insumos (ID, codigo_sku, codigo_qr, nombre, descripcion, stock_actual, stock_minimo).
+3. **`productos_stock`**: Catálogo de insumos (ID, codigo_sku, codigo_qr, nombre, descripcion, stock_actual, stock_minimo, activo). El campo `activo` permite retirar productos del inventario sin borrarlos físicamente; aplicar `migracion-inventario-activo.sql` a las bases existentes.
 4. **`insumos_servicio`**: Relación entre productos consumidos y la orden de trabajo (ID, servicio_id, producto_id, cantidad).
 5. **`reseñas`**: Puntuación otorgada por el cliente (ID, servicio_id, cliente_id, tecnico_id, estrellas, comentario, fecha).
