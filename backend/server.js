@@ -20,7 +20,8 @@ const db = mysql.createPool({
     port: Number(process.env.DB_PORT),
      ssl: {
         rejectUnauthorized: false
-    }
+    },
+    timezone: '-03:00' 
 });
 
 
@@ -71,8 +72,6 @@ app.get("/api/Usuarios", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(PORT, () => {
     console.log(`Servidor iniciado en http://localhost:${PORT}`);

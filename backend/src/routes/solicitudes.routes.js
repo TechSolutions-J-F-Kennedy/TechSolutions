@@ -1,31 +1,12 @@
 const express = require("express");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 
 const solicitudesController = require("../controllers/solicitudes.controller");
 
 const router = express.Router();
 
-const carpetaUploads = path.join(__dirname, "../../uploads");
-
-fs.mkdirSync(carpetaUploads, { recursive: true });
-
-const almacenamiento = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, carpetaUploads);
-    },
-
-    filename: (req, file, cb) => {
-        const extension = path.extname(file.originalname).toLowerCase();
-        const nombre = `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`;
-
-        cb(null, nombre);
-    }
-});
-
 const upload = multer({
-    storage: almacenamiento,
+    storage: multer.memoryStorage(),
     limits: {
         fileSize: 5 * 1024 * 1024
     },
