@@ -550,6 +550,7 @@ button, input {
   padding: 10px;
 }
 
+
 /* Drawer / Off-canvas */
 .drawer-overlay {
   position: absolute;
@@ -890,4 +891,85 @@ button, input {
   justify-content: center;
   align-items: center;
   gap: 8px;
+}
+/* ==========================================
+   BOTÓN DE CHAT FIJO PARA MÓVIL (SIN HOVER)
+   ========================================== */
+
+.tech-item-card {
+  position: relative !important;
+}
+
+/* Contenedor del encabezado de la tarjeta */
+.tech-item-card .tech-header {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+/* El botón de chat fijo siempre visible y bien posicionado */
+.tech-item-card .btn-chat-fixed {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  background: var(--primary-50) !important;
+  color: var(--primary-600) !important;
+  border: 1px solid var(--primary-200) !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease, transform 0.1s ease !important;
+  z-index: 5 !important;
+}
+
+.tech-item-card .btn-chat-fixed i {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Efecto al presionar con el dedo en el celular */
+.tech-item-card .btn-chat-fixed:active {
+  background: var(--primary-500) !important;
+  color: white !important;
+  transform: scale(0.92) !important;
+}
+
+.tech-header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* El botón de chat con un tamaño y estilo limpio y armónico */
+.tech-header-actions .btn-chat-inline {
+  background: var(--primary-50) !important;
+  color: var(--primary-600) !important;
+  border: 1px solid var(--primary-200) !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.tech-header-actions .btn-chat-inline i {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Efecto al tocarlo en el celular */
+.tech-header-actions .btn-chat-inline:active {
+  background: var(--primary-500) !important;
+  color: white !important;
+  transform: scale(0.92);
 }
