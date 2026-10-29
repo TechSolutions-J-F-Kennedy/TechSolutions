@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           };
 
           contenedorChats.appendChild(card);
+          if (window.lucide) lucide.createIcons();
         });
       }
       if (window.lucide) lucide.createIcons();

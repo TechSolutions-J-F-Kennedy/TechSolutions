@@ -973,3 +973,25 @@ button, input {
   color: white !important;
   transform: scale(0.92);
 }
+.btn-chat-action {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.btn-chat-action:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.btn-chat-action i {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2px;
+    color: #666; /* O el color que prefieras para los iconos */
+}
