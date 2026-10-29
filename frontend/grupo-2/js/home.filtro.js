@@ -33,24 +33,23 @@ document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
   }
 
-  // Menú Drawer Lateral
-  const menuBtn = document.getElementById('menu-btn');
-  const sideDrawer = document.getElementById('side-drawer');
-  const drawerOverlay = document.getElementById('drawer-overlay');
+ // Menú Drawer Lateral
+const menuBtn = document.getElementById('menu-btn');
+const sideDrawer = document.getElementById('side-drawer');
+const drawerOverlay = document.getElementById('drawer-overlay');
 
-  function openMenu() {
-    if (sideDrawer) sideDrawer.classList.add('open');
-    if (drawerOverlay) drawerOverlay.classList.add('active');
-  }
+function openMenu() {
+  if (sideDrawer) sideDrawer.classList.add('active'); // Reemplazado 'open' por 'active'
+  if (drawerOverlay) drawerOverlay.classList.add('active');
+}
 
-  function closeMenu() {
-    if (sideDrawer) sideDrawer.classList.remove('open');
-    if (drawerOverlay) drawerOverlay.classList.remove('active');
-  }
+function closeMenu() {
+  if (sideDrawer) sideDrawer.classList.remove('active'); // Reemplazado 'open' por 'active'
+  if (drawerOverlay) drawerOverlay.classList.remove('active');
+}
 
-  if (menuBtn) menuBtn.addEventListener('click', openMenu);
-  if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
-
+if (menuBtn) menuBtn.addEventListener('click', openMenu);
+if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
   // Vistas principales
   const viewWelcome = document.getElementById('view-welcome');
   const viewTechList = document.getElementById('view-tech-list');
