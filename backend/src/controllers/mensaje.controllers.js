@@ -1,4 +1,4 @@
-import { crearMensaje, obtenerMensajesPorChat } from "../models/mensaje.models.js";
+import { crearMensaje, obtenerMensajesPorChat, obtenerChatsPorUsuario } from "../models/mensaje.models.js";
 
 // Enviar un mensaje (Guarda en la BD)
 export const postMensaje = async (req, res) => {
@@ -30,5 +30,15 @@ export const getMensajesChat = async (req, res) => {
     } catch (error) {
         console.error("Error al obtener mensajes:", error);
         return res.status(500).json({ error: "Error al cargar el historial" });
+    }
+};
+export const getChatsUsuario = async (req, res) => {
+    try {
+        const { usuarioId } = req.params;
+        const chats = await obtenerChatsPorUsuario(usuarioId);
+        return res.status(200).json({ chats });
+    } catch (error) {
+        console.error("Error al obtener la lista de chats:", error);
+        return res.status(500).json({ error: "Error al cargar los chats" });
     }
 };

@@ -118,10 +118,11 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
   });
 
   // Renderizado dinámico de la tarjeta del técnico
+ // Renderizado dinámico de la tarjeta del técnico en home.js
+ // Renderizado dinámico de la tarjeta del técnico en home.js
   function agregarTarjetaTecnico(tecnico) {
     const nombreReal = tecnico.nombre || tecnico.nombre_real || 'Técnico';
     const apellido = tecnico.apellido || '';
-    
     
     const iniciales = (nombreReal && apellido) 
       ? `${nombreReal[0]}${apellido[0]}`.toUpperCase() 
@@ -139,26 +140,29 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
     const categoriaNombre = categoriasLegibles[tecnico.categoria] || tecnico.categoria || 'Técnico General';
     const descripcionTecnico = tecnico.descripcion || `Especialista en servicios de ${categoriaNombre}.`;
     
-    // Distancia formateada si el backend la proporciona
     const textoDistancia = tecnico.distancia_km !== undefined 
       ? `<span class="distance-chip"><i data-lucide="navigation"></i> a ${tecnico.distancia_km} km</span>` 
       : '';
 
     contenedor.innerHTML += `
-      <div class="tech-card" data-category="${tecnico.categoria || 'general'}">
+      <div class="tech-card tech-item-card" data-category="${tecnico.categoria || 'general'}">
         <div class="tech-header">
           <div class="tech-avatar">${iniciales}</div>
           <div class="tech-details">
             <h4>${nombreReal} ${apellido}</h4>
-           <button class="btn btn-ghost btn-touch-sm" onclick="abrirChatConTecnico('${tecnico.id}', '${nombreReal} ${apellido}')">
-  <i data-lucide="message-square"></i> Enviar mensaje
-</button>
             <div class="rating">
               <span class="stars">★ ${tecnico.reputacion_promedio || '5.0'}</span>
               <small>(${categoriaNombre})</small>
             </div>
           </div>
-          <span class="status-badge available">Disponible</span>
+          
+          <!-- Contenedor alineado para estado y botón de chat -->
+          <div class="tech-header-actions">
+            <span class="status-badge available">Disponible</span>
+            <button class="btn-chat-inline" onclick="abrirChatConTecnico('${tecnico.id}', '${nombreReal} ${apellido}')" title="Enviar mensaje">
+              <i data-lucide="message-square"></i>
+            </button>
+          </div>
         </div>
 
         <p class="tech-spec">${descripcionTecnico}</p>
@@ -257,7 +261,7 @@ function abrirModalReserva(id, nombre, iniciales, categoria) {
 function abrirChatConTecnico(tecnicoId, nombreCompleto) {
   localStorage.setItem('chatActivo_tecnicoId', tecnicoId);
   localStorage.setItem('chatActivo_nombreTecnico', nombreCompleto);
-  window.location.href = 'chat.html';
+  window.location.href = '../html/chat.html';
 }
 
 

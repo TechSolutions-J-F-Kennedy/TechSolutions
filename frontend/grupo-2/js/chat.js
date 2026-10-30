@@ -1,7 +1,9 @@
 const BASE_URL = "http://localhost:3000";
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.lucide) lucide.createIcons();
+  if (window.lucide) {
+    lucide.createIcons();
+}
 
   const usuarioGuardado = localStorage.getItem('usuario');
   if (!usuarioGuardado) {
@@ -27,21 +29,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const contenedorMensajes = document.getElementById('chat-messages-container');
 
   // 1. Cargar historial inicial de mensajes desde la BD
-  async function cargarHistorial() {
-    try {
-      const res = await fetch(`${BASE_URL}/api/mensajes/${usuario.id}/${tecnicoId}`);
-      const mensajes = await res.json();
+  let ultimaCantidad = -1;
 
-      if (res.ok) {
-        contenedorMensajes.innerHTML = '';
-        mensajes.forEach(msg => {
-          agregarBurbujaMensaje(msg.remitente === 'usuario', msg.mensaje, msg.hora);
-        });
-      }
-    } catch (error) {
-      console.error('Error al cargar historial:', error);
+async function cargarHistorial() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/mensajes/${usuario.id}/${tecnicoId}`);
+    const mensajes = await res.json();
+
+    if (res.ok) {
+      if (mensajes.length === ultimaCantidad) return; // nada nuevo
+      ultimaCantidad = mensajes.length;
+
+      contenedorMensajes.innerHTML = '';
+      mensajes.forEach(msg => {
+        agregarBurbujaMensaje(msg.remitente === 'usuario', msg.mensaje, msg.hora);
+      });
+      window.scrollTo(0, document.documentElement.scrollHeight);
     }
+  } catch (error) {
+    console.error('Error al cargar historial:', error);
   }
+}
 
   // 2. Enviar mensaje al backend vía POST
   async function enviarMensaje() {

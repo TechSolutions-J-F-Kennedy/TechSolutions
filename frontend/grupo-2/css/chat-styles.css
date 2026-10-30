@@ -43,6 +43,7 @@
 .chat-messages-container { display: flex; flex-direction: column; gap: 8px; }
 
 /* Burbujas — cubro los nombres de clase más habituales que inyecta el JS */
+.message-bubble,
 .message,
 .msg,
 .mensaje,
@@ -57,9 +58,9 @@
   border: 1px solid var(--n200);
   border-radius: 18px 18px 18px 6px;
   align-self: flex-start;
-  animation: bubble-in 0.2s var(--ease);
 }
 
+.message-bubble.sent,
 .message.sent, .message.own, .message.mine, .message.me,
 .msg.sent, .msg.own, .msg.mine, .msg.y,
 .mensaje.sent, .mensaje.own, .mensaje.propio, .mensaje.enviado,
@@ -71,6 +72,7 @@
   border-radius: 18px 18px 6px 18px;
 }
 
+.message-bubble .message-time,
 .message small, .msg small, .mensaje small, .chat-message small,
 .message-time, .msg-time {
   display: block;
@@ -79,8 +81,6 @@
   text-align: right;
   opacity: 0.7;
 }
-
-@keyframes bubble-in { from { opacity: 0; transform: translateY(6px); } }
 
 /* ---------- Barra de entrada ---------- */
 .chat-input-bar {
@@ -131,3 +131,18 @@
 .btn-send-msg:hover { background: var(--p6); }
 .btn-send-msg:active { transform: scale(0.92); }
 .btn-send-msg svg { width: 20px; height: 20px; }
+
+/* La hora de mis mensajes sobre fondo azul */
+.message-bubble.sent .message-time { color: #fff; opacity: 0.8; }
+
+/* Chat vacío */
+.chat-messages-container:empty::before {
+  content: 'Escribí tu primer mensaje para empezar la conversación.';
+  align-self: center;
+  max-width: 28ch;
+  margin-top: 40px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--n500);
+}

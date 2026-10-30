@@ -209,6 +209,7 @@
   border-radius: 99px;
 }
 
+/* ---------- Tarjeta de técnico (la genera home.filtro.js) ---------- */
 .tech-list { display: flex; flex-direction: column; gap: 14px; }
 
 .tech-card {
@@ -217,14 +218,44 @@
   border: 1px solid var(--n200);
   border-radius: var(--r-lg);
   box-shadow: var(--sh);
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.tech-header { display: flex; align-items: center; gap: 12px; }
-.tech-details { flex: 1; min-width: 0; }
-.tech-details h4 { font-size: 16px; font-weight: 700; }
+.tech-card:hover { border-color: var(--p200); }
 
-.rating { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
-.stars { font-size: 13px; font-weight: 800; color: var(--wa); }
+.tech-header { display: flex; align-items: flex-start; gap: 12px; }
+.tech-header .tech-avatar { width: 52px; height: 52px; font-size: 17px; }
+
+.tech-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tech-details h4 {
+  max-width: 100%;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rating { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 4px; }
+
+.stars {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--wa);
+  background: var(--wal);
+  border-radius: 99px;
+}
+
 .rating small { font-size: 12px; color: var(--n500); }
 
 .status-badge {
@@ -242,11 +273,65 @@
 .status-badge.available { color: var(--ok); background: var(--okl); }
 .status-badge.busy { color: var(--wa); background: var(--wal); }
 
-.tech-spec { margin: 12px 0 10px; font-size: 13.5px; line-height: 1.5; color: var(--n700); }
+/* Estado + botón de chat, apilados a la derecha de la cabecera */
+.tech-header-actions {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
 
-.tech-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; font-size: 12.5px; color: var(--n500); }
+.btn-chat-inline {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: var(--p6);
+  background: var(--p50);
+  border: 1.5px solid var(--p100);
+  border-radius: 50%;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s var(--ease);
+}
+
+.btn-chat-inline:hover { color: #fff; background: var(--p5); border-color: var(--p5); }
+.btn-chat-inline:active { transform: scale(0.92); }
+.btn-chat-inline svg { width: 18px; height: 18px; }
+
+.tech-spec {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 14px 0 12px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--n700);
+}
+
+.tech-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--n100);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--n500);
+}
+
 .tech-meta span { display: inline-flex; align-items: center; gap: 6px; }
 .tech-meta svg { width: 15px; height: 15px; }
+
+/* Distancia al cliente (solo aparece si el backend manda distancia_km) */
+.tech-meta .distance-chip {
+  padding: 4px 10px;
+  font-weight: 800;
+  color: var(--s5);
+  background: rgba(32, 201, 151, 0.14);
+  border-radius: 99px;
+}
 
 /* ---------- Menú lateral ---------- */
 .drawer-overlay {
@@ -437,6 +522,8 @@
 .day-btn.active strong,
 .day-card.selected .day-number,
 .day-card.active .day-number,
+.day-card.selected .day-num,
+.day-card.active .day-num,
 .day-item.selected .day-num,
 .day-item.active .day-num { color: #fff; }
 

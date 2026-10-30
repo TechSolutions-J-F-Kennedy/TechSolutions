@@ -1,0 +1,293 @@
+/* ==========================================================================
+   tema.css — Modo oscuro + hoja de Configuración
+   Cargar ÚLTIMO, después de base.css y del CSS de cada página.
+   El modo oscuro se activa con <html data-theme="dark"> (lo pone tema.js).
+   ========================================================================== */
+
+/* Variable que usan los mensajes de "cargando" del JS y no estaba definida */
+:root { --muted: var(--n500); }
+
+/* ==========================================================================
+   1) TOKENS OSCUROS
+   Se invierte la escala de grises y se aclaran los azules que se usan como
+   TEXTO (p6–p9). Los fondos azules sólidos se corrigen más abajo.
+   ========================================================================== */
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --n50: #0b1220;   /* fondo de la app */
+  --n100: #1a2640;  /* rellenos suaves */
+  --n200: #2a3855;  /* bordes */
+  --n400: #7c8ba3;
+  --n500: #9aa8bd;
+  --n700: #cbd5e1;
+  --n900: #f1f5f9;  /* texto principal */
+
+  --surface: #121c31;    /* tarjetas */
+  --surface-2: #1b2842;  /* tarjeta elevada / pestaña activa */
+
+  --p6: #60a5fa;
+  --p7: #93c5fd;
+  --p8: #bfdbfe;
+  --p9: #dbeafe;
+  --p50: rgba(96, 165, 250, 0.12);
+  --p100: rgba(96, 165, 250, 0.22);
+  --p200: rgba(96, 165, 250, 0.38);
+
+  --ok: #4ade80;   --okl: rgba(74, 222, 128, 0.14);
+  --wa: #fbbf24;   --wal: rgba(251, 191, 36, 0.14);
+  --er: #f87171;   --erl: rgba(248, 113, 113, 0.14);
+  --inf: #60a5fa;  --infl: rgba(96, 165, 250, 0.16);
+
+  --sh: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --sh-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --sh-lg: 0 20px 50px rgba(0, 0, 0, 0.6);
+  --ring: 0 0 0 3px rgba(96, 165, 250, 0.35);
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body { background: #070c17; }
+
+/* ==========================================================================
+   2) SUPERFICIES (lo que en claro es #fff)
+   :where() mantiene la especificidad baja para no pisar estados
+   como .selected, .active, .sent, :hover.
+   ========================================================================== */
+html[data-theme="dark"] :where(
+  .login-card, .empty-state, .pedido-card, .timeline-card, .receipt-card,
+  .modal-card, .modal-content, .panel, .card, .suggestions-list, .side-drawer,
+  .category-card, .tech-card, .profile-card, .address-card, .history-card,
+  .chip-filter, .btn-back, .btn-ghost, .btn-danger-ghost,
+  .day-card, .day-item, .day-btn,
+  .time-slot, .time-btn, .time-chip, .time-block,
+  .message-bubble, .message, .msg, .mensaje, .chat-message,
+  .chat-input-bar
+) { background: var(--surface); }
+
+html[data-theme="dark"] :where(
+  .input-icon-wrapper input, .input-icon-wrapper select, .custom-select,
+  .input, .custom-textarea, .form-control
+) { background-color: var(--n50); }
+
+html[data-theme="dark"] .chat-input-bar input:focus { background: var(--n50); }
+
+html[data-theme="dark"] .bottom-nav { background: rgba(11, 18, 32, 0.92); }
+
+html[data-theme="dark"] .tab-btn.active { background: var(--surface-2); }
+
+html[data-theme="dark"] .btn-action.danger { background: var(--surface); }
+html[data-theme="dark"] .btn-action.danger:hover { background: var(--erl); }
+
+/* Burbujas de chat: el color de texto de las recibidas ya sale de --n900 */
+html[data-theme="dark"] :where(.message-bubble, .message, .msg, .mensaje, .chat-message) { border-color: var(--n200); }
+
+/* Autocompletado del navegador */
+html[data-theme="dark"] input:-webkit-autofill {
+  -webkit-text-fill-color: var(--n900);
+  box-shadow: 0 0 0 40px var(--n50) inset;
+}
+
+/* ==========================================================================
+   3) FONDOS AZULES SÓLIDOS (con texto blanco) — que no se aclaren
+   ========================================================================== */
+html[data-theme="dark"] .btn-primary:hover,
+html[data-theme="dark"] .btn-send-msg:hover { background: #1d4ed8; }
+
+html[data-theme="dark"] .chip-filter.active {
+  color: #fff;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+html[data-theme="dark"] :where(.day-card, .day-item, .day-btn).selected,
+html[data-theme="dark"] :where(.day-card, .day-item, .day-btn).active {
+  color: #dbeafe;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+html[data-theme="dark"] :where(.time-slot, .time-btn, .time-chip, .time-block).selected,
+html[data-theme="dark"] :where(.time-slot, .time-btn, .time-chip, .time-block).active {
+  color: #fff;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+html[data-theme="dark"] .btn-danger { background: #dc2626; color: #fff; }
+
+/* Encabezados y degradados de marca: se mantienen oscuros */
+html[data-theme="dark"] .phone-head,
+html[data-theme="dark"] .drawer-header { background: linear-gradient(135deg, #172554, #1e40af); }
+
+html[data-theme="dark"] .login-wrapper {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 34px 34px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 34px 34px,
+    linear-gradient(160deg, #0b1330, #14275f 65%, #101e4d);
+}
+
+html[data-theme="dark"] .status-card { background: linear-gradient(135deg, #1e3a8a, #1d4ed8); }
+
+html[data-theme="dark"] .tech-avatar,
+html[data-theme="dark"] .tech-avatar-box,
+html[data-theme="dark"] .tech-avatar-lg,
+html[data-theme="dark"] .profile-avatar { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
+
+html[data-theme="dark"] .tech-avatar.alt { background: linear-gradient(135deg, #20c997, #1e40af); }
+html[data-theme="dark"] .tech-avatar.alt2 { background: linear-gradient(135deg, #f59e0b, #b45309); }
+html[data-theme="dark"] .chat-tech-header-info .tech-avatar { background: rgba(255, 255, 255, 0.18); }
+
+html[data-theme="dark"] .profile-avatar { box-shadow: 0 0 0 4px var(--n50), 0 0 0 7px var(--s4); }
+html[data-theme="dark"] .edit-avatar-btn { border-color: var(--n50); }
+
+/* Texto claro sobre los encabezados azules (antes usaban --p100) */
+html[data-theme="dark"] .brand small,
+html[data-theme="dark"] .status-card small,
+html[data-theme="dark"] .user-info small,
+html[data-theme="dark"] .chat-status-indicator { color: #cfe0ff; }
+
+html[data-theme="dark"] .login-footer { color: #a6c5ff; }
+
+/* ==========================================================================
+   4) CASOS PUNTUALES
+   ========================================================================== */
+html[data-theme="dark"] .welcome-card {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), var(--surface) 85%);
+}
+
+html[data-theme="dark"] .upload-box { background: rgba(37, 99, 235, 0.08); }
+
+/* Buscador sobre el encabezado: vidrio en vez de blanco */
+html[data-theme="dark"] .search-box input {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+html[data-theme="dark"] .search-box input::placeholder { color: rgba(255, 255, 255, 0.55); }
+html[data-theme="dark"] .search-box input:focus { background: rgba(255, 255, 255, 0.16); }
+html[data-theme="dark"] .search-icon { color: rgba(255, 255, 255, 0.6); }
+
+html[data-theme="dark"] .badge-progress { color: #c4b5fd; background: rgba(167, 139, 250, 0.16); }
+html[data-theme="dark"] .chat-notice { color: #fcd34d; }
+
+/* ==========================================================================
+   5) HOJA DE CONFIGURACIÓN (la inyecta tema.js)
+   ========================================================================== */
+.ajustes-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.5);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease, visibility 0.22s;
+}
+
+.ajustes-overlay.active { opacity: 1; visibility: visible; }
+
+.ajustes-sheet {
+  width: 100%;
+  max-width: var(--max-w);
+  padding: 10px 20px calc(24px + var(--safe-bottom));
+  background: #fff;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  box-shadow: var(--sh-lg);
+  transform: translateY(100%);
+  transition: transform 0.3s var(--ease);
+}
+
+.ajustes-overlay.active .ajustes-sheet { transform: none; }
+
+.ajustes-sheet .grab { width: 42px; height: 4px; margin: 0 auto 14px; border-radius: 9px; background: var(--n200); }
+
+.ajustes-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.ajustes-head h4 { font-size: 19px; color: var(--n900); }
+
+.ajustes-close {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: var(--n500);
+  background: var(--n100);
+  border: 0;
+  border-radius: 50%;
+}
+
+.ajustes-close:hover { background: var(--n200); }
+.ajustes-close svg { width: 18px; height: 18px; }
+
+.ajustes-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: var(--n50);
+  border: 1px solid var(--n200);
+  border-radius: var(--r-md);
+}
+
+.ajustes-icon {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: var(--p6);
+  background: var(--p50);
+  border-radius: var(--r-sm);
+}
+
+.ajustes-icon svg { width: 20px; height: 20px; }
+
+.ajustes-text { flex: 1; min-width: 0; }
+.ajustes-text strong { display: block; font-size: 14.5px; color: var(--n900); }
+.ajustes-text small { font-size: 12.5px; color: var(--n500); }
+
+.ajustes-switch {
+  position: relative;
+  flex: none;
+  width: 52px;
+  height: 30px;
+  padding: 0;
+  background: var(--n200);
+  border: 0;
+  border-radius: 99px;
+  transition: background 0.2s;
+}
+
+.ajustes-switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: var(--sh-sm);
+  transition: transform 0.2s var(--ease);
+}
+
+.ajustes-switch[aria-checked="true"] { background: var(--s5); }
+.ajustes-switch[aria-checked="true"]::before { transform: translateX(22px); }
+
+.ajustes-auto {
+  display: block;
+  margin: 14px auto 0;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--p6);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+html[data-theme="dark"] .ajustes-sheet { background: var(--surface); }
+html[data-theme="dark"] .ajustes-row { background: var(--n50); }

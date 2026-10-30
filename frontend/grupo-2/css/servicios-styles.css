@@ -39,21 +39,45 @@
 }
 
 /* ---------- Tarjeta de Pedido (.pedido-card) ---------- */
+/* pedidos.js agrega el estado como clase: .pendiente .confirmado .en_proceso ...
+   y esa clase pinta la franja lateral de la tarjeta. */
 .pedido-card {
+  --estado: var(--n400);
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 16px;
+  overflow: hidden;
+  padding: 16px 16px 14px 22px;
   background: #fff;
   border: 1px solid var(--n200);
   border-radius: var(--r-lg);
   box-shadow: var(--sh-sm);
-  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  transition: box-shadow 0.15s var(--ease);
 }
 
-.pedido-card:hover {
-  box-shadow: var(--sh);
+.pedido-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--estado);
 }
+
+.pedido-card:hover { box-shadow: var(--sh); }
+
+.pedido-card.pendiente { --estado: var(--a4); }
+.pedido-card.confirmado { --estado: var(--p5); }
+.pedido-card.en_proceso { --estado: #7c3aed; }
+.pedido-card.finalizado,
+.pedido-card.completado { --estado: var(--s4); }
+.pedido-card.cancelado,
+.pedido-card.rechazado { --estado: var(--er); background: var(--n50); }
+
+.pedido-card.cancelado .tech-info,
+.pedido-card.rechazado .tech-info,
+.pedido-card.cancelado .pedido-desc,
+.pedido-card.rechazado .pedido-desc { opacity: 0.7; }
 
 /* Header de la tarjeta */
 .pedido-header {
@@ -155,39 +179,33 @@
   padding: 10px 12px;
   border-radius: var(--r-sm);
   border: 1px solid var(--n100);
+  overflow-wrap: anywhere;
 }
 
-.pedido-details-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.pedido-details-grid { display: flex; flex-direction: column; gap: 10px; }
 
-.detail-group {
-  display: flex;
+/* fecha y hora como pastillas */
+.detail-group { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.detail-group .detail-row {
   align-items: center;
-  gap: 16px;
+  padding: 5px 11px;
+  background: var(--n100);
+  border-radius: 99px;
 }
 
 .detail-row {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 7px;
   font-size: 13px;
   font-weight: 600;
   color: var(--n500);
 }
 
-.detail-row svg {
-  width: 15px;
-  height: 15px;
-  color: var(--p6);
-  flex: none;
-}
-
-.detail-row span {
-  color: var(--n700);
-}
+.detail-row svg { width: 15px; height: 15px; margin-top: 2px; color: var(--p6); flex: none; }
+.detail-group .detail-row svg { margin-top: 0; }
+.detail-row span { min-width: 0; color: var(--n700); overflow-wrap: anywhere; }
 
 /* ---------- Footer del Pedido ---------- */
 .pedido-footer {
@@ -201,11 +219,14 @@
 }
 
 .pedido-id {
+  padding: 4px 9px;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
-  color: var(--n400);
   letter-spacing: 0.04em;
+  color: var(--n500);
+  background: var(--n100);
+  border-radius: var(--r-sm);
 }
 
 .pedido-actions {
