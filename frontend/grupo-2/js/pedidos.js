@@ -178,7 +178,7 @@ async function cancelarPedido(pedidoId) {
         const data = await response.json();
 
         if (response.ok) {
-            alert("Pedido cancelado exitosamente.");
+            
             const usuarioGuardado = localStorage.getItem('usuario');
             if (usuarioGuardado) {
                 const usuario = JSON.parse(usuarioGuardado);

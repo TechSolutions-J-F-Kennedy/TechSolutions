@@ -408,7 +408,7 @@ if (btnConfirmBooking) {
       const data = await res.json();
 
       if (res.ok) {
-        alert('¡Solicitud enviada con éxito!');
+        
         const modal = document.getElementById('modal-agendar');
         if (modal) modal.classList.remove('active');
         if (descripcionInput) descripcionInput.value = '';
