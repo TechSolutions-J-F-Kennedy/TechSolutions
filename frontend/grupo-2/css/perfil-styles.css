@@ -98,6 +98,26 @@
 .tab-content.active { display: block; animation: tab-in 0.28s var(--ease); }
 @keyframes tab-in { from { opacity: 0; transform: translateY(6px); } }
 
+/* ---------- Datos personales: lectura / edición ---------- */
+.is-hidden { display: none !important; }
+
+/* Valor en modo lectura: parece un campo, pero plano */
+.data-view-text {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--n900);
+  background: var(--n50);
+  border: 1px solid var(--n100);
+  border-radius: var(--r-md);
+  overflow-wrap: anywhere;
+}
+
+.form-actions { align-items: stretch; }
+
 /* ---------- Direcciones ---------- */
 .address-list { display: flex; flex-direction: column; gap: 12px; }
 
@@ -129,7 +149,17 @@
 
 .address-details { flex: 1; min-width: 0; }
 .address-details strong { display: block; font-size: 14.5px; }
-.address-details p { font-size: 13px; color: var(--n700); }
+.address-details p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;           /* display_name de Nominatim es larguísimo */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--n700);
+  overflow-wrap: anywhere;
+}
 .address-details small { font-size: 12px; color: var(--n500); }
 
 .check-badge {
@@ -144,6 +174,17 @@
 }
 
 .check-badge svg { width: 15px; height: 15px; }
+
+/* "Usar como principal": compacto, en dos líneas si hace falta */
+.address-card > .btn {
+  flex: none;
+  max-width: 92px;
+  padding: 7px 10px;
+  font-size: 11.5px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
 
 /* ---------- Historial ---------- */
 .history-list { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
@@ -172,3 +213,119 @@
 
 .history-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .rating-display { font-size: 13px; font-weight: 800; letter-spacing: 1px; color: var(--wa); }
+
+/* ---------- Sugerencias de Dirección y Modal ---------- */
+.input-icon-wrapper {
+  position: relative;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 220px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh);
+}
+
+.suggestions-list:empty { display: none; }
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.suggestion-item:hover,
+.suggestion-item:focus { background: var(--n100); outline: 0; }
+
+.suggestion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--p6);
+}
+
+.suggestion-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.suggestion-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.suggestion-text .street-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--n900, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestion-text .location-name {
+  font-size: 12px;
+  color: var(--n500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Modal personalizado */
+.custom-modal {
+  width: 90%;
+  max-width: 420px;
+  padding: 24px;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-lg);
+  overflow: visible;                 /* la lista de sugerencias sobresale */
+  color: var(--n900);
+  background: var(--surface, #fff);  /* --surface existe solo en modo oscuro */
+  box-shadow: var(--sh-lg);
+}
+
+.custom-modal::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.custom-modal h4 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--n900, #0f172a);
+}
+
+/* Input suelto (sin ícono): el alias de la dirección */
+.custom-modal .field > input {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 14px;
+  font-size: 16px;
+  color: var(--n900);
+  background: #fff;
+  border: 1.5px solid var(--n200);
+  border-radius: var(--r-md);
+  outline: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.custom-modal .field > input:focus { border-color: var(--p5); box-shadow: var(--ring); }
+
+.custom-modal .modal-actions .btn { min-height: 48px; }
