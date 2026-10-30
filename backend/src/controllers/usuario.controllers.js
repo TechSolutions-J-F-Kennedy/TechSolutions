@@ -1,3 +1,6 @@
+
+import { getFotoPerfil, actualizarFotoPerfil } from "../models/usuario.models.js";
+
 import { crearUsuario, inicioSesion } from "../models/usuario.models.js";
 import { crearDireccion, obtenerDireccionesPorUsuario } from "../models/direccion.models.js";
 
@@ -5,10 +8,10 @@ export const postUsuario = async (req, res) => {
     try {
         const { nombre, email, password, telefono, direccion } = req.body;
 
+
         if (!nombre || !email || !password) {
             return res.status(400).json({ error: "Faltan datos obligatorios" });
         }
-
         // 1. Crear el usuario
         const usuarioId = await crearUsuario({ nombre, email, password, telefono: telefono || '' });
 
@@ -44,6 +47,7 @@ export const postSesion = async (req, res) => {
         }
 
         // Buscar el usuario en la BD
+
         const usuarioEncontrado = await inicioSesion({ email, password });
 
         // Si no se encontró ningún registro
@@ -60,7 +64,64 @@ export const postSesion = async (req, res) => {
         console.error("Error al iniciar sesión:", error);
         return res.status(500).json({ error: "Error en la búsqueda en la base de datos" });
     }
-}
+};
+
+//Máximo ~375 KB de imagen (el frontend la achica antes de mandarla)
+const MAX_FOTO = 500000;
+const FORMATO_FOTO = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
+
+export const getFoto = async (req, res) => {
+    try {
+        const foto = await getFotoPerfil(req.params.id);
+        if (foto === undefined) {
+            return res.status(404).json({ error: "No se encontró el usuario" });
+        }
+        return res.json({ foto });
+    } catch (error) {
+        console.error("Error al obtener la foto de perfil:", error);
+        return res.status(500).json({ error: "Error al consultar la foto de perfil" });
+    }
+};
+
+export const putFoto = async (req, res) => {
+    try {
+        const { foto } = req.body;
+
+        //foto = null sirve para quitar la foto
+        if (foto !== null && (typeof foto !== "string" || foto.length > MAX_FOTO || !FORMATO_FOTO.test(foto))) {
+            return res.status(400).json({ error: "La foto tiene que ser una imagen JPG, PNG o WEBP de menos de 375 KB" });
+        }
+
+        const actualizado = await actualizarFotoPerfil(req.params.id, foto);
+        if (!actualizado) {
+            return res.status(404).json({ error: "No se encontró el usuario" });
+        }
+        return res.json({ foto });
+    } catch (error) {
+        console.error("Error al guardar la foto de perfil:", error);
+        return res.status(500).json({ error: "Error al guardar la foto de perfil" });
+    }
+};
+
+//Devolver la foto como una imagen común, para usarla en <img src="..."> (chat, listas)
+export const enviarImagenBase64 = (res, foto) => {
+    const partes = /^data:(image\/[a-z]+);base64,(.+)$/.exec(foto || "");
+    if (!partes) return res.status(404).end();
+    res.set("Content-Type", partes[1]);
+    res.set("Cache-Control", "no-cache");
+    return res.send(Buffer.from(partes[2], "base64"));
+};
+
+export const getFotoImagen = async (req, res) => {
+    try {
+        enviarImagenBase64(res, await getFotoPerfil(req.params.id));
+    } catch (error) {
+        console.error("Error al enviar la foto de perfil:", error);
+        res.status(404).end();
+    }
+};
+
+
 
 export const getDireccionesUsuario = async (req, res) => {
     try {

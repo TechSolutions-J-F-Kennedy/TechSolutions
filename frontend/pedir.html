@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Pedir un servicio · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/cliente.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="head">
+        <small>NUEVO PEDIDO</small>
+        <h1>Pedir un servicio</h1>
+      </div>
+
+      <div class="wrap">
+        <form class="card" id="form-pedido">
+          <div class="field">
+            <label for="descripcion">¿Qué necesitás?</label>
+            <textarea class="input" id="descripcion" rows="5" maxlength="2000" required
+              placeholder="Ej: La PC no prende desde ayer después de un corte de luz."></textarea>
+          </div>
+
+          <div class="field">
+            <label>¿Dónde?</label>
+            <!-- Acá el JS pone las direcciones guardadas del cliente + "Otra dirección" -->
+            <div class="direcciones" id="direcciones"></div>
+          </div>
+
+          <div class="field" id="campo-direccion" hidden>
+            <label for="direccion">Dirección nueva</label>
+            <input class="input" id="direccion" maxlength="200" autocomplete="street-address"
+              placeholder="Calle, número y localidad (ej: Maipú 320, Banfield)">
+          </div>
+
+          <button class="btn btn-primary full" id="enviar" type="submit">
+            <i data-lucide="send"></i> Enviar pedido
+          </button>
+        </form>
+
+        <div class="card listo" id="listo" hidden>
+          <i data-lucide="circle-check"></i>
+          <b>¡Pedido enviado!</b>
+          <p class="m" id="texto-listo">Ya lo recibimos. Cuando un técnico lo acepte vas a verlo en el Inicio.</p>
+          <a class="btn btn-primary full" href="cliente.html">Ver mis pedidos</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/cliente.pedir.js"></script>
+  </body>
+</html>

@@ -176,7 +176,7 @@ if (loginForm) {
         if (data.usuario.rol === "usuario") {
           window.location.href = 'grupo-2/html/home.html';
         } else if (data.usuario.rol === "tecnico") {
-          window.location.href = 'html/tecnico-dashboard.html'; // Ajustar ruta deseada
+          window.location.href = 'inicio.html'; // Ajustar ruta deseada
         } else if (data.usuario.rol === "deposito") {
           window.location.href = 'html/deposito-dashboard.html'; // Ajustar ruta deseada
         }
