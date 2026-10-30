@@ -139,7 +139,7 @@ if (registerForm) {
             const data = await response.json();
 
             if (response.ok) {
-                alert('¡Cuenta registrada exitosamente!');
+                
                 if (goToLogin) goToLogin.click();
             } else {
                 alert('Error: ' + (data.error || 'No se pudo crear la cuenta'));
