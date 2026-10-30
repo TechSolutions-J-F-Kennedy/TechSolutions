@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Perfil · Kennedy Tech</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/perfil.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="head hero">
+        <div class="av-wrap">
+          <div class="av" id="av"></div>
+          <label class="av-cam" for="foto-input" title="Cambiar foto de perfil">
+            <i data-lucide="camera"></i>
+          </label>
+          <input type="file" id="foto-input" accept="image/*" hidden />
+        </div>
+        <button class="av-quitar" id="quitar-foto" type="button" hidden>Quitar foto</button>
+        <h1 id="n"></h1>
+        <span class="chip" id="chip-rol"><i data-lucide="hard-hat"></i> Técnico</span>
+      </div>
+
+      <div class="wrap">
+        <div class="card" id="vista">
+          <div class="kv">
+            <i data-lucide="briefcase"></i>
+            <div>
+              <b>Rol</b>
+              <span id="vr"></span>
+            </div>
+          </div>
+
+          <div class="kv">
+            <i data-lucide="mail"></i>
+            <div>
+              <b>Email</b>
+              <span id="ve"></span>
+            </div>
+          </div>
+
+          <div class="kv" id="fila-categoria">
+            <i data-lucide="layers"></i>
+            <div>
+              <b>Categoría</b>
+              <span id="vc"></span>
+            </div>
+          </div>
+
+          <div class="kv">
+            <i data-lucide="phone"></i>
+            <div>
+              <b>Teléfono</b>
+              <span id="vt"></span>
+            </div>
+          </div>
+
+          <div class="kv">
+            <i data-lucide="key-round"></i>
+            <div>
+              <b>Contraseña</b>
+              <span>••••••••</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="form" hidden>
+          <div class="field">
+            <label>Nombre real</label>
+            <input class="input" id="nombre-real" autocomplete="given-name" required />
+          </div>
+
+          <div class="field">
+            <label>Apellido</label>
+            <input class="input" id="apellido" autocomplete="family-name" required />
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input class="input" id="email" type="email" autocomplete="email" required />
+          </div>
+
+          <div class="field" id="campo-categoria">
+            <label>Categoría</label>
+            <input class="input" id="categoria" required />
+          </div>
+
+          <div class="field">
+            <label>Teléfono</label>
+            <input class="input" id="telefono" type="tel" autocomplete="tel" />
+          </div>
+
+          <div class="field" style="margin: 0">
+            <label>Nueva contraseña</label>
+            <input class="input" id="password" type="password" autocomplete="new-password" placeholder="Dejar en blanco para mantener la actual" />
+          </div>
+        </div>
+
+        <!-- Solo técnicos: desde acá se calculan los pedidos cercanos que le llegan -->
+        <div class="card zona" id="zona" hidden>
+          <div class="kv">
+            <i data-lucide="map-pin"></i>
+            <div>
+              <b>Mi zona de trabajo</b>
+              <span id="zona-direccion">Cargando...</span>
+            </div>
+          </div>
+          <iframe class="mapa" id="zona-mapa" title="Mi zona de trabajo" loading="lazy" hidden></iframe>
+          <p class="m" id="zona-ayuda">Te llegan los pedidos de clientes que estén a 15 km o menos de este lugar.</p>
+
+          <div class="zona-botones">
+            <button class="btn btn-primary" id="zona-gps" type="button">
+              <i data-lucide="locate-fixed"></i> Usar mi ubicación
+            </button>
+            <button class="btn btn-ghost" id="zona-escribir" type="button">
+              <i data-lucide="pencil"></i> Escribir dirección
+            </button>
+          </div>
+
+          <form class="zona-form" id="zona-form" hidden>
+            <input class="input" id="zona-input" maxlength="200" autocomplete="street-address"
+              placeholder="Calle, número y localidad (ej: Maipú 320, Banfield)">
+            <button class="btn btn-primary" type="submit">Guardar</button>
+          </form>
+        </div>
+
+        <div class="btns" id="bv">
+          <button class="btn btn-ghost" id="ed">
+            <i data-lucide="pencil"></i> Editar
+          </button>
+          <button class="btn btn-danger" id="ce">
+            <i data-lucide="log-out"></i> Cerrar sesión
+          </button>
+        </div>
+
+        <div class="btns" id="be" hidden>
+          <button class="btn btn-primary" id="sv">
+            <i data-lucide="check"></i> Guardar cambios
+          </button>
+          <button class="btn btn-ghost" id="cn">
+            <i data-lucide="x"></i> Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet" id="cf">
+      <div class="panel cf">
+        <div class="grab"></div>
+        <div class="warn"><i data-lucide="triangle-alert"></i></div>
+        <h3>¿Estás seguro?</h3>
+        <p class="m">
+          ¿Deseas cambiar estos datos? Se reemplazarán los datos actuales de tu
+          perfil.
+        </p>
+
+        <div class="btns">
+          <button class="btn btn-ghost" id="no">Cancelar</button>
+          <button class="btn btn-primary" id="ok">Sí, cambiar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/fotos.js"></script>
+    <script src="js/perfil.js"></script>
+  </body>
+</html>
