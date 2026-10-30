@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Flujo de Solicitud y Seguimiento — Kennedy Tech Solutions</title>
+
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="../css/servicios-styles.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+    
+    <!-- Encabezado de la App -->
+    <header class="phone-head">
+      <div class="head-top">
+        <a href="home.html" class="icon-btn" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </a>
+        <div class="brand">
+          <small>KENNEDY TECH</small>
+          <h4 id="page-title">Solicitar servicio</h4>
+        </div>
+        <button class="icon-btn" aria-label="Ayuda">
+          <i data-lucide="help-circle"></i>
+        </button>
+      </div>
+    </header>
+    <main class="phone-body">
+        <div id="contenedor-pedidos"  class="contenedor-pedidos"></div>
+    </main>
+
+    <!-- Navegación Inferior -->
+    <nav class="bottom-nav">
+      <a href="home.html" style="text-decoration: none; color: inherit;">
+      <div id="nav-btn-home" class="nav-item">
+        <i data-lucide="house"></i>
+        <span>Inicio</span>
+      </div>
+      </a>
+      <a href="servicios.html" style="text-decoration: none; color: inherit;">
+       <div class="nav-item">
+        <i data-lucide="clipboard-list"></i>
+        <span>Solicitar</span>
+      </div>
+      </a>
+      <div class="nav-item  active">
+        <i data-lucide="clipboard-list"></i>
+        <span>Pedidos</span>
+      </div>
+      <a href="mensajes.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item">
+          <i data-lucide="message-square"></i>
+          <span> Mis Chats</span>
+          </div>
+        </a>
+      <a href="perfil.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item">
+          <i data-lucide="user"></i>
+          <span>Perfil</span>
+        </div>
+      </a>
+    </nav>
+  </div>
+
+  <script src="../js/pedidos.js"></script>
+
+</body>
+</html>

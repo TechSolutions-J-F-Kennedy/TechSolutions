@@ -1,7 +1,9 @@
 // Mapea las URLs y verbos HTTP con las funciones del controlador:
 import express from "express";
+
 import { getServiciosPendientes, getTodosLosServicios, patchDisponibilidadTecnico, patchPerfilTecnico, getServicio, patchEstadoServicio, putFotoServicio, getSolicitudesCerca, postAceptarSolicitud, getUbicacion, putUbicacion } from "../controllers/tecnico.controllers.js";
-import { postSesion } from "../controllers/usuario.controllers.js";
+import { postSesion } from "../controllers/tecnico.controllers.js";
+import { getTecnicosCercanosController } from "../controllers/tecnico.controllers.js";
 
 const router = express.Router();
 
@@ -18,5 +20,8 @@ router.patch("/:id/disponibilidad", patchDisponibilidadTecnico);
 router.get("/:id/ubicacion", getUbicacion);
 router.put("/:id/ubicacion", putUbicacion);
 router.patch("/:id/perfil", patchPerfilTecnico);
+router.get("/cercanos/:usuarioId", getTecnicosCercanosController);
+
+
 
 export default router;

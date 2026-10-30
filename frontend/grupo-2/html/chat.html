@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chat con Técnico — Kennedy Tech Solutions</title>
+
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- CSS Principal y específico de Chat -->
+  <link rel="stylesheet" href="../css/home-styles.css">
+  <link rel="stylesheet" href="../css/chat-styles.css">
+</head>
+<body>
+
+  <div class="mobile-container">
+
+    <!-- Encabezado del Chat -->
+    <header class="phone-head chat-phone-head">
+      <div class="head-top">
+        <button id="btn-back-chat" class="icon-btn" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <div class="chat-tech-header-info">
+          <div class="tech-avatar sm" id="chat-tech-avatar">TM</div>
+          <div>
+            <h4 id="chat-tech-name">Técnico</h4>
+            <span class="chat-status-indicator">
+              <span class="status-dot"></span> Mensajes temporales
+            </span>
+          </div>
+        </div>
+        <button class="icon-btn" aria-label="Opciones">
+          <i data-lucide="more-vertical"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Cuerpo del Chat (Mensajes) -->
+    <main class="phone-body chat-body">
+      <div class="chat-notice">
+        <i data-lucide="shield-alert"></i>
+        <p>Los mensajes de este chat no se almacenan permanentemente para proteger tu privacidad.</p>
+      </div>
+
+      <div class="chat-messages-container" id="chat-messages-container">
+        <!-- Los mensajes se inyectan dinámicamente aquí -->
+      </div>
+    </main>
+
+    <!-- Barra Inferior de Entrada de Texto -->
+    <div class="chat-input-bar">
+      <input type="text" id="mensaje-input" placeholder="Escribe tu mensaje..." autocomplete="off">
+      <button id="btn-enviar-mensaje" class="btn-send-msg" aria-label="Enviar mensaje">
+        <i data-lucide="send"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Cliente de Socket.io -->
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="../js/chat.js"></script>
+</body>
+</html>
