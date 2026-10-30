@@ -31,3 +31,11 @@
   margin-bottom: 14px;
 }
 
+
+/* Foto del trabajo terminado */
+.foto-trabajo {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 12px;
+}

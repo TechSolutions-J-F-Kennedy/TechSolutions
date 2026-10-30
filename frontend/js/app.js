@@ -35,7 +35,23 @@ const CLS = {
   Finalizado: 'success'
 };
 const st = (e) => `<span class="status ${CLS[e]}">${e}</span>`;
-const NT = ['tareas', 'herramientas', 'inicio', 'perfil', 'chat'];
+// Pestañas de la barra de abajo según quién entró: cliente (rol 'usuario') o técnico
+const ES_CLIENTE = usuarioGuardado()?.rol === 'usuario';
+const TABS = ES_CLIENTE
+  ? [
+      ['cliente', 'house', 'Inicio'],
+      ['pedir', 'circle-plus', 'Pedir'],
+      ['perfil', 'user', 'Perfil'],
+      ['chat', 'message-circle', 'Chat']
+    ]
+  : [
+      ['tareas', 'clipboard-list', 'Tareas'],
+      ['herramientas', 'wrench', 'Herram.'],
+      ['inicio', 'house', 'Inicio'],
+      ['perfil', 'user', 'Perfil'],
+      ['chat', 'message-circle', 'Chat']
+    ];
+const NT = TABS.map((t) => t[0]);
 
 function navFx(f, t, p, anim) {
   const n = document.querySelector('nav');
@@ -67,15 +83,9 @@ function navFx(f, t, p, anim) {
   });
 }
 
-const ORDER = {
-  index: -1,
-  tareas: 0,
-  herramientas: 1,
-  inicio: 2,
-  pedido_actual: 2.5,
-  perfil: 3,
-  chat: 4
-};
+// Orden de las pantallas (para animar hacia la izquierda o la derecha)
+const ORDER = { index: -1, pedido_actual: 2.5 };
+NT.forEach((n, k) => (ORDER[n] = k));
 
 const pg = (u) => ((u || location.pathname).split('/').pop().replace('.html', '')) || 'index';
 const cur = ORDER[pg()];
@@ -114,13 +124,7 @@ document.addEventListener('click', (e) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!document.body.classList.contains('login')) {
-    const l = [
-      ['tareas', 'clipboard-list', 'Tareas'],
-      ['herramientas', 'wrench', 'Herram.'],
-      ['inicio', 'house', 'Inicio'],
-      ['perfil', 'user', 'Perfil'],
-      ['chat', 'message-circle', 'Chat']
-    ];
+    const l = TABS;
     const p = pg() == 'pedido_actual' ? 'inicio' : pg();
     document.body.insertAdjacentHTML(
       'beforeend',
@@ -168,7 +172,7 @@ if (!EMB) {
 
   if (!document.body.classList.contains('login')) {
     (function () {
-      const T = ['tareas', 'herramientas', 'inicio', 'perfil', 'chat'];
+      const T = NT;
       const pd = pg() == 'pedido_actual';
       const i = T.indexOf(pd ? 'inicio' : pg());
       const nbr = (d) => (pd ? (d > 0 ? 'inicio' : null) : T[i - d] || null);
@@ -299,4 +303,33 @@ if (!EMB) {
       addEventListener('pointercancel', end);
     })();
   }
+}
+
+/* ===== Acciones rápidas de un pedido: chatear, cómo llegar, llamar y mapa ===== */
+function prepararAccionesPedido(servicio, ids) {
+  const el = (id) => document.getElementById(id);
+  const lugar = String(servicio.ubicacion_lat_long || '').trim() || String(servicio.direccion || '').trim();
+  const telefono = String(servicio.telefono || '').replace(/[^\d+]/g, '');
+
+  const activar = (id, href) => {
+    const a = el(id);
+    if (!a) return;
+    a.classList.toggle('off', !href);
+    a.href = href || '#';
+  };
+
+  activar(ids.chat, servicio.cliente_id ? `chat.html?con=${encodeURIComponent(servicio.cliente_id)}` : '');
+  activar(ids.llegar, lugar ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(lugar)}` : '');
+  activar(ids.llamar, telefono ? `tel:${telefono}` : '');
+
+  const mapa = el(ids.mapa);
+  if (mapa) {
+    mapa.hidden = !lugar;
+    if (lugar) mapa.src = `https://maps.google.com/maps?q=${encodeURIComponent(lugar)}&z=15&output=embed`;
+  }
+}
+
+/* ===== App instalable: registrar el service worker ===== */
+if ('serviceWorker' in navigator && !EMB) {
+  navigator.serviceWorker.register('sw.js').catch((error) => console.error('No se pudo registrar el service worker:', error));
 }
