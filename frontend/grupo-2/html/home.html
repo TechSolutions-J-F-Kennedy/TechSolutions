@@ -13,7 +13,11 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="home-styles.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/home-styles.css">
+  <!-- en el <head>, al final -->
+<link rel="stylesheet" href="../css/tema.css">   <!-- después de los demás CSS -->
+<script src="../js/tema.js"></script>
 </head>
 <body>
 
@@ -33,11 +37,14 @@
       </div>
 
       <nav class="drawer-nav">
-        <a href="#" class="drawer-item active">
+        <a href="home.html" class="drawer-item active">
           <i data-lucide="house"></i> Inicio
         </a>
         <a href="#" class="drawer-item">
           <i data-lucide="clipboard-list"></i> Mis Solicitudes
+        </a>
+        <a href="mensajes.html" class="drawer-item">
+          <i data-lucide="message-square"></i> Mis Chats
         </a>
         <a href="perfil.html" class="drawer-item">
           <i data-lucide="user-round"></i> Mi Perfil
@@ -302,10 +309,24 @@
         <i data-lucide="house"></i>
         <span>Inicio</span>
       </div>
+      <a href="servicios.html" style="text-decoration: none; color: inherit;">
+       <div class="nav-item">
+        <i data-lucide="clipboard-list"></i>
+        <span>Solicitar</span>
+      </div>
+      </a>
+      <a href="pedidos.html" style="text-decoration: none; color: inherit;">
       <div class="nav-item">
         <i data-lucide="clipboard-list"></i>
         <span>Pedidos</span>
       </div>
+      </a>
+      <a href="mensajes.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item">
+          <i data-lucide="message-square"></i>
+          <span> Mis Chats</span>
+          </div>
+        </a>
       <a href="perfil.html" style="text-decoration: none; color: inherit;">
         <div class="nav-item">
           <i data-lucide="user"></i>
@@ -316,7 +337,60 @@
 
   </div>
 
-  <script src="js/home.filtro.js">
+<div id="modal-agendar" class="modal-overlay">
+  <div class="modal-content">
+    
+    <div class="modal-header">
+      <div class="modal-tech-info">
+        <div class="tech-avatar sm" id="modal-tech-avatar">LM</div>
+        <div>
+          <h4 id="modal-tech-name">Lucía Martínez</h4>
+          <small id="modal-tech-cat">Reparación PC</small>
+        </div>
+      </div>
+      <button id="btn-close-modal" class="btn-icon-close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- 1. Selector de Día / Calendario Carrusel -->
+      <div class="calendar-section">
+        <div class="calendar-header">
+          <span class="label-title">Selecciona la fecha</span>
+          <span class="month-label" id="calendar-month-label">Octubre 2026</span>
+        </div>
+        
+        <div class="days-carousel" id="days-carousel">
+          <!-- Días generados dinámicamente -->
+        </div>
+      </div>
+
+      <!-- 2. Selector de Bloque Horario -->
+      <div class="time-section">
+        <span class="label-title">Horarios disponibles</span>
+        <div class="time-grid" id="time-grid">
+          <!-- Bloques horarios generados -->
+        </div>
+      </div>
+
+      <!-- 3. Descripción opcional del problema -->
+      <div class="problem-section">
+        <label for="problem-desc" class="label-title">Detalle del problema (Opcional)</label>
+        <textarea id="problem-desc" class="form-control" rows="2" placeholder="Ej: La PC no enciende y hace tres pitidos..."></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button id="btn-confirm-booking" class="btn btn-primary btn-block" disabled>
+        <i data-lucide="check"></i> Confirmar y Enviar Solicitud
+      </button>
+    </div>
+
+  </div>
+</div>
+
+  <script src="../js/home.filtro.js">
   </script>
 </body>
 </html>

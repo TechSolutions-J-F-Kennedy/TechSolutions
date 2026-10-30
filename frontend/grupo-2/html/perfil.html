@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mi Perfil — Kennedy Tech Solutions</title>
+
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/perfil-styles.css">
+  <link rel="stylesheet" href="../css/tema.css">
+  <script src="../js/tema.js"></script>
+
+  <style>
+    .is-hidden {
+      display: none !important;
+    }
+    .data-view-text {
+      padding: 8px 0;
+      font-weight: 500;
+      color: var(--text-main, #0f172a);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-container">
+    
+    <!-- Encabezado Móvil -->
+    <header class="phone-head">
+      <div class="head-top">
+        <a href="home.html" class="icon-btn" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </a>
+        <div class="brand">
+          <small>KENNEDY TECH</small>
+          <h4>Mi Perfil</h4>
+        </div>
+        <button class="icon-btn" aria-label="Ajustes">
+          <i data-lucide="settings"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Cuerpo Principal -->
+    <main class="phone-body">
+
+      <!-- Tarjeta de Usuario -->
+      <section class="profile-card">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar">--</div>
+          <button class="edit-avatar-btn" aria-label="Cambiar foto">
+            <i data-lucide="camera"></i>
+          </button>
+        </div>
+        <h3 class="user-name">Cargando...</h3>
+        <p class="user-email">...</p>
+        <span class="user-badge"><i data-lucide="user-check"></i> Cliente Verificado</span>
+      </section>
+
+      <!-- Navegación por Pestañas -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-datos', this)">
+          <i data-lucide="user"></i> Datos
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-direcciones', this)">
+          <i data-lucide="map-pin"></i> Direcciones
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-historial', this)">
+          <i data-lucide="history"></i> Historial
+        </button>
+      </div>
+
+      <!-- ================= 1. TAB DATOS PERSONALES ================= -->
+      <section id="tab-datos" class="tab-content active">
+        <div class="section-header">
+          <span class="section-title">Información Personal</span>
+          <button type="button" id="btn-editar-datos" class="btn btn-ghost btn-sm" onclick="habilitarEdicionDatos()">
+            <i data-lucide="edit-3"></i> Modificar datos
+          </button>
+        </div>
+
+        <form id="form-datos-usuario" class="auth-form" onsubmit="guardarDatosUsuario(event)">
+          
+          <div class="field">
+            <label>Nombre completo</label>
+            <p id="view-username" class="data-view-text">-</p>
+            <div class="input-icon-wrapper is-hidden" id="wrap-username">
+              <i data-lucide="user" class="input-icon"></i>
+              <input type="text" id="username" required disabled>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Correo electrónico</label>
+            <p id="view-email" class="data-view-text">-</p>
+            <div class="input-icon-wrapper is-hidden" id="wrap-email">
+              <i data-lucide="mail" class="input-icon"></i>
+              <input type="email" id="email" required disabled>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Teléfono celular</label>
+            <p id="view-phone" class="data-view-text">-</p>
+            <div class="input-icon-wrapper is-hidden" id="wrap-phone">
+              <i data-lucide="phone" class="input-icon"></i>
+              <input type="tel" id="phone" disabled>
+            </div>
+          </div>
+
+          <div id="actions-datos" class="form-actions is-hidden" style="display: flex; gap: 8px; margin-top: 16px;">
+            <button type="button" class="btn btn-ghost" onclick="cancelarEdicionDatos()" style="flex: 1;">Cancelar</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1;"><i data-lucide="save"></i> Guardar</button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- ================= 2. TAB DIRECCIONES ================= -->
+      <section id="tab-direcciones" class="tab-content">
+        <div class="section-header">
+          <span class="section-title">Direcciones Guardadas</span>
+          <button class="btn btn-ghost btn-sm" onclick="abrirModalNuevaDireccion()">
+            <i data-lucide="plus"></i> Nueva
+          </button>
+        </div>
+
+        <div class="address-list"></div>
+
+        <!-- Modal Nueva Dirección -->
+        <dialog id="modal-direccion" class="custom-modal">
+          <form id="form-nueva-direccion" method="dialog" onsubmit="guardarNuevaDireccion(event)">
+            <h4>Nueva Dirección</h4>
+            
+            <div class="field" style="margin-top: 10px;">
+              <label for="dir-alias">Alias (Ej: Casa, Oficina)</label>
+              <input type="text" id="dir-alias" placeholder="Ej.: Oficina Norte" required>
+            </div>
+
+            <div class="field" style="margin-top: 10px;">
+              <label for="dir-completa">Dirección completa</label>
+              <div class="input-icon-wrapper">
+                <i data-lucide="map-pin" class="input-icon"></i>
+                <input type="text" id="dir-completa" placeholder="Escribe tu calle y altura..." autocomplete="off" required>
+                <ul id="modal-address-suggestions" class="suggestions-list"></ul>
+              </div>
+            </div>
+
+            <div class="modal-actions" style="display: flex; gap: 8px; margin-top: 16px;">
+              <button type="button" class="btn btn-ghost" onclick="cerrarModalNuevaDireccion()" style="flex: 1;">Cancelar</button>
+              <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar</button>
+            </div>
+          </form>
+        </dialog>
+      </section>
+
+      <!-- ================= 3. TAB HISTORIAL DE SERVICIOS ================= -->
+      <section id="tab-historial" class="tab-content">
+        <span class="section-title">Últimos Servicios</span>
+        <div class="history-list">
+          <p style="color: var(--muted); font-size: 13px; text-align: center; padding: 12px 0;">Historial de servicios completados.</p>
+        </div>
+      </section>
+
+      <!-- Cerrar Sesión -->
+      <button class="btn btn-danger-ghost btn-touch" style="margin-top: 12px;">
+        <i data-lucide="log-out"></i> Cerrar Sesión
+      </button>
+
+    </main>
+
+    <!-- Navegación Inferior -->
+    <nav class="bottom-nav">
+      <a href="home.html" style="text-decoration: none; color: inherit;">
+        <div id="nav-btn-home" class="nav-item"><i data-lucide="house"></i><span>Inicio</span></div>
+      </a>
+      <a href="servicios.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item"><i data-lucide="clipboard-list"></i><span>Solicitar</span></div>
+      </a>
+      <a href="pedidos.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item"><i data-lucide="clipboard-list"></i><span>Pedidos</span></div>
+      </a>
+      <a href="mensajes.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item"><i data-lucide="message-square"></i><span>Mis Chats</span></div>
+      </a>
+      <div class="nav-item active"><i data-lucide="user"></i><span>Perfil</span></div>
+    </nav>
+
+  </div>
+
+  <script src="../js/datos.perfil.js"></script>
+</body>
+</html>

@@ -1,9 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso — Kennedy Tech Solutions</title>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Acceso — Kennedy Tech Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/login.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  </head>
 
   <!-- Google Fonts: Space Grotesk + Manrope -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +33,8 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="grupo-2/css/base.css">
+  <link rel="stylesheet" href="grupo-2/css/styles.css">
 </head>
 <body>
 
@@ -90,9 +111,12 @@
         <div class="field">
           <label for="reg-address">Dirección</label>
           <div class="input-icon-wrapper">
-            <i data-lucide="map-pin" class="input-icon"></i>
-            <input type="text" id="reg-address" placeholder="Calle y número" required>
+          <i data-lucide="map-pin" class="input-icon"></i>
+          <input type="text" id="reg-address" placeholder="Escribe tu calle y altura..." autocomplete="off">
+          <ul id="address-suggestions" class="suggestions-list"></ul>
           </div>
+          
+          
         </div>
 
 
@@ -116,7 +140,7 @@
         <div class="field">
           <label for="reg-confirm-password">Confirmar contraseña</label>
           <div class="input-icon-wrapper">
-            <i data-lucide="lock-check" class="input-icon"></i>
+            <i data-lucide="lock-keyhole" class="input-icon"></i>
             <input type="password" id="reg-confirm-password" placeholder="••••••••" required>
           </div>
         </div>
@@ -139,8 +163,6 @@
   </div>
 
 <!-- Enlazar script externo del Frontend -->
-  <script src="js/autenticacion.js"></script>
-</body>
-</html>
+  <script src="autenticacion.js"></script>
 </body>
 </html>

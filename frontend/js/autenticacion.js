@@ -1,109 +1,48 @@
-const BASE_URL = "https://tech-solutions-neon.vercel.app";
-lucide.createIcons();
+const API_URL = location.protocol === 'file:' || location.port === '5500' ? 'http://localhost:3000' : ''; // '' = el mismo servidor que entregó la página (compu, celu o internet)
+
+// Página de inicio según el rol guardado en la tabla Usuarios
+const INICIO_POR_ROL = {
+    tecnico: 'inicio.html',
+    usuario: 'cliente.html'
+};
 
 const loginForm = document.getElementById('login-form');
-const registerForm = document.getElementById('register-form');
-const goToRegister = document.getElementById('go-to-register');
-const goToLogin = document.getElementById('go-to-login');
-const formSubtitle = document.getElementById('form-subtitle');
+const botonLogin = document.getElementById('btn-login');
 
-// Alternar a Registro
-if (goToRegister) {
-  goToRegister.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginForm.classList.add('hidden');
-    registerForm.classList.remove('hidden');
-    formSubtitle.textContent = 'Creá tu cuenta completando el siguiente formulario.';
-  });
-}
-
-// Alternar a Login
-if (goToLogin) {
-  goToLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    registerForm.classList.add('hidden');
-    loginForm.classList.remove('hidden');
-    formSubtitle.textContent = 'Ingresá tus credenciales para acceder a la plataforma.';
-  });
-}
-
-
-// front/auth.js
-
-if (registerForm) {
-  registerForm.addEventListener('submit', async (e) => {
+loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const nombre = document.getElementById('reg-username').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-password').value;
-    const confirmPassword = document.getElementById('reg-confirm-password').value;
-    const telefono = document.getElementById('reg-phone') ? document.getElementById('reg-phone').value : '';
-
-    if (password !== confirmPassword) {
-      alert('Las contraseñas no coinciden.');
-      return;
-    }
+    const email = document.getElementById('u').value.trim();
+    const password = document.getElementById('p').value;
+    botonLogin.disabled = true;
 
     try {
-      // Petición a la ruta configurada en tu MVC
-      const response = await fetch(`${BASE_URL}/api/usuarios/registro`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, email, password, telefono })
-      });
+        // Petición a la ruta de sesión (consulta la tabla Usuarios)
+        const response = await fetch(`${API_URL}/api/usuarios/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok) {
-        alert('¡Cuenta creada exitosamente!');
-        document.getElementById('go-to-login').click();
-      } else {
-        alert('Error: ' + (data.error || 'No se pudo crear la cuenta'));
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('No se pudo conectar con el servidor.');
-    }
-  });
-}
+        if (!response.ok) {
+            alert('Error: ' + (data.error || 'Credenciales inválidas'));
+            return;
+        }
 
-if (loginForm) {
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+        const destino = INICIO_POR_ROL[data.usuario.rol];
+        if (!destino) {
+            alert('Tu cuenta (' + data.usuario.rol + ') todavía no tiene acceso a esta aplicación.');
+            return;
+        }
 
-    const email = document.getElementById('login-user').value;
-    const password = document.getElementById('login-password').value;
-
-    try {
-      // Petición a la ruta de sesión
-      const response = await fetch(`${BASE_URL}/api/usuarios/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert('¡Bienvenido, ' + data.usuario.nombre + '!');
         localStorage.setItem('usuario', JSON.stringify(data.usuario));
-        if (data.usuario.rol==="usuario"){
-          window.location.href = 'home.html';
-        }
-        else if(data.usuario.rol==="tecnico"){
-
-        }
-        else if(data.usuario.rol==="deposito"){
-          
-        }
-      } else {
-        alert('Error: ' + (data.error || 'Credenciales inválidas'));
-      }
+        window.location.href = destino;
     } catch (error) {
-      console.error('Error:', error);
-      alert('No se pudo conectar con el servidor.');
+        console.error('Error:', error);
+        alert('No se pudo conectar con el servidor.');
+    } finally {
+        botonLogin.disabled = false;
     }
-  });
-}
-
+});

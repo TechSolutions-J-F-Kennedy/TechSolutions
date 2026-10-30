@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mis Chats — Kennedy Tech Solutions</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons (tiene que estar ANTES de mensajes.js) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/mensajes-styles.css">
+  <link rel="stylesheet" href="../css/tema.css">
+  <script src="../js/tema.js"></script>
+</head>
+<body>
+
+  <div class="mobile-container">
+
+    <!-- Encabezado -->
+    <header class="phone-head">
+      <div class="head-top">
+        <div class="brand">
+          <small>KENNEDY TECH</small>
+          <h4>Conversaciones</h4>
+        </div>
+      </div>
+    </header>
+
+    <!-- Cuerpo principal -->
+    <main class="phone-body" style="padding-bottom: 80px;">
+      <section class="section">
+        <div class="section-header">
+          <span class="section-title">Chats recientes</span>
+        </div>
+        <p class="section-desc">Selecciona un chat para continuar hablando con tu técnico.</p>
+
+        <!-- Contenedor dinámico -->
+        <div id="chats-list-container" class="tech-list">
+          <p style="text-align: center; color: var(--muted); padding: 20px;">Cargando tus conversaciones...</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Barra de Navegación Inferior -->
+    <nav class="bottom-nav">
+  <a href="home.html" style="text-decoration: none; color: inherit;">
+    <div class="nav-item">
+      <i data-lucide="house"></i>
+      <span>Inicio</span>
+    </div>
+  </a>
+  <a href="servicios.html" style="text-decoration: none; color: inherit;">
+    <div class="nav-item">
+      <i data-lucide="clipboard-list"></i>
+      <span>Solicitar</span>
+    </div>
+  </a>
+  <a href="pedidos.html" style="text-decoration: none; color: inherit;">
+    <div class="nav-item">
+      <i data-lucide="clipboard-list"></i>
+      <span>Pedidos</span>
+    </div>
+  </a>
+  <a href="mensajes.html" style="text-decoration: none; color: inherit;">
+    <div class="nav-item active">
+      <i data-lucide="message-square"></i>
+      <span>Mis Chats</span>
+    </div>
+  </a>
+  <a href="perfil.html" style="text-decoration: none; color: inherit;">
+    <div class="nav-item">
+      <i data-lucide="user"></i>
+      <span>Perfil</span>
+    </div>
+  </a>
+</nav>
+
+  </div>
+  <script src="../js/mensajes.js"></script>
+</body>
+</html>

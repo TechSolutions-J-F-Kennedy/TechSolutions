@@ -1,0 +1,75 @@
+/* ==========================================================================
+   mensajes-styles.css — Mis chats (mensajes.html)
+   Requiere base.css (y tema.css para el modo oscuro). Ya NO depende de
+   home-styles.css: todo está acotado a #chats-list-container, así que
+   funciona con el HTML que genera mensajes.js tal cual.
+   ========================================================================== */
+
+.section-desc { margin: -4px 0 14px; font-size: 13.5px; color: var(--n500); }
+
+#chats-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---------- Fila de conversación ---------- */
+#chats-list-container > .tech-card {
+  padding: 12px 12px 12px 14px;
+  background: var(--surface, #fff); /* --surface existe solo en modo oscuro */
+  border: 1px solid var(--n200);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s var(--ease);
+}
+
+#chats-list-container > .tech-card:hover { border-color: var(--p200); box-shadow: var(--sh); }
+#chats-list-container > .tech-card:active { transform: scale(0.985); }
+
+#chats-list-container .tech-header { display: flex; align-items: center; gap: 12px; }
+
+#chats-list-container .tech-details { flex: 1; min-width: 0; }
+
+#chats-list-container .tech-details h4 {
+  font-size: 15.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Vista previa del último mensaje: una línea con puntos suspensivos.
+   El !important pisa el max-width: 180px que mensajes.js pone en línea. */
+#chats-list-container .tech-spec {
+  max-width: none !important;
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--n500);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Botón de la derecha ---------- */
+.btn-chat-action {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: var(--p6);
+  background: var(--p50);
+  border: 1.5px solid var(--p100);
+  border-radius: 50%;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+#chats-list-container > .tech-card:hover .btn-chat-action {
+  color: #fff;
+  background: var(--p5);
+  border-color: var(--p5);
+}
+
+.btn-chat-action svg { width: 18px; height: 18px; }

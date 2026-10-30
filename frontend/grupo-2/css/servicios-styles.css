@@ -1,0 +1,298 @@
+/* ==========================================================================
+   servicios-styles.css — Mis pedidos (pedidos.html)
+   Requiere base.css
+   ========================================================================== */
+
+/* ---------- Contenedor principal ---------- */
+.contenedor-pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------- Estado Vacío (Empty State) ---------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 24px;
+  background: #fff;
+  border: 2px dashed var(--n200);
+  border-radius: var(--r-lg);
+  color: var(--n500);
+}
+
+.empty-state svg {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 12px;
+  color: var(--n400);
+}
+
+.empty-state p {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--n500);
+}
+
+/* ---------- Tarjeta de Pedido (.pedido-card) ---------- */
+/* pedidos.js agrega el estado como clase: .pendiente .confirmado .en_proceso ...
+   y esa clase pinta la franja lateral de la tarjeta. */
+.pedido-card {
+  --estado: var(--n400);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  padding: 16px 16px 14px 22px;
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+  transition: box-shadow 0.15s var(--ease);
+}
+
+.pedido-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--estado);
+}
+
+.pedido-card:hover { box-shadow: var(--sh); }
+
+.pedido-card.pendiente { --estado: var(--a4); }
+.pedido-card.confirmado { --estado: var(--p5); }
+.pedido-card.en_proceso { --estado: #7c3aed; }
+.pedido-card.finalizado,
+.pedido-card.completado { --estado: var(--s4); }
+.pedido-card.cancelado,
+.pedido-card.rechazado { --estado: var(--er); background: var(--n50); }
+
+.pedido-card.cancelado .tech-info,
+.pedido-card.rechazado .tech-info,
+.pedido-card.cancelado .pedido-desc,
+.pedido-card.rechazado .pedido-desc { opacity: 0.7; }
+
+/* Header de la tarjeta */
+.pedido-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tech-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.tech-avatar-box {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--p5), var(--p8));
+}
+
+.tech-text-info {
+  min-width: 0;
+}
+
+.tech-text-info h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--n900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tech-text-info small {
+  display: block;
+  font-size: 12px;
+  color: var(--n500);
+}
+
+/* ---------- Badges de Estado ---------- */
+.status-badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.status-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+.badge-pending {
+  color: var(--wa);
+  background: var(--wal);
+}
+
+.badge-confirmed {
+  color: var(--p6);
+  background: var(--p50);
+}
+
+.badge-progress {
+  color: #6d28d9;
+  background: #ede9fe;
+}
+
+.badge-finished {
+  color: var(--ok);
+  background: var(--okl);
+}
+
+.badge-canceled {
+  color: var(--er);
+  background: var(--erl);
+}
+
+/* ---------- Contenido del Pedido ---------- */
+.pedido-desc {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--n700);
+  background: var(--n50);
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--n100);
+  overflow-wrap: anywhere;
+}
+
+.pedido-details-grid { display: flex; flex-direction: column; gap: 10px; }
+
+/* fecha y hora como pastillas */
+.detail-group { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.detail-group .detail-row {
+  align-items: center;
+  padding: 5px 11px;
+  background: var(--n100);
+  border-radius: 99px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--n500);
+}
+
+.detail-row svg { width: 15px; height: 15px; margin-top: 2px; color: var(--p6); flex: none; }
+.detail-group .detail-row svg { margin-top: 0; }
+.detail-row span { min-width: 0; color: var(--n700); overflow-wrap: anywhere; }
+
+/* ---------- Footer del Pedido ---------- */
+.pedido-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--n100);
+  margin-top: 4px;
+}
+
+.pedido-id {
+  padding: 4px 9px;
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--n500);
+  background: var(--n100);
+  border-radius: var(--r-sm);
+}
+
+.pedido-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Botones de Acción dentro de la tarjeta */
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.btn-action svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-action:active {
+  transform: scale(0.96);
+}
+
+.btn-action.danger {
+  color: var(--er);
+  background: #fff;
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+.btn-action.danger:hover {
+  background: var(--erl);
+}
+
+.btn-action.primary {
+  color: var(--p6);
+  background: var(--p50);
+  border-color: var(--p200);
+}
+
+.btn-action.primary:hover {
+  background: var(--p100);
+}
+
+/* ---------- Interruptor / Switch ---------- */
+.switch { position: relative; width: 52px; height: 30px; flex: none; }
+.switch input { display: none; }
+.switch i { position: absolute; inset: 0; background: var(--n200); border-radius: 99px; transition: background 0.2s; }
+.switch i::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: var(--sh-sm);
+  transition: transform 0.2s var(--ease);
+}
+.switch input:checked + i { background: var(--ok); }
+.switch input:checked + i::before { transform: translateX(22px); }
