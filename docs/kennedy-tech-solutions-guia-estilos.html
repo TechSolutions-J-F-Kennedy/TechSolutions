@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kennedy Tech Solutions — Guía de estilos</title>
+
+<!-- Google Fonts: Space Grotesk + Manrope -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+:root{
+  --primary-50:#E8F1FF;
+  --primary-100:#CFE0FF;
+  --primary-200:#A6C5FF;
+  --primary-300:#76A4FF;
+  --primary-400:#4B83F5;
+  --primary-500:#2563EB;
+  --primary-600:#1D4ED8;
+  --primary-700:#1E40AF;
+  --primary-800:#1E3A8A;
+  --primary-900:#172554;
+
+  --secondary-50:#E8FFF7;
+  --secondary-100:#C7FBE9;
+  --secondary-200:#8EF3D0;
+  --secondary-300:#4DE1B2;
+  --secondary-400:#20C997;
+  --secondary-500:#0FA77A;
+  --secondary-600:#0B8664;
+  --secondary-700:#086A51;
+  --secondary-800:#075540;
+  --secondary-900:#053A2D;
+
+  --accent-300:#FDE68A;
+  --accent-400:#FACC15;
+  --accent-500:#EAB308;
+  --accent-600:#CA8A04;
+  --accent-700:#A16207;
+
+  --neutral-50:#F8FAFC;
+  --neutral-100:#F1F5F9;
+  --neutral-200:#E2E8F0;
+  --neutral-300:#CBD5E1;
+  --neutral-400:#94A3B8;
+  --neutral-500:#64748B;
+  --neutral-600:#475569;
+  --neutral-700:#334155;
+  --neutral-800:#1E293B;
+  --neutral-900:#0F172A;
+
+  --success:#16A34A;
+  --success-light:#DCFCE7;
+  --warning:#D97706;
+  --warning-light:#FEF3C7;
+  --error:#DC2626;
+  --error-light:#FEE2E2;
+  --info:#2563EB;
+  --info-light:#DBEAFE;
+
+  --bg:#F8FAFC;
+  --surface:#FFFFFF;
+  --surface-alt:#F1F5F9;
+  --text:#0F172A;
+  --muted:#64748B;
+  --border:#E2E8F0;
+  --shadow:0 8px 30px rgba(15,23,42,.08);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(37,99,235,.10), transparent 32%),
+    radial-gradient(circle at 90% 10%, rgba(15,167,122,.09), transparent 28%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Manrope',sans-serif;
+  padding-bottom:80px;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
+h1,h2,h3,h4,p{margin-top:0}
+button,input,select,textarea{font:inherit}
+
+.hero{
+  padding:70px 24px 54px;
+  text-align:center;
+  color:white;
+  background:
+    linear-gradient(135deg, rgba(23,37,84,.98), rgba(30,64,175,.96));
+  border-bottom:4px solid var(--secondary-400);
+}
+.logo{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(40px,8vw,78px);
+  font-weight:700;
+  letter-spacing:-2px;
+  line-height:1;
+}
+.logo span{color:#4DE1B2}
+.hero p{
+  max-width:720px;
+  margin:18px auto 0;
+  color:#CFE0FF;
+  font-size:15px;
+  line-height:1.65;
+}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-bottom:18px;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  font-size:12px;
+  font-weight:800;
+}
+
+main{max-width:1120px;margin:0 auto;padding:0 24px}
+section{margin-top:64px}
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:24px;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  color:var(--primary-700);
+}
+.section-title::before{
+  content:'';
+  width:4px;height:24px;
+  border-radius:4px;
+  background:var(--secondary-400);
+}
+
+.note{
+  padding:16px 18px;
+  border:1px solid var(--primary-200);
+  border-left:4px solid var(--primary-500);
+  border-radius:12px;
+  background:var(--info-light);
+  color:var(--primary-900);
+  line-height:1.6;
+  font-size:14px;
+}
+
+/* Palette */
+.swatch-group{margin-bottom:28px}
+.swatch-group h3{font-size:13px;color:var(--muted);margin-bottom:10px}
+.swatch-row{display:flex;gap:7px;flex-wrap:wrap}
+.swatch{
+  width:88px;height:78px;border-radius:11px;
+  padding:7px 9px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  font-size:10px;font-weight:800;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+}
+.swatch small{font-weight:600;opacity:.72}
+
+/* Typography */
+.type-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px;
+  box-shadow:var(--shadow);
+}
+.type-display{font-family:'Space Grotesk';font-size:40px;font-weight:700;margin-bottom:10px}
+.type-title{font-family:'Space Grotesk';font-size:24px;font-weight:600;margin-bottom:7px}
+.type-body{font-family:'Manrope';font-size:15px;line-height:1.7;color:var(--muted)}
+.code{
+  display:inline-block;
+  padding:2px 7px;
+  border-radius:6px;
+  background:var(--neutral-100);
+  color:var(--primary-700);
+  font-family:monospace;
+}
+
+/* Buttons */
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:0;border-radius:10px;padding:12px 18px;
+  font-weight:800;font-size:13px;cursor:pointer;
+  transition:.15s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--primary-500);color:white}
+.btn-secondary{background:var(--secondary-500);color:white}
+.btn-warning{background:var(--accent-400);color:var(--neutral-900)}
+.btn-ghost{background:white;color:var(--primary-700);border:1px solid var(--primary-200)}
+.btn-danger{background:var(--error);color:white}
+.btn-disabled{background:var(--neutral-200);color:var(--neutral-400);cursor:not-allowed}
+.btn-sm{padding:8px 12px;font-size:12px}
+
+/* Chips / roles */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 12px;border-radius:999px;
+  background:var(--primary-50);color:var(--primary-700);
+  border:1px solid var(--primary-100);
+  font-size:12px;font-weight:800;
+}
+
+/* Forms */
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:12px;font-weight:800;color:var(--neutral-700)}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px 13px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:white;color:var(--text);
+  outline:none;
+}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--primary-400);
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+.hint{font-size:11px;color:var(--muted)}
+.field.error input{border-color:var(--error)}
+.field.error .hint{color:var(--error)}
+.field.success input{border-color:var(--success)}
+.field.success .hint{color:var(--success)}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{
+  background:white;border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+}
+.card-top{
+  height:92px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--primary-700),var(--primary-500));
+  color:white;
+}
+.card-body{padding:16px}
+.card h4{margin-bottom:5px;font-size:16px}
+.card p{color:var(--muted);font-size:12px;line-height:1.55;margin-bottom:13px}
+.meta{display:flex;justify-content:space-between;align-items:center}
+.value{font-size:17px;font-weight:900;color:var(--primary-600)}
+.mini{font-size:11px;color:var(--muted);font-weight:700}
+
+/* Status */
+.statuses{display:flex;gap:9px;flex-wrap:wrap}
+.status{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 11px;border-radius:999px;
+  font-size:11px;font-weight:800;
+}
+.status::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor}
+.pending{background:var(--warning-light);color:var(--warning)}
+.progress{background:var(--info-light);color:var(--info)}
+.success{background:var(--success-light);color:var(--success)}
+.danger{background:var(--error-light);color:var(--error)}
+.neutral{background:var(--neutral-100);color:var(--neutral-600)}
+
+/* Alerts */
+.alert{
+  display:flex;gap:11px;align-items:flex-start;
+  padding:14px 16px;border-radius:12px;
+  margin-bottom:10px;font-size:13px;line-height:1.5;
+  border-left:4px solid;
+}
+.alert.success-a{background:var(--success-light);border-color:var(--success);color:#166534}
+.alert.warning-a{background:var(--warning-light);border-color:var(--warning);color:#92400E}
+.alert.error-a{background:var(--error-light);border-color:var(--error);color:#991B1B}
+.alert.info-a{background:var(--info-light);border-color:var(--info);color:var(--primary-900)}
+
+/* Desktop layout */
+.dashboard{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  min-height:380px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  background:white;
+  box-shadow:var(--shadow);
+}
+.sidebar{background:var(--neutral-900);color:white;padding:18px}
+.brand-mini{font-family:'Space Grotesk';font-weight:700;font-size:17px;margin-bottom:24px}
+.brand-mini span{color:var(--secondary-300)}
+.side-item{
+  display:flex;align-items:center;gap:9px;
+  padding:10px;border-radius:9px;
+  margin-bottom:5px;color:#CBD5E1;font-size:11px;font-weight:700;
+}
+.side-item.active{background:var(--primary-600);color:white}
+.dashboard-main{padding:22px}
+.dash-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
+.dash-head h3{margin:0;font-size:22px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{
+  padding:15px;border:1px solid var(--border);border-radius:12px;
+}
+.stat small{color:var(--muted);font-size:10px;font-weight:800}
+.stat strong{display:block;font-family:'Space Grotesk';font-size:24px;margin-top:4px}
+.table{
+  width:100%;border-collapse:collapse;font-size:11px
+}
+.table th,.table td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
+.table th{color:var(--muted);font-size:10px;text-transform:uppercase}
+
+/* Inventory */
+.inventory{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.qr{
+  min-height:150px;border:2px dashed var(--primary-300);
+  border-radius:14px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:var(--primary-50);color:var(--primary-700);
+}
+.stock{
+  padding:16px;border:1px solid var(--border);border-radius:14px;
+}
+.stock-line{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}
+.stock-line:last-child{border-bottom:0}
+.low{color:var(--error);font-weight:900}
+.ok{color:var(--success);font-weight:900}
+
+/* Mobile PWA */
+.phone-wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.phone{
+  width:285px;
+  border:7px solid var(--neutral-900);
+  border-radius:31px;
+  background:white;
+  overflow:hidden;
+  box-shadow:0 16px 45px rgba(15,23,42,.18);
+}
+.phone-head{
+  padding:13px 14px;
+  background:linear-gradient(135deg,var(--primary-700),var(--primary-500));
+  color:white;
+}
+.phone-head small{opacity:.78;font-size:9px}
+.phone-head h4{margin:4px 0 0;font-size:17px}
+.phone-body{padding:13px}
+.mobile-card{
+  padding:13px;border:1px solid var(--border);
+  border-radius:13px;margin-bottom:10px;
+}
+.mobile-card h4{font-size:13px;margin-bottom:5px}
+.mobile-card p{font-size:10.5px;line-height:1.5;color:var(--muted);margin:0}
+.progressbar{display:flex;gap:4px;margin:14px 0}
+.progressbar span{height:6px;flex:1;border-radius:99px;background:var(--neutral-200)}
+.progressbar span.done{background:var(--secondary-400)}
+.bottom-nav{
+  display:flex;justify-content:space-around;
+  padding:9px 5px;background:white;border-top:1px solid var(--border);
+}
+.bottom-nav div{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:8px;font-weight:800}
+.bottom-nav .active{color:var(--primary-600)}
+.map{
+  height:105px;border-radius:12px;
+  background:
+    linear-gradient(25deg,transparent 48%,rgba(37,99,235,.18) 49%,transparent 51%),
+    linear-gradient(120deg,transparent 46%,rgba(15,167,122,.18) 47%,transparent 49%),
+    var(--neutral-100);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--primary-600);
+}
+.gps{
+  display:flex;align-items:center;gap:8px;
+  padding:10px;border-radius:10px;
+  background:var(--success-light);color:#166534;
+  font-size:10px;font-weight:800;
+}
+.scanner{
+  height:145px;border-radius:14px;
+  background:var(--neutral-900);
+  display:flex;align-items:center;justify-content:center;
+  color:white;position:relative;overflow:hidden;
+}
+.scan-box{width:105px;height:105px;border:2px solid var(--secondary-300);border-radius:12px}
+.scan-line{position:absolute;width:115px;height:2px;background:var(--secondary-300);animation:scan 2s infinite}
+@keyframes scan{0%,100%{transform:translateY(-42px)}50%{transform:translateY(42px)}}
+
+/* Icon table */
+.icon-table{
+  width:100%;border-collapse:collapse;
+  background:white;border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+}
+.icon-table th,.icon-table td{
+  padding:12px;border-bottom:1px solid var(--border);
+  text-align:center;font-size:11px;
+}
+.icon-table th{background:var(--neutral-900);color:white}
+.icon-table td:first-child{text-align:left;font-weight:800}
+.icon-table tr:last-child td{border-bottom:0}
+
+/* Responsive */
+@media(max-width:760px){
+  .form-grid,.inventory{grid-template-columns:1fr}
+  .dashboard{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .stats{grid-template-columns:1fr}
+  .dashboard-main{padding:15px}
+}
+footer{
+  text-align:center;padding:52px 24px 10px;
+  color:var(--muted);font-size:11px
+}
+</style>
+</head>
+
+<body>
+
+<header class="hero">
+  <div class="tag"><i data-lucide="wrench"></i> Proyecto escolar · Guía de diseño</div>
+  <div class="logo">Kennedy <span>Tech Solutions</span></div>
+  <p>
+    Sistema de gestión de servicios técnicos pensado para dos experiencias:
+    administración desde computadoras del laboratorio y operación desde una PWA en celulares.
+  </p>
+</header>
+
+<main>
+
+<section>
+  <div class="section-title">01 · Cómo usar esta guía</div>
+  <div class="note">
+    Esta página funciona como referencia visual del proyecto. Los equipos pueden reutilizar
+    la paleta, tipografías, botones, formularios, tarjetas, estados, navegación e iconos.
+    La idea es que las distintas pantallas de la aplicación se vean como partes de un mismo sistema.
+  </div>
+</section>
+
+<section>
+  <div class="section-title">02 · Paleta de colores</div>
+
+  <div class="swatch-group">
+    <h3>Primary — azul tecnológico</h3>
+    <div class="swatch-row" id="primary"></div>
+  </div>
+
+  <div class="swatch-group">
+    <h3>Secondary — verde operativo</h3>
+    <div class="swatch-row" id="secondary"></div>
+  </div>
+
+  <div class="swatch-group">
+    <h3>Accent — amarillo de atención</h3>
+    <div class="swatch-row" id="accent"></div>
+  </div>
+
+  <div class="swatch-group">
+    <h3>Neutral — fondos y textos</h3>
+    <div class="swatch-row" id="neutral"></div>
+  </div>
+
+  <div class="swatch-group">
+    <h3>Semánticos</h3>
+    <div class="swatch-row" id="semantic"></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">03 · Tipografía</div>
+  <div class="type-card">
+    <div class="type-display">Kennedy Tech Solutions</div>
+    <div class="type-title">Space Grotesk 600/700 — títulos</div>
+    <div class="type-body">
+      <strong>Manrope 400/500/600/700/800</strong> — textos, formularios, botones y datos.
+      Ambas tipografías son de Google Fonts y se cargan con el <span class="code">&lt;link&gt;</span>
+      incluido en esta guía.
+    </div>
+    <div style="margin-top:18px;color:var(--muted);font-size:12px">
+      Recomendación: usar Space Grotesk para títulos y Manrope para todo lo demás.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">04 · Botones y acciones</div>
+  <div class="row">
+    <button class="btn btn-primary"><i data-lucide="plus"></i> Crear solicitud</button>
+    <button class="btn btn-secondary"><i data-lucide="check"></i> Confirmar</button>
+    <button class="btn btn-warning"><i data-lucide="alert-triangle"></i> Revisar</button>
+    <button class="btn btn-ghost"><i data-lucide="x"></i> Cancelar</button>
+    <button class="btn btn-danger"><i data-lucide="trash-2"></i> Eliminar</button>
+    <button class="btn btn-disabled" disabled>Sin disponibilidad</button>
+  </div>
+
+  <div class="chips">
+    <span class="chip"><i data-lucide="user-round"></i> Cliente</span>
+    <span class="chip"><i data-lucide="hard-hat"></i> Técnico</span>
+    <span class="chip"><i data-lucide="package"></i> Depósito</span>
+    <span class="chip"><i data-lucide="monitor"></i> Administración</span>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">05 · Formularios</div>
+  <div class="type-card">
+    <div class="form-grid">
+      <div class="field">
+        <label>Nombre del cliente</label>
+        <input type="text" placeholder="Ej.: Juan Pérez">
+        <span class="hint">Usar nombres claros y cortos.</span>
+      </div>
+      <div class="field">
+        <label>Tipo de servicio</label>
+        <select><option>Reparación de PC</option><option>Instalación</option><option>Redes</option></select>
+      </div>
+      <div class="field">
+        <label>Dirección</label>
+        <input type="text" placeholder="Calle y número">
+      </div>
+      <div class="field">
+        <label>Descripción del problema</label>
+        <textarea placeholder="Contá brevemente qué sucede..."></textarea>
+      </div>
+      <div class="field error">
+        <label>Código SKU</label>
+        <input value="REP-00X">
+        <span class="hint">⚠ El SKU debe tener un formato válido.</span>
+      </div>
+      <div class="field success">
+        <label>Correo electrónico</label>
+        <input value="cliente@ejemplo.com">
+        <span class="hint">✓ Correo válido.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">06 · Tarjetas de servicios</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-top"><i data-lucide="laptop"></i></div>
+      <div class="card-body">
+        <h4>Reparación de PC</h4>
+        <p>Diagnóstico y reparación de equipos informáticos en el domicilio del cliente.</p>
+        <div class="meta"><span class="value">Solicitud #1042</span><span class="mini">Prioridad media</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top"><i data-lucide="wifi"></i></div>
+      <div class="card-body">
+        <h4>Instalación de red</h4>
+        <p>Configuración de router, cableado y conectividad para pequeñas oficinas.</p>
+        <div class="meta"><span class="value">Solicitud #1043</span><span class="mini">Prioridad alta</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top"><i data-lucide="printer"></i></div>
+      <div class="card-body">
+        <h4>Servicio de impresora</h4>
+        <p>Mantenimiento, diagnóstico y reemplazo de consumibles o repuestos.</p>
+        <div class="meta"><span class="value">Solicitud #1044</span><span class="mini">Prioridad baja</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">07 · Estados de una solicitud</div>
+  <div class="statuses">
+    <span class="status pending">Pendiente</span>
+    <span class="status progress">Técnico asignado</span>
+    <span class="status progress">En camino</span>
+    <span class="status progress">En atención</span>
+    <span class="status success">Finalizado</span>
+    <span class="status danger">Cancelado</span>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">08 · Alertas y mensajes</div>
+  <div class="alert success-a"><i data-lucide="check-circle"></i><span>Servicio actualizado correctamente.</span></div>
+  <div class="alert warning-a"><i data-lucide="triangle-alert"></i><span>El repuesto está por debajo del stock mínimo.</span></div>
+  <div class="alert error-a"><i data-lucide="circle-x"></i><span>No se pudo registrar la salida de stock.</span></div>
+  <div class="alert info-a"><i data-lucide="info"></i><span>El técnico debe realizar el Check-In al llegar al domicilio.</span></div>
+</section>
+
+<section>
+  <div class="section-title">09 · Web Desktop — Panel de gestión</div>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="brand-mini">Kennedy <span>Tech</span></div>
+      <div class="side-item active"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+      <div class="side-item"><i data-lucide="clipboard-list"></i> Servicios</div>
+      <div class="side-item"><i data-lucide="package"></i> Inventario</div>
+      <div class="side-item"><i data-lucide="users"></i> Usuarios</div>
+      <div class="side-item"><i data-lucide="bar-chart-3"></i> Reportes</div>
+      <div class="side-item"><i data-lucide="settings"></i> Configuración</div>
+    </aside>
+
+    <div class="dashboard-main">
+      <div class="dash-head">
+        <div>
+          <h3>Panel de gestión</h3>
+          <div style="font-size:11px;color:var(--muted)">Administración centralizada</div>
+        </div>
+        <button class="btn btn-primary btn-sm"><i data-lucide="plus"></i> Nueva solicitud</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><small>SOLICITUDES HOY</small><strong>24</strong></div>
+        <div class="stat"><small>EN ATENCIÓN</small><strong>8</strong></div>
+        <div class="stat"><small>TÉCNICOS ACTIVOS</small><strong>12</strong></div>
+      </div>
+
+      <table class="table">
+        <thead><tr><th>Solicitud</th><th>Cliente</th><th>Técnico</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>#1042</td><td>Juan Pérez</td><td>Lucía M.</td><td><span class="status progress">En camino</span></td></tr>
+          <tr><td>#1043</td><td>Comercio Norte</td><td>Pedro R.</td><td><span class="status pending">Pendiente</span></td></tr>
+          <tr><td>#1044</td><td>Ana Gómez</td><td>Martín S.</td><td><span class="status success">Finalizado</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">10 · Web Desktop — Inventario y depósito</div>
+  <div class="inventory">
+    <div class="qr">
+      <i data-lucide="qr-code" style="width:48px;height:48px"></i>
+      <strong style="margin-top:9px">Etiqueta QR</strong>
+      <small style="margin-top:4px">REP-4521 · Router Wi-Fi</small>
+    </div>
+    <div class="stock">
+      <strong style="font-family:'Space Grotesk'">Stock crítico</strong>
+      <div class="stock-line"><span>Cable UTP Cat 6</span><span class="low">3 un.</span></div>
+      <div class="stock-line"><span>Conector RJ45</span><span class="ok">48 un.</span></div>
+      <div class="stock-line"><span>Fuente 12V</span><span class="low">2 un.</span></div>
+      <div class="stock-line"><span>Router Wi-Fi</span><span class="ok">15 un.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">11 · PWA Cliente — Solicitud y seguimiento</div>
+  <div class="phone-wrap">
+
+    <div class="phone">
+      <div class="phone-head"><small>KENNEDY TECH</small><h4>Solicitar servicio</h4></div>
+      <div class="phone-body">
+        <div class="mobile-card">
+          <h4>Paso 1 · ¿Qué necesitás?</h4>
+          <p>Elegí el tipo de servicio técnico.</p>
+          <div class="chips">
+            <span class="chip">PC</span><span class="chip">Red</span><span class="chip">Impresora</span>
+          </div>
+        </div>
+        <div class="mobile-card">
+          <h4>Paso 2 · Ubicación</h4>
+          <p>Indicá dónde debe asistir el técnico.</p>
+          <button class="btn btn-secondary btn-sm" style="margin-top:10px;width:100%"><i data-lucide="map-pin"></i> Usar ubicación</button>
+        </div>
+        <div class="mobile-card">
+          <h4>Paso 3 · Confirmar</h4>
+          <p>Revisá los datos antes de enviar.</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:10px;width:100%">Enviar solicitud</button>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="active"><i data-lucide="house"></i>Inicio</div>
+        <div><i data-lucide="clipboard-list"></i>Servicios</div>
+        <div><i data-lucide="user"></i>Perfil</div>
+      </div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-head"><small>SOLICITUD #1042</small><h4>Seguimiento</h4></div>
+      <div class="phone-body">
+        <div class="mobile-card">
+          <h4>Técnico asignado</h4>
+          <p>Lucía Martínez · ★ 4.8</p>
+        </div>
+        <div class="progressbar"><span class="done"></span><span class="done"></span><span class="done"></span><span></span><span></span></div>
+        <div class="statuses" style="gap:5px"><span class="status progress">En camino</span></div>
+        <div class="mobile-card" style="margin-top:10px">
+          <h4>Próximo paso</h4>
+          <p>El técnico está viajando al domicilio indicado.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" style="width:100%"><i data-lucide="phone"></i> Contactar técnico</button>
+      </div>
+      <div class="bottom-nav">
+        <div><i data-lucide="house"></i>Inicio</div>
+        <div class="active"><i data-lucide="clipboard-list"></i>Servicios</div>
+        <div><i data-lucide="user"></i>Perfil</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="section-title">12 · PWA Técnico — Agenda + GPS Check-In</div>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-head"><small>PERFIL TÉCNICO</small><h4>Agenda de hoy</h4></div>
+      <div class="phone-body">
+        <div class="mobile-card">
+          <h4>09:30 · Servicio #1042</h4>
+          <p>Juan Pérez · Reparación de PC</p>
+          <div class="map" style="margin-top:10px"><i data-lucide="map"></i></div>
+        </div>
+        <div class="mobile-card">
+          <h4>13:00 · Servicio #1047</h4>
+          <p>Comercio Norte · Instalación de red</p>
+        </div>
+        <button class="btn btn-primary btn-sm" style="width:100%"><i data-lucide="navigation"></i> Ver ruta</button>
+      </div>
+      <div class="bottom-nav">
+        <div class="active"><i data-lucide="calendar-days"></i>Agenda</div>
+        <div><i data-lucide="map-pin"></i>Mapa</div>
+        <div><i data-lucide="user"></i>Perfil</div>
+      </div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-head"><small>SERVICIO #1042</small><h4>Check-In</h4></div>
+      <div class="phone-body">
+        <div class="gps"><i data-lucide="map-pin-check"></i> Ubicación validada</div>
+        <div class="mobile-card" style="margin-top:10px">
+          <h4>Cliente</h4><p>Juan Pérez · Av. Principal 1234</p>
+        </div>
+        <button class="btn btn-secondary" style="width:100%;margin-bottom:8px"><i data-lucide="log-in"></i> Registrar llegada</button>
+        <button class="btn btn-ghost btn-sm" style="width:100%"><i data-lucide="log-out"></i> Registrar salida</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">13 · PWA Depósito — Escáner QR + SKU</div>
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-head"><small>DEPÓSITO</small><h4>Escanear repuesto</h4></div>
+      <div class="phone-body">
+        <div class="scanner">
+          <div class="scan-box"></div>
+          <div class="scan-line"></div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:10px"><i data-lucide="camera"></i> Abrir cámara</button>
+        <div style="text-align:center;color:var(--muted);font-size:10px;margin:12px 0">¿No funciona el QR?</div>
+        <div class="field">
+          <label>Ingresar SKU manualmente</label>
+          <input placeholder="Ej.: REP-4521">
+        </div>
+        <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:8px">Buscar repuesto</button>
+      </div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-head"><small>REPUESTO ENCONTRADO</small><h4>REP-4521</h4></div>
+      <div class="phone-body">
+        <div class="mobile-card">
+          <h4>Router Wi-Fi</h4>
+          <p>Stock actual: <strong>15 unidades</strong></p>
+        </div>
+        <div class="row">
+          <button class="btn btn-danger btn-sm" style="flex:1"><i data-lucide="minus"></i> Salida</button>
+          <button class="btn btn-secondary btn-sm" style="flex:1"><i data-lucide="plus"></i> Entrada</button>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>Cantidad</label>
+          <input type="number" value="1">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">14 · Calificación del servicio</div>
+  <div class="type-card">
+    <div style="font-family:'Space Grotesk';font-size:20px;font-weight:700;margin-bottom:6px">¿Cómo fue la atención?</div>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:15px">Calificá al técnico de 1 a 5 estrellas.</div>
+    <div class="row" style="font-size:28px;color:var(--accent-500)">
+      ★ ★ ★ ★ ★
+    </div>
+    <div class="field" style="margin-top:15px;max-width:520px">
+      <label>Reseña</label>
+      <textarea placeholder="Contanos brevemente cómo fue el servicio..."></textarea>
+    </div>
+    <button class="btn btn-primary btn-sm">Enviar calificación</button>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">15 · Iconos recomendados</div>
+  <div style="overflow-x:auto">
+    <table class="icon-table">
+      <thead>
+        <tr><th>Función</th><th>Icono</th><th>Uso</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Servicios</td><td><i data-lucide="clipboard-list"></i></td><td>Solicitudes, historial</td></tr>
+        <tr><td>Técnico</td><td><i data-lucide="hard-hat"></i></td><td>Perfil y agenda</td></tr>
+        <tr><td>Ubicación</td><td><i data-lucide="map-pin"></i></td><td>Dirección / GPS</td></tr>
+        <tr><td>Ruta</td><td><i data-lucide="navigation"></i></td><td>Mapa y navegación</td></tr>
+        <tr><td>QR</td><td><i data-lucide="qr-code"></i></td><td>Escaneo de repuestos</td></tr>
+        <tr><td>Cámara</td><td><i data-lucide="camera"></i></td><td>Web Camera API</td></tr>
+        <tr><td>Inventario</td><td><i data-lucide="package"></i></td><td>Stock y repuestos</td></tr>
+        <tr><td>Usuarios</td><td><i data-lucide="users"></i></td><td>Clientes y técnicos</td></tr>
+        <tr><td>Estadísticas</td><td><i data-lucide="bar-chart-3"></i></td><td>Reportes</td></tr>
+        <tr><td>Configuración</td><td><i data-lucide="settings"></i></td><td>Preferencias</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note" style="margin-top:15px">
+    En esta guía se utiliza <strong>Lucide Icons</strong> para mantener un estilo de iconos
+    simple y consistente. Los alumnos pueden reemplazarlo por otra librería si el proyecto lo requiere.
+  </div>
+</section>
+
+<section>
+  <div class="section-title">16 · Reglas visuales para el proyecto</div>
+  <div class="cards">
+    <div class="card"><div class="card-body"><h4>01 · Consistencia</h4><p>Una misma acción debe verse igual en todas las pantallas. Evitar cambiar colores, formas o nombres sin motivo.</p></div></div>
+    <div class="card"><div class="card-body"><h4>02 · Responsive</h4><p>La Web Desktop prioriza tablas y paneles. La PWA prioriza tarjetas, botones grandes y navegación táctil.</p></div></div>
+    <div class="card"><div class="card-body"><h4>03 · Estados claros</h4><p>Usar los colores semánticos para diferenciar pendiente, progreso, éxito, advertencia y error.</p></div></div>
+    <div class="card"><div class="card-body"><h4>04 · Acciones visibles</h4><p>Las acciones principales deben ser fáciles de encontrar y tener un texto que explique qué hacen.</p></div></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Kennedy Tech Solutions · Guía visual para el proyecto escolar · Web Desktop + PWA
+</footer>
+
+<script>
+function swatches(id, prefix, values){
+  const el=document.getElementById(id);
+  el.innerHTML=values.map(([name,value])=>{
+    const dark=['50','100','200','300'].includes(name);
+    const text=dark?'#172554':'#FFFFFF';
+    return `<div class="swatch" style="background:${value};color:${text}">
+      <span>${prefix}.${name}</span><small>${value}</small>
+    </div>`;
+  }).join('');
+}
+swatches('primary','primary',[
+  ['50','#E8F1FF'],['100','#CFE0FF'],['200','#A6C5FF'],['300','#76A4FF'],['400','#4B83F5'],
+  ['500','#2563EB'],['600','#1D4ED8'],['700','#1E40AF'],['800','#1E3A8A'],['900','#172554']
+]);
+swatches('secondary','secondary',[
+  ['50','#E8FFF7'],['100','#C7FBE9'],['200','#8EF3D0'],['300','#4DE1B2'],['400','#20C997'],
+  ['500','#0FA77A'],['600','#0B8664'],['700','#086A51'],['800','#075540'],['900','#053A2D']
+]);
+swatches('accent','accent',[
+  ['300','#FDE68A'],['400','#FACC15'],['500','#EAB308'],['600','#CA8A04'],['700','#A16207']
+]);
+swatches('neutral','neutral',[
+  ['50','#F8FAFC'],['100','#F1F5F9'],['200','#E2E8F0'],['300','#CBD5E1'],['400','#94A3B8'],
+  ['500','#64748B'],['600','#475569'],['700','#334155'],['800','#1E293B'],['900','#0F172A']
+]);
+swatches('semantic','semantic',[
+  ['success','#16A34A'],['warning','#D97706'],['error','#DC2626'],['info','#2563EB']
+]);
+lucide.createIcons();
+</script>
+
+</body>
+</html>
