@@ -70,6 +70,7 @@ html[data-theme="dark"] :where(
 ) { background-color: var(--n50); }
 
 html[data-theme="dark"] .chat-input-bar input:focus { background: var(--n50); }
+html[data-theme="dark"] .custom-modal .field > input { background: var(--n50); }
 
 html[data-theme="dark"] .bottom-nav { background: rgba(11, 18, 32, 0.92); }
 

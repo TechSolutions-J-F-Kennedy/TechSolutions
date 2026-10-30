@@ -163,3 +163,32 @@ function generarTarjetaPedidoHTML(pedido) {
         </article>
     `;
 }
+
+
+async function cancelarPedido(pedidoId) {
+    const confirmacion = confirm("¿Estás seguro de que deseas cancelar este pedido?");
+    if (!confirmacion) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/api/pedidos/${pedidoId}/cancelar`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Pedido cancelado exitosamente.");
+            const usuarioGuardado = localStorage.getItem('usuario');
+            if (usuarioGuardado) {
+                const usuario = JSON.parse(usuarioGuardado);
+                await cargarPedidosUsuario(usuario.id);
+            }
+        } else {
+            alert(data.error || "No se pudo cancelar el pedido.");
+        }
+    } catch (error) {
+        console.error("Error al cancelar pedido:", error);
+        alert("Error al conectar con el servidor.");
+    }
+}

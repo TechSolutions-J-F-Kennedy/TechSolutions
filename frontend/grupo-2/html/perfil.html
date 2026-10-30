@@ -15,15 +15,25 @@
 
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/perfil-styles.css">
-  <!-- en el <head>, al final -->
-<link rel="stylesheet" href="../css/tema.css">   <!-- después de los demás CSS -->
-<script src="../js/tema.js"></script>
+  <link rel="stylesheet" href="../css/tema.css">
+  <script src="../js/tema.js"></script>
+
+  <style>
+    .is-hidden {
+      display: none !important;
+    }
+    .data-view-text {
+      padding: 8px 0;
+      font-weight: 500;
+      color: var(--text-main, #0f172a);
+    }
+  </style>
 </head>
 <body>
 
   <div class="mobile-container">
     
-    <!-- Encabezado Móvil de la App -->
+    <!-- Encabezado Móvil -->
     <header class="phone-head">
       <div class="head-top">
         <a href="home.html" class="icon-btn" aria-label="Volver">
@@ -39,23 +49,23 @@
       </div>
     </header>
 
-    <!-- Cuerpo Principal de la App -->
+    <!-- Cuerpo Principal -->
     <main class="phone-body">
 
-      <!-- Tarjeta de Usuario / Resumen de Perfil -->
+      <!-- Tarjeta de Usuario -->
       <section class="profile-card">
         <div class="profile-avatar-wrap">
-          <div class="profile-avatar">JP</div>
+          <div class="profile-avatar">--</div>
           <button class="edit-avatar-btn" aria-label="Cambiar foto">
             <i data-lucide="camera"></i>
           </button>
         </div>
-        <h3 class="user-name">Juan Pérez</h3>
-        <p class="user-email">juan.perez@ejemplo.com</p>
+        <h3 class="user-name">Cargando...</h3>
+        <p class="user-email">...</p>
         <span class="user-badge"><i data-lucide="user-check"></i> Cliente Verificado</span>
       </section>
 
-      <!-- Pestañas / Pillas de Selección -->
+      <!-- Navegación por Pestañas -->
       <div class="tabs-nav">
         <button class="tab-btn active" onclick="switchTab('tab-datos', this)">
           <i data-lucide="user"></i> Datos
@@ -70,43 +80,46 @@
 
       <!-- ================= 1. TAB DATOS PERSONALES ================= -->
       <section id="tab-datos" class="tab-content active">
-        <form class="auth-form" onsubmit="event.preventDefault(); alert('¡Datos guardados con éxito!');">
+        <div class="section-header">
+          <span class="section-title">Información Personal</span>
+          <button type="button" id="btn-editar-datos" class="btn btn-ghost btn-sm" onclick="habilitarEdicionDatos()">
+            <i data-lucide="edit-3"></i> Modificar datos
+          </button>
+        </div>
+
+        <form id="form-datos-usuario" class="auth-form" onsubmit="guardarDatosUsuario(event)">
           
           <div class="field">
-            <label for="username">Nombre de usuario</label>
-            <div class="input-icon-wrapper">
+            <label>Nombre completo</label>
+            <p id="view-username" class="data-view-text">-</p>
+            <div class="input-icon-wrapper is-hidden" id="wrap-username">
               <i data-lucide="user" class="input-icon"></i>
-              <input type="text" id="username" value="juanperez" required>
+              <input type="text" id="username" required disabled>
             </div>
           </div>
 
           <div class="field">
-            <label for="email">Correo electrónico</label>
-            <div class="input-icon-wrapper">
+            <label>Correo electrónico</label>
+            <p id="view-email" class="data-view-text">-</p>
+            <div class="input-icon-wrapper is-hidden" id="wrap-email">
               <i data-lucide="mail" class="input-icon"></i>
-              <input type="email" id="email" value="juan.perez@ejemplo.com" required>
+              <input type="email" id="email" required disabled>
             </div>
           </div>
 
           <div class="field">
-            <label for="phone">Teléfono celular</label>
-            <div class="input-icon-wrapper">
+            <label>Teléfono celular</label>
+            <p id="view-phone" class="data-view-text">-</p>
+            <div class="input-icon-wrapper is-hidden" id="wrap-phone">
               <i data-lucide="phone" class="input-icon"></i>
-              <input type="tel" id="phone" value="+54 11 4567-8901">
+              <input type="tel" id="phone" disabled>
             </div>
           </div>
 
-          <div class="field">
-            <label for="password">Contraseña</label>
-            <div class="input-icon-wrapper">
-              <i data-lucide="lock" class="input-icon"></i>
-              <input type="password" id="password" value="••••••••">
-            </div>
+          <div id="actions-datos" class="form-actions is-hidden" style="display: flex; gap: 8px; margin-top: 16px;">
+            <button type="button" class="btn btn-ghost" onclick="cancelarEdicionDatos()" style="flex: 1;">Cancelar</button>
+            <button type="submit" class="btn btn-primary" style="flex: 1;"><i data-lucide="save"></i> Guardar</button>
           </div>
-
-          <button type="submit" class="btn btn-primary btn-touch">
-            <i data-lucide="save"></i> Guardar Cambios
-          </button>
 
         </form>
       </section>
@@ -115,93 +128,50 @@
       <section id="tab-direcciones" class="tab-content">
         <div class="section-header">
           <span class="section-title">Direcciones Guardadas</span>
-          <button class="btn btn-ghost btn-sm" onclick="alert('Formulario para agregar nueva dirección');">
+          <button class="btn btn-ghost btn-sm" onclick="abrirModalNuevaDireccion()">
             <i data-lucide="plus"></i> Nueva
           </button>
         </div>
 
-        <div class="address-list">
-          
-          <!-- Dirección 1 (Principal) -->
-          <div class="address-card active">
-            <div class="address-icon">
-              <i data-lucide="home"></i>
-            </div>
-            <div class="address-details">
-              <strong>Casa (Principal)</strong>
-              <p>Av. Principal 1234, Piso 2 B</p>
-              <small>CABA, Buenos Aires</small>
-            </div>
-            <span class="check-badge"><i data-lucide="check"></i></span>
-          </div>
+        <div class="address-list"></div>
 
-          <!-- Dirección 2 -->
-          <div class="address-card">
-            <div class="address-icon">
-              <i data-lucide="briefcase"></i>
+        <!-- Modal Nueva Dirección -->
+        <dialog id="modal-direccion" class="custom-modal">
+          <form id="form-nueva-direccion" method="dialog" onsubmit="guardarNuevaDireccion(event)">
+            <h4>Nueva Dirección</h4>
+            
+            <div class="field" style="margin-top: 10px;">
+              <label for="dir-alias">Alias (Ej: Casa, Oficina)</label>
+              <input type="text" id="dir-alias" placeholder="Ej.: Oficina Norte" required>
             </div>
-            <div class="address-details">
-              <strong>Oficina Norte</strong>
-              <p>Calle Comercial 456, Oficina 301</p>
-              <small>Vicente López, Buenos Aires</small>
-            </div>
-            <button class="btn btn-ghost btn-icon-sm" aria-label="Opciones">
-              <i data-lucide="more-vertical"></i>
-            </button>
-          </div>
 
-        </div>
+            <div class="field" style="margin-top: 10px;">
+              <label for="dir-completa">Dirección completa</label>
+              <div class="input-icon-wrapper">
+                <i data-lucide="map-pin" class="input-icon"></i>
+                <input type="text" id="dir-completa" placeholder="Escribe tu calle y altura..." autocomplete="off" required>
+                <ul id="modal-address-suggestions" class="suggestions-list"></ul>
+              </div>
+            </div>
+
+            <div class="modal-actions" style="display: flex; gap: 8px; margin-top: 16px;">
+              <button type="button" class="btn btn-ghost" onclick="cerrarModalNuevaDireccion()" style="flex: 1;">Cancelar</button>
+              <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar</button>
+            </div>
+          </form>
+        </dialog>
       </section>
 
       <!-- ================= 3. TAB HISTORIAL DE SERVICIOS ================= -->
       <section id="tab-historial" class="tab-content">
         <span class="section-title">Últimos Servicios</span>
-
         <div class="history-list">
-
-          <!-- Servicio 1 -->
-          <div class="history-card">
-            <div class="history-header">
-              <div>
-                <strong>Reparación de PC</strong>
-                <small>Solicitud #1042 · 15 Sep 2026</small>
-              </div>
-              <span class="status-chip success">Finalizado</span>
-            </div>
-            <div class="history-body">
-              <p><i data-lucide="user"></i> Técnico: Lucía Martínez</p>
-              <p><i data-lucide="dollar-sign"></i> Monto: $20.500</p>
-            </div>
-            <div class="history-footer">
-              <span class="rating-display">★ ★ ★ ★ ★ (5.0)</span>
-              <button class="btn btn-ghost btn-sm" onclick="location.href='servicios.html'">Ver Detalle</button>
-            </div>
-          </div>
-
-          <!-- Servicio 2 -->
-          <div class="history-card">
-            <div class="history-header">
-              <div>
-                <strong>Instalación de Red</strong>
-                <small>Solicitud #0988 · 02 Ago 2026</small>
-              </div>
-              <span class="status-chip success">Finalizado</span>
-            </div>
-            <div class="history-body">
-              <p><i data-lucide="user"></i> Técnico: Pedro Rodríguez</p>
-              <p><i data-lucide="dollar-sign"></i> Monto: $18.000</p>
-            </div>
-            <div class="history-footer">
-              <span class="rating-display">★ ★ ★ ★ ☆ (4.0)</span>
-              <button class="btn btn-ghost btn-sm" onclick="location.href='servicios.html'">Ver Detalle</button>
-            </div>
-          </div>
-
+          <p style="color: var(--muted); font-size: 13px; text-align: center; padding: 12px 0;">Historial de servicios completados.</p>
         </div>
       </section>
 
       <!-- Cerrar Sesión -->
-      <button class="btn btn-danger-ghost btn-touch" onclick="location.href='index.html'" style="margin-top: 12px;">
+      <button class="btn btn-danger-ghost btn-touch" style="margin-top: 12px;">
         <i data-lucide="log-out"></i> Cerrar Sesión
       </button>
 
@@ -210,33 +180,18 @@
     <!-- Navegación Inferior -->
     <nav class="bottom-nav">
       <a href="home.html" style="text-decoration: none; color: inherit;">
-      <div id="nav-btn-home" class="nav-item">
-        <i data-lucide="house"></i>
-        <span>Inicio</span>
-      </div>
+        <div id="nav-btn-home" class="nav-item"><i data-lucide="house"></i><span>Inicio</span></div>
       </a>
       <a href="servicios.html" style="text-decoration: none; color: inherit;">
-       <div class="nav-item">
-        <i data-lucide="clipboard-list"></i>
-        <span>Solicitar</span>
-      </div>
+        <div class="nav-item"><i data-lucide="clipboard-list"></i><span>Solicitar</span></div>
       </a>
       <a href="pedidos.html" style="text-decoration: none; color: inherit;">
-      <div class="nav-item ">
-        <i data-lucide="clipboard-list"></i>
-        <span>Pedidos</span>
-      </div>
+        <div class="nav-item"><i data-lucide="clipboard-list"></i><span>Pedidos</span></div>
       </a>
       <a href="mensajes.html" style="text-decoration: none; color: inherit;">
-        <div class="nav-item">
-          <i data-lucide="message-square"></i>
-          <span> Mis Chats</span>
-          </div>
-        </a>
-        <div class="nav-item active">
-          <i data-lucide="user"></i>
-          <span>Perfil</span>
-        </div>
+        <div class="nav-item"><i data-lucide="message-square"></i><span>Mis Chats</span></div>
+      </a>
+      <div class="nav-item active"><i data-lucide="user"></i><span>Perfil</span></div>
     </nav>
 
   </div>
