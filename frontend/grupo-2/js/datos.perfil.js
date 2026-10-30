@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('usuario');
-            window.location.href = '../index.html';
+            window.location.href = '../../index.html';
         });
     }
 });
@@ -116,7 +116,7 @@ window.guardarDatosUsuario = async function (e) {
             localStorage.setItem('usuario', JSON.stringify(usuarioActual));
             renderizarVistaDatos();
             toggleModoEdicion(false);
-            alert("Datos actualizados correctamente.");
+            
         } else {
             alert(data.error || "No se pudieron actualizar los datos.");
         }
