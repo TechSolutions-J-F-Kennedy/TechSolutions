@@ -1,8 +1,10 @@
+import { crearUsuario, inicioSesion, actualizarUsuario, getFotoPerfil, actualizarFotoPerfil } from "../models/usuario.models.js";
+import { 
+    crearDireccion, 
+    obtenerDireccionesPorUsuario, 
+    marcarDireccionPrincipal 
+} from "../models/direccion.models.js";
 
-import { getFotoPerfil, actualizarFotoPerfil } from "../models/usuario.models.js";
-
-import { crearUsuario, inicioSesion } from "../models/usuario.models.js";
-import { crearDireccion, obtenerDireccionesPorUsuario } from "../models/direccion.models.js";
 
 export const postUsuario = async (req, res) => {
     try {
@@ -66,6 +68,28 @@ export const postSesion = async (req, res) => {
     }
 };
 
+// --- AGREGADA: Actualizar datos de usuario (PUT /api/usuarios/:usuarioId) ---
+export const putUsuario = async (req, res) => {
+    try {
+        const { usuarioId } = req.params;
+        const { nombre, email, telefono } = req.body;
+
+        if (!nombre || !email) {
+            return res.status(400).json({ error: "Nombre y email son obligatorios" });
+        }
+
+        const actualizado = await actualizarUsuario(usuarioId, { nombre, email, telefono });
+
+        if (!actualizado) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        return res.status(200).json({ mensaje: "Perfil actualizado correctamente" });
+    } catch (error) {
+        console.error("Error al actualizar usuario:", error);
+        return res.status(500).json({ error: "Error al actualizar perfil" });
+    }
+};
 //Máximo ~375 KB de imagen (el frontend la achica antes de mandarla)
 const MAX_FOTO = 500000;
 const FORMATO_FOTO = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
@@ -131,5 +155,48 @@ export const getDireccionesUsuario = async (req, res) => {
     } catch (error) {
         console.error("Error al obtener direcciones:", error);
         return res.status(500).json({ error: "Error al cargar las direcciones" });
+    }
+};
+
+// --- AGREGADA: Crear nueva dirección (POST /api/usuarios/:usuarioId/direcciones) ---
+export const postDireccionUsuario = async (req, res) => {
+    try {
+        const { usuarioId } = req.params;
+        const { alias, direccion_completa, latitud, longitud } = req.body;
+
+        if (!direccion_completa) {
+            return res.status(400).json({ error: "La dirección completa es requerida" });
+        }
+
+        const id = await crearDireccion({
+            usuario_id: usuarioId,
+            alias: alias || 'Otra',
+            direccion_completa,
+            latitud,
+            longitud,
+            es_principal: 0
+        });
+
+        return res.status(201).json({ mensaje: "Dirección guardada con éxito", id });
+    } catch (error) {
+        console.error("Error al crear dirección:", error);
+        return res.status(500).json({ error: "Error al guardar la dirección" });
+    }
+};
+
+export const patchDireccionPrincipal = async (req, res) => {
+    try {
+        const { usuarioId, direccionId } = req.params;
+
+        const exito = await marcarDireccionPrincipal(usuarioId, direccionId);
+
+        if (!exito) {
+            return res.status(404).json({ error: "No se encontró la dirección especificada para este usuario" });
+        }
+
+        return res.status(200).json({ mensaje: "Dirección principal actualizada correctamente" });
+    } catch (error) {
+        console.error("Error al marcar dirección principal:", error);
+        return res.status(500).json({ error: "Error al cambiar la dirección principal" });
     }
 };

@@ -1,7 +1,9 @@
 const BASE_URL = "http://localhost:3000";
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if (window.lucide) lucide.createIcons();
+  if (window.lucide) {
+    lucide.createIcons();
+}
 
   const usuarioGuardado = localStorage.getItem('usuario');
   if (!usuarioGuardado) {
@@ -55,6 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           };
 
           contenedorChats.appendChild(card);
+          if (window.lucide) lucide.createIcons();
         });
       }
       if (window.lucide) lucide.createIcons();

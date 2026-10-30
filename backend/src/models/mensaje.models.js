@@ -24,3 +24,22 @@ export const obtenerMensajesPorChat = async (usuario_id, tecnico_id) => {
     const [resultado] = await connection.query(sql, [usuario_id, tecnico_id]);
     return resultado;
 };
+export const obtenerChatsPorUsuario = async (usuario_id) => {
+    const sql = `
+        SELECT 
+            m.tecnico_id,
+            u.nombre AS nombre_tecnico, 
+            m.mensaje AS ultimo_mensaje,
+            m.created_at
+        FROM Mensajes m
+        JOIN Usuarios u ON m.tecnico_id = u.id
+        WHERE m.usuario_id = ? AND m.created_at = (
+            SELECT MAX(m2.created_at) 
+            FROM Mensajes m2 
+            WHERE m2.usuario_id = m.usuario_id AND m2.tecnico_id = m.tecnico_id
+        )
+        ORDER BY m.created_at DESC;
+    `;
+    const [resultado] = await connection.query(sql, [usuario_id]);
+    return resultado;
+};

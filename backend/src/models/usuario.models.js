@@ -27,3 +27,9 @@ export const inicioSesion = async ({ email, password }) => {
     return resultado[0]; // Retorna el usuario encontrado o undefined
 };
 
+// Actualizar información del perfil de usuario
+export const actualizarUsuario = async (id, { nombre, email, telefono }) => {
+    const sql = "UPDATE Usuarios SET nombre = ?, email = ?, telefono = ? WHERE id = ?";
+    const [resultado] = await connection.query(sql, [nombre, email, telefono, id]);
+    return resultado.affectedRows > 0;
+};
