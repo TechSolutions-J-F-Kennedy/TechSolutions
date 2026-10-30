@@ -1,6 +1,6 @@
 
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = window.location.origin;
 lucide.createIcons();
 
 const loginForm = document.getElementById('login-form');
