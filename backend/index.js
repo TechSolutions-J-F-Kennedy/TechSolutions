@@ -1,52 +1,46 @@
-//Importar y conectar el router en el servidor principal:
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
-
 import { fileURLToPath } from "url";
+
 import chatRoutes from "./src/routes/chat.routes.js";
 import clientesRoutes from "./src/routes/cliente.routes.js";
-import connection from "./src/database/db.js";
 import usuariosRoutes from "./src/routes/usuario.routes.js";
 import tecnicosRoutes from "./src/routes/tecnico.routes.js";
 import serviciosRoutes from "./src/routes/servicio.routes.js"; 
 import pedidosRoutes from "./src/routes/pedido.routes.js"; 
 import mensajesRoutes from "./src/routes/mensaje.routes.js"; 
 
-
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
-//Carpeta del frontend (al lado de la carpeta backend)
-const carpetaFrontend = path.join(path.dirname(fileURLToPath(import.meta.url)), "../frontend");
-
-// 1. Servir archivos estáticos (CSS, JS del frontend, imágenes)
-app.use(express.static(path.resolve("../frontend")));
-
-// 2. Montar las rutas de la API
+// 1. Montar las rutas de la API (siempre van primero)
 app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/tecnicos", tecnicosRoutes);
-app.use("/api", serviciosRoutes); // Montamos las rutas de servicios (/api/tecnicos/:id/disponibilidad y /api/servicios/solicitar)
+app.use("/api", serviciosRoutes);
 app.use("/api/pedidos", pedidosRoutes); 
 app.use("/api/mensajes", mensajesRoutes); 
 app.use("/api/chat", chatRoutes);
 app.use("/api/clientes", clientesRoutes);
 
-// 3. Servir el HTML principal en la raíz /
+// 2. Servir archivos estáticos del frontend (solo necesario localmente)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const carpetaFrontend = path.join(__dirname, "../frontend");
+
+app.use(express.static(carpetaFrontend));
+
 app.get("/", (req, res) => {
-  res.sendFile(path.resolve("../frontend/index.html"));
+  res.sendFile(path.join(carpetaFrontend, "index.html"));
 });
 
-// 4. Escuchar en puerto local solo fuera de producción (Vercel)
+// 3. Escuchar en puerto solo en entorno local
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => console.log(`🚀 Servidor activo en puerto ${PORT}`));
 }
 
-// 5. Exportar la instancia de Express para Vercel
 export default app;
