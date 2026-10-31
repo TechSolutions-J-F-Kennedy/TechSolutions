@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Chat · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="head">
+        <small>MENSAJES</small>
+        <h1>Chats</h1>
+
+        <div class="search">
+          <i data-lucide="search"></i>
+          <input id="q" placeholder="Buscar chat" autocomplete="off">
+        </div>
+      </div>
+
+      <div id="ls"></div>
+    </div>
+
+    <div class="conv" id="cv">
+      <div class="ch">
+        <button class="ib" id="bk">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <div class="av" id="cav"></div>
+
+        <div class="who">
+          <b id="cn"></b>
+          <small id="cs"></small>
+        </div>
+      </div>
+
+      <div class="cm" id="cm"></div>
+
+      <div class="cb">
+        <label class="btn btn-ghost foto-btn" for="foto-chat" title="Mandar una foto">
+          <i data-lucide="camera"></i>
+        </label>
+        <input type="file" id="foto-chat" accept="image/*" hidden>
+        <input class="input" id="t" placeholder="Escribe un mensaje" autocomplete="off">
+        <button class="btn btn-primary" id="sd">
+          <i data-lucide="send"></i>
+        </button>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/fotos.js"></script>
+    <script src="js/chat.js"></script>
+  </body>
+</html>
+
