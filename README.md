@@ -63,6 +63,7 @@ main  (Producción Estable) [Protegida - Solo PRs aprobados]
 
 Para conocer los flujos de trabajo, arquitectura e instrucciones de desarrollo, consulta las siguientes guías:
 
+0. 🧠 [**Roadmap de Implementación MVC y APIs**](docs/roadmap-implementacion-mvc.md) — **Lectura obligatoria**: Cómo pensar en 4 capas (Model ➔ Controller ➔ Router ➔ Vista), analogía del restaurante y plan de acción para cada subgrupo.
 1. 🎬 [**Hilo Conductor Integrado**](docs/hilo-conductor-integrado.md) — La historia completa de extremo a extremo que conecta al Cliente, Técnico y Depósito.
 2. 💻 [**Alcance Web vs. Móvil (PWA)**](docs/alcance-web-vs-movil.md) — Definición de pantallas para computadoras del laboratorio vs. celulares.
 3. 🔧 [**Guía de Inicio: Subgrupo A1 (Técnicos)**](docs/guia-inicio-subgrupo-a1.md) — Experiencia PWA para el técnico en la calle (GPS Check-In, ruta diaria).

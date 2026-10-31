@@ -1,3 +1,4 @@
+const BASE_URL = "https://tech-solutions-neon.vercel.app";
 document.addEventListener('DOMContentLoaded', () => {
 
 
@@ -165,52 +166,59 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
 }
 
-  async function obtenerTecnicos(categoria = 'todos') {
-    if (!contenedor) return;
 
-    try {
-      contenedor.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--muted);">Cargando técnicos...</p>';
+// 2. Así queda tu función actualizada
+async function obtenerTecnicos(categoria = "todos") {
+  try {
+    contenedor.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--muted);">Cargando técnicos...</p>';
 
-      const response = await fetch('http://localhost:3000/api/tecnicos/verTecnicos', {
+    const catNormalizada = String(categoria).toLowerCase();
+
+    let response;
+    if (catNormalizada === "todos") {
+      // AQUÍ USAS LA LÍNEA TAL CUAL:
+      response = await fetch(`${BASE_URL}/api/tecnicos/verTodosLosTecnicos`);
+    } else {
+      response = await fetch(`${BASE_URL}/api/tecnicos/verTecnicosCategoria`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ categoria })
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        contenedor.innerHTML = ''; // Limpiar previo
-        const listaTecnicos = data.payload || [];
-
-        if (listaTecnicos.length === 0) {
-          contenedor.innerHTML = `
-            <div style="text-align: center; padding: 30px 10px; color: var(--muted);">
-              <i data-lucide="user-x" style="width: 32px; height: 32px; margin-bottom: 8px;"></i>
-              <p>No se encontraron técnicos disponibles para esta categoría.</p>
-            </div>
-          `;
-        } else {
-          listaTecnicos.forEach(tecnico => {
-            agregarTarjetaTecnico(tecnico);
-          });
-        }
-
-        if (window.lucide) {
-          lucide.createIcons();
-        }
-
-        if (techCount) {
-          techCount.textContent = `${listaTecnicos.length} disponibles`;
-        }
-
-      } else {
-        alert('Error: ' + (data.error || 'No se pudieron consultar los técnicos.'));
-      }
-    } catch (error) {
-      console.error('Error al conectar con la API:', error);
-      contenedor.innerHTML = '<p style="text-align:center; color: red;">No se pudo conectar con el servidor.</p>';
     }
-  }
 
+    const data = await response.json();
+
+    if (response.ok) {
+      contenedor.innerHTML = ''; // Limpiar previo
+      const listaTecnicos = data.payload || [];
+
+      if (listaTecnicos.length === 0) {
+        contenedor.innerHTML = `
+          <div style="text-align: center; padding: 30px 10px; color: var(--muted);">
+            <i data-lucide="user-x" style="width: 32px; height: 32px; margin-bottom: 8px;"></i>
+            <p>No se encontraron técnicos disponibles para esta categoría.</p>
+          </div>
+        `;
+      } else {
+        listaTecnicos.forEach(tecnico => {
+          agregarTarjetaTecnico(tecnico);
+        });
+      }
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      if (techCount) {
+        techCount.textContent = `${listaTecnicos.length} disponibles`;
+      }
+
+    } else {
+      alert('Error: ' + (data.error || 'No se pudieron consultar los técnicos.'));
+    }
+  } catch (error) {
+    console.error('Error al conectar con la API:', error);
+    contenedor.innerHTML = '<p style="text-align:center; color: red;">No se pudo conectar con el servidor.</p>';
+  }
+}
 });

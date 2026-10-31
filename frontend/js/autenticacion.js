@@ -1,4 +1,4 @@
-
+const BASE_URL = "https://tech-solutions-neon.vercel.app";
 lucide.createIcons();
 
 const loginForm = document.getElementById('login-form');
@@ -47,7 +47,7 @@ if (registerForm) {
 
     try {
       // Petición a la ruta configurada en tu MVC
-      const response = await fetch('http://localhost:3000/api/usuarios/registro', {
+      const response = await fetch(`${BASE_URL}/api/usuarios/registro`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre, email, password, telefono })
@@ -77,7 +77,7 @@ if (loginForm) {
 
     try {
       // Petición a la ruta de sesión
-      const response = await fetch('http://localhost:3000/api/usuarios/login', {
+      const response = await fetch(`${BASE_URL}/api/usuarios/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
