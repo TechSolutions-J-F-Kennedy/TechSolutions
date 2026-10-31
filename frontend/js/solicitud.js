@@ -17,6 +17,12 @@ const contadorTexto = document.getElementById("contadorTexto");
 const mensaje = document.getElementById("mensaje");
 const btnConfirmar = document.getElementById("btnConfirmar");
 
+const API_URL = window.location.protocol === "file:"
+    ? "http://localhost:3000/api/solicitudes"
+    : window.location.port === "5500"
+        ? `${window.location.protocol}//${window.location.hostname}:3000/api/solicitudes`
+        : "/api/solicitudes";
+
 
 
 const MAX_FOTO = 5 * 1024 * 1024;
@@ -180,13 +186,7 @@ form.addEventListener("submit", async (evento) => {
         return;
     }
 
-    
-
-    mostrarMensaje(
-        "Los datos son válidos. El formulario está listo para conectarse al servidor.",
-        "exito"
-    );
-        const datos = new FormData();
+    const datos = new FormData();
 
     datos.append("id_usuario", localStorage.getItem("usuarioId") || "");
     datos.append("direccion", direccionValor);
@@ -200,13 +200,11 @@ form.addEventListener("submit", async (evento) => {
     btnConfirmar.textContent = "Enviando solicitud...";
 
     try {
-        const respuesta = await fetch(
-            "http://localhost:3000/api/solicitudes",
-            {
-                method: "POST",
-                body: datos
-            }
-        );
+        mostrarMensaje("Enviando solicitud...", "exito");
+        const respuesta = await fetch(API_URL, {
+            method: "POST",
+            body: datos
+        });
 
         const resultado = await respuesta.json();
 
@@ -227,7 +225,9 @@ form.addEventListener("submit", async (evento) => {
         console.error("Error al enviar la solicitud:", error);
 
         mostrarMensaje(
-            error.message || "No se pudo conectar con el servidor.",
+            error instanceof TypeError
+                ? "No se pudo conectar con el servidor. Iniciá el backend con «npm start» desde la carpeta backend."
+                : error.message || "No se pudo crear la solicitud.",
             "error"
         );
     } finally {

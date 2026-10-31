@@ -1,4 +1,41 @@
 const solicitudesModel = require("../models/solicitudes.model");
+const cloudinary = require("../config/cloudinary");
+
+function subirImagen(buffer) {
+    const variablesFaltantes = [
+        "CLOUDINARY_CLOUD_NAME",
+        "CLOUDINARY_API_KEY",
+        "CLOUDINARY_API_SECRET"
+    ].filter((nombre) => !process.env[nombre]);
+
+    if (variablesFaltantes.length) {
+        throw new Error(
+            `Faltan variables de entorno de Cloudinary: ${variablesFaltantes.join(", ")}`
+        );
+    }
+
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                folder: "techsolutions/solicitudes",
+                resource_type: "image"
+            },
+            (error, resultado) => {
+                if (error) {
+                    return reject(error);
+                }
+
+                if (!resultado || !resultado.secure_url) {
+                    return reject(new Error("Cloudinary no devolvió una URL segura."));
+                }
+
+                resolve(resultado.secure_url);
+            }
+        );
+
+        stream.end(buffer);
+    });
+}
 
 async function crearSolicitud(req, res) {
     try {
@@ -30,7 +67,7 @@ async function crearSolicitud(req, res) {
             });
         }
 
-        const foto = req.file ? req.file.filename : null;
+        const foto = req.file ? await subirImagen(req.file.buffer) : null;
 
         const solicitud = await solicitudesModel.crearSolicitud({
             id_usuario: Number(id_usuario),
