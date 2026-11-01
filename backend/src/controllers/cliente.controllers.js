@@ -1,4 +1,4 @@
-import { esCliente, getSolicitudesByCliente, getServiciosByCliente, getDireccionesCliente, getServicioDeCliente, existeResena, crearResena, actualizarPerfilCliente } from "../models/cliente.models.js";
+import { esCliente, getSolicitudesByCliente, getServiciosByCliente, getDireccionesCliente, getServicioDeCliente, existeResena, crearResena, actualizarPerfilCliente, cancelarSolicitudCliente } from "../models/cliente.models.js";
 import { crearSolicitud, getTecnicosCercanos } from "../models/solicitud.models.js";
 import { geocodificar } from "../utils/geo.js";
 import { enviarEvento } from "../utils/tiempoReal.js";
@@ -155,5 +155,23 @@ export const patchPerfilCliente = async (req, res) => {
             return res.status(409).json({ error: "Ese email ya está asociado a otra cuenta" });
         }
         return res.status(500).json({ error: "Error al actualizar el perfil" });
+    }
+};
+
+//DELETE /api/clientes/:id/solicitudes/:solicitudId -> cancelar solicitud pendiente
+export const deleteSolicitud = async (req, res) => {
+    try {
+        const { id, solicitudId } = req.params;
+        if (!(await esCliente(id))) {
+            return res.status(404).json({ error: "No se encontró el cliente" });
+        }
+        const cancelada = await cancelarSolicitudCliente(id, solicitudId);
+        if (!cancelada) {
+            return res.status(400).json({ error: "No se puede cancelar esa solicitud (ya fue tomada o no existe)" });
+        }
+        return res.json({ ok: true });
+    } catch (error) {
+        console.error("Error al cancelar la solicitud:", error);
+        return res.status(500).json({ error: "Error al cancelar la solicitud" });
     }
 };

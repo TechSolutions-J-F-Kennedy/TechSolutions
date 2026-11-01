@@ -102,3 +102,13 @@ export const actualizarPerfilCliente = async (clienteId, { nombre_real, apellido
     );
     return rows[0];
 };
+
+
+// Cancelar solicitud en estado 'Solicitado' (antes de que un técnico la acepte)
+export const cancelarSolicitudCliente = async (clienteId, solicitudId) => {
+    const [cambio] = await connection.query(
+        "UPDATE Solicitudes SET estado = 'Cancelado' WHERE id = ? AND id_usuario = ? AND estado = 'Solicitado'",
+        [solicitudId, clienteId]
+    );
+    return cambio.affectedRows > 0;
+};

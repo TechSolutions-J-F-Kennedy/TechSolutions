@@ -1,73 +1,53 @@
 <!DOCTYPE html>
 <html lang="es">
-
-  <head>
-    <meta charset="UTF-8">
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover"
-    >
-    <title>Acceso — Kennedy Tech Solutions</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
-      rel="stylesheet"
-    >
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/login.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- App instalable (PWA) -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#172554">
-    <link rel="icon" type="image/png" href="img/icono-192.png">
-    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
-  </head>
-
-  <!-- Google Fonts: Space Grotesk + Manrope -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Acceso — Kennedy Tech Solutions</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Lucide Icons -->
+  <link rel="stylesheet" href="css/styles.css">
   <script src="https://unpkg.com/lucide@latest"></script>
-
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#172554">
+  <link rel="icon" type="image/png" href="img/icono-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
 </head>
 <body>
   <div class="login-wrapper">
-    <!-- Card Principal -->
     <div class="login-card">
-      
-      <!-- Encabezado / Logo -->
+
+      <!-- Encabezado -->
       <div class="login-header">
         <div class="tag">
           <i data-lucide="wrench"></i> Kennedy Tech Solutions
         </div>
-        <div class="logo">
-          Kennedy <span>Tech</span>
-        </div>
+        <div class="logo">Kennedy <span>Tech</span></div>
         <p id="form-subtitle">Ingresá tus credenciales para acceder a la plataforma.</p>
       </div>
 
-      <!-- ================= FORMULARIO DE INICIO DE SESIÓN ================= -->
-      <form id="login-form" class="auth-form" onsubmit="event.preventDefault();">
+      <!-- Mensajes de error/éxito -->
+      <p id="auth-mensaje" class="auth-mensaje" hidden></p>
+
+      <!-- FORMULARIO LOGIN -->
+      <form id="login-form" class="auth-form">
         <div class="field">
           <label for="login-user">Usuario o correo electrónico</label>
           <div class="input-icon-wrapper">
             <i data-lucide="user" class="input-icon"></i>
-            <input type="text" id="login-user" placeholder="Ej.: usuario123" required>
+            <input type="text" id="login-user" placeholder="Ej.: usuario123" autocomplete="username" required>
           </div>
         </div>
 
         <div class="field">
-          <div class="label-row">
-            <label for="login-password">Contraseña</label>
-            <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
-          </div>
+          <label for="login-password">Contraseña</label>
           <div class="input-icon-wrapper">
             <i data-lucide="lock" class="input-icon"></i>
-            <input type="password" id="login-password" placeholder="••••••••" required>
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
           </div>
         </div>
 
@@ -78,7 +58,7 @@
           </label>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-block">
+        <button type="submit" id="btn-login" class="btn btn-primary btn-block">
           <i data-lucide="log-in"></i> Iniciar sesión
         </button>
 
@@ -87,13 +67,13 @@
         </p>
       </form>
 
-      <!-- ================= FORMULARIO DE REGISTRO ================= -->
-      <form id="register-form" class="auth-form hidden" onsubmit="event.preventDefault();">
+      <!-- FORMULARIO REGISTRO -->
+      <form id="register-form" class="auth-form hidden">
         <div class="field">
           <label for="reg-username">Nombre de usuario</label>
           <div class="input-icon-wrapper">
             <i data-lucide="user" class="input-icon"></i>
-            <input type="text" id="reg-username" placeholder="Ej.: juanperez" required>
+            <input type="text" id="reg-username" placeholder="Ej.: juanperez" autocomplete="username" required>
           </div>
         </div>
 
@@ -101,36 +81,31 @@
           <label for="reg-email">Correo electrónico</label>
           <div class="input-icon-wrapper">
             <i data-lucide="mail" class="input-icon"></i>
-            <input type="email" id="reg-email" placeholder="cliente@ejemplo.com" required>
+            <input type="email" id="reg-email" placeholder="cliente@ejemplo.com" autocomplete="email" required>
           </div>
         </div>
 
         <div class="field">
-          <label for="reg-address">Dirección</label>
+          <label for="reg-phone">Teléfono <span class="opcional">(opcional)</span></label>
           <div class="input-icon-wrapper">
-          <i data-lucide="map-pin" class="input-icon"></i>
-          <input type="text" id="reg-address" placeholder="Escribe tu calle y altura..." autocomplete="off">
-          <ul id="address-suggestions" class="suggestions-list"></ul>
+            <i data-lucide="phone" class="input-icon"></i>
+            <input type="tel" id="reg-phone" placeholder="Ej.: 1112345678" autocomplete="tel">
           </div>
-          
-          
         </div>
 
-
         <div class="field">
-  <label for="reg-phone">Teléfono</label>
-  <div class="input-icon-wrapper">
-    <i data-lucide="phone" class="input-icon"></i>
-    <input type="tel" id="reg-phone" placeholder="Ej.: 1112345678">
-  </div>
-</div>
-
+          <label for="reg-address">Dirección <span class="opcional">(opcional)</span></label>
+          <div class="input-icon-wrapper">
+            <i data-lucide="map-pin" class="input-icon"></i>
+            <input type="text" id="reg-address" placeholder="Ej.: Av. Mitre 123, Quilmes" autocomplete="street-address">
+          </div>
+        </div>
 
         <div class="field">
           <label for="reg-password">Contraseña</label>
           <div class="input-icon-wrapper">
             <i data-lucide="lock" class="input-icon"></i>
-            <input type="password" id="reg-password" placeholder="••••••••" required>
+            <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password" required>
           </div>
         </div>
 
@@ -138,11 +113,11 @@
           <label for="reg-confirm-password">Confirmar contraseña</label>
           <div class="input-icon-wrapper">
             <i data-lucide="lock-keyhole" class="input-icon"></i>
-            <input type="password" id="reg-confirm-password" placeholder="••••••••" required>
+            <input type="password" id="reg-confirm-password" placeholder="••••••••" autocomplete="new-password" required>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-secondary btn-block">
+        <button type="submit" id="btn-registro" class="btn btn-secondary btn-block">
           <i data-lucide="user-plus"></i> Crear mi cuenta
         </button>
 
@@ -152,14 +127,10 @@
       </form>
 
     </div>
-
-    <!-- Pie de página -->
-    <footer class="login-footer">
-      Kennedy Tech Solutions · Web Desktop + PWA
-    </footer>
+    <footer class="login-footer">Kennedy Tech Solutions · Web Desktop + PWA</footer>
   </div>
 
-<!-- Enlazar script externo del Frontend -->
-  <script src="autenticacion.js"></script>
+  <script src="js/autenticacion.js"></script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>

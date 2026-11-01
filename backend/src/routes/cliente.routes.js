@@ -1,6 +1,6 @@
 // Rutas de las pantallas del cliente (rol 'usuario'):
 import express from "express";
-import { getPedidos, getDirecciones, postSolicitud, postResena, patchPerfilCliente } from "../controllers/cliente.controllers.js";
+import { getPedidos, getDirecciones, postSolicitud, postResena, patchPerfilCliente, deleteSolicitud } from "../controllers/cliente.controllers.js";
 
 const router = express.Router();
 
@@ -8,6 +8,7 @@ const router = express.Router();
 router.get("/:id/pedidos", getPedidos);
 router.get("/:id/direcciones", getDirecciones);
 router.post("/:id/solicitudes", postSolicitud);
+router.delete("/:id/solicitudes/:solicitudId", deleteSolicitud);
 router.post("/:id/resenas", postResena);
 router.patch("/:id/perfil", patchPerfilCliente);
 

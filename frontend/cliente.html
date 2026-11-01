@@ -1,67 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover"
-    >
-    <title>Inicio · Kennedy Tech</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
-      rel="stylesheet"
-    >
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/cliente.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- App instalable (PWA) -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#172554">
-    <link rel="icon" type="image/png" href="img/icono-192.png">
-    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Mi panel — Kennedy Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/cliente.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#172554">
+  <link rel="icon" type="image/png" href="img/icono-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+</head>
+<body>
 
-  <body>
-    <div class="app">
-      <div class="head">
-        <small>KENNEDY TECH</small>
-        <h1 id="saludo">Hola</h1>
+  <div class="app-wrapper">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="app-header__brand">
+        <span class="app-header__tag">Kennedy Tech</span>
+        <h1 class="app-header__title">Mi <span>panel</span></h1>
       </div>
+      <a href="perfil.html" class="btn-icon" aria-label="Mi perfil">
+        <i data-lucide="user-circle"></i>
+      </a>
+    </header>
 
-      <div class="wrap">
-        <div class="card cta">
-          <div>
-            <b>¿Necesitás un técnico?</b>
-            <p class="m">Contanos qué pasó y te asignamos uno.</p>
-          </div>
-          <a class="btn btn-primary" href="pedir.html"><i data-lucide="circle-plus"></i> Pedir</a>
-        </div>
-
-        <h2>Tus pedidos</h2>
-        <p class="m" id="mensaje">Cargando tus pedidos...</p>
-        <div id="lista"></div>
+    <!-- Bienvenida -->
+    <div class="bienvenida">
+      <div class="bienvenida__av" id="av-iniciales">?</div>
+      <div class="bienvenida__texto">
+        <p>Bienvenido/a,</p>
+        <h2 id="nombre-cliente">Cargando...</h2>
       </div>
     </div>
 
-    <!-- Calificar al técnico -->
-    <div class="sheet" id="hoja-resena">
-      <div class="panel">
-        <div class="grab"></div>
-        <h3>¿Cómo te fue con <span id="resena-tecnico"></span>?</h3>
-        <p class="m">Tocá las estrellas para calificar el servicio.</p>
-        <div class="estrellas" id="estrellas"></div>
-        <textarea class="input" id="resena-comentario" rows="3" maxlength="500" placeholder="Contanos cómo fue (opcional)"></textarea>
-        <div class="btns-resena">
-          <button class="btn btn-ghost" id="resena-cancelar">Cancelar</button>
-          <button class="btn btn-primary" id="resena-enviar" disabled>Enviar</button>
-        </div>
+    <!-- Botón principal -->
+    <a href="solicitud.html" class="btn-solicitar">
+      <i data-lucide="plus-circle"></i>
+      Solicitar un servicio técnico
+    </a>
+
+    <!-- Mensaje de error global -->
+    <p id="msg-global" class="auth-mensaje auth-mensaje--error" hidden></p>
+
+    <!-- ═══ SOLICITUDES ACTIVAS ═══ -->
+    <section class="seccion" id="sec-solicitudes">
+      <div class="seccion__header">
+        <h2 class="seccion__titulo">Solicitudes activas</h2>
+        <span class="chip" id="chip-solicitudes">0</span>
+      </div>
+      <div id="lista-solicitudes">
+        <div class="spinner"></div>
+      </div>
+    </section>
+
+    <!-- ═══ HISTORIAL DE SERVICIOS ═══ -->
+    <section class="seccion" id="sec-servicios">
+      <div class="seccion__header">
+        <h2 class="seccion__titulo">Historial de servicios</h2>
+        <span class="chip" id="chip-servicios">0</span>
+      </div>
+      <div id="lista-servicios">
+        <div class="spinner"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Nav inferior (móvil) -->
+  <nav class="nav-bottom">
+    <a href="cliente.html" class="nav-bottom__item activo">
+      <i data-lucide="layout-dashboard"></i>
+      Inicio
+    </a>
+    <a href="solicitud.html" class="nav-bottom__item">
+      <i data-lucide="plus-circle"></i>
+      Solicitar
+    </a>
+    <a href="perfil.html" class="nav-bottom__item">
+      <i data-lucide="user"></i>
+      Perfil
+    </a>
+  </nav>
+
+  <!-- ═══ MODAL DE CALIFICACIÓN ═══ -->
+  <div class="modal-overlay hidden" id="modal-resena">
+    <div class="modal-panel">
+      <div class="modal-grab"></div>
+      <h3>⭐ Calificar servicio</h3>
+      <p id="modal-tecnico-nombre">¿Cómo fue la atención?</p>
+
+      <div class="estrellas" id="estrellas-container">
+        <button class="estrella-btn" data-val="1" aria-label="1 estrella">⭐</button>
+        <button class="estrella-btn" data-val="2" aria-label="2 estrellas">⭐</button>
+        <button class="estrella-btn" data-val="3" aria-label="3 estrellas">⭐</button>
+        <button class="estrella-btn" data-val="4" aria-label="4 estrellas">⭐</button>
+        <button class="estrella-btn" data-val="5" aria-label="5 estrellas">⭐</button>
+      </div>
+
+      <textarea id="comentario-resena" placeholder="Comentario opcional (máx. 500 caracteres)" maxlength="500"></textarea>
+
+      <div style="display:flex;gap:10px">
+        <button class="btn-sm btn-sm--ghost" id="btn-cancelar-resena" style="flex:1;padding:12px">Cancelar</button>
+        <button class="btn-sm btn-sm--primary" id="btn-enviar-resena" style="flex:2;padding:12px">Enviar calificación</button>
       </div>
     </div>
+  </div>
 
-    <script src="js/app.js"></script>
-    <script src="js/cliente.inicio.js"></script>
-  </body>
+  <!-- Toast de notificaciones -->
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="js/cliente.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
 </html>

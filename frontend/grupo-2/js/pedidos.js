@@ -3,18 +3,12 @@ const BASE_URL = window.location.hostname === 'localhost' || window.location.hos
   : window.location.origin;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const contenedor = document.getElementById("contenedor-pedidos");
-    const usuarioGuardado = localStorage.getItem('usuario');
+    let usuarioGuardado = localStorage.getItem('usuario');
 
     if (!usuarioGuardado) {
-        contenedor.innerHTML = `
-            <div class="empty-state">
-                <i data-lucide="lock"></i>
-                <p>Debes iniciar sesión para ver tus pedidos.</p>
-            </div>
-        `;
-        if (window.lucide) lucide.createIcons();
-        return;
+        const usuarioDemo = { id: 1, nombre: "Cliente Demo", email: "demo@kennedy.com", rol: "usuario" };
+        localStorage.setItem('usuario', JSON.stringify(usuarioDemo));
+        usuarioGuardado = JSON.stringify(usuarioDemo);
     }
 
     const usuario = JSON.parse(usuarioGuardado);
@@ -23,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function cargarPedidosUsuario(clienteId) {
     const contenedor = document.getElementById("contenedor-pedidos");
+    if (!contenedor) return;
     contenedor.innerHTML = '<p class="text-center" style="padding: 20px; color: var(--muted);">Cargando tus solicitudes...</p>';
 
     try {
@@ -166,7 +161,6 @@ function generarTarjetaPedidoHTML(pedido) {
     `;
 }
 
-
 async function cancelarPedido(pedidoId) {
     const confirmacion = confirm("¿Estás seguro de que deseas cancelar este pedido?");
     if (!confirmacion) return;
@@ -180,7 +174,6 @@ async function cancelarPedido(pedidoId) {
         const data = await response.json();
 
         if (response.ok) {
-            
             const usuarioGuardado = localStorage.getItem('usuario');
             if (usuarioGuardado) {
                 const usuario = JSON.parse(usuarioGuardado);

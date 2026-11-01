@@ -114,9 +114,18 @@ export const patchEstadoServicio = async (req, res) => {
             });
         }
 
+        const servicio = await getServicioDeTecnico(id, servicioId);
+        if (!servicio) {
+            return res.status(404).json({ error: "No se encontró el servicio" });
+        }
+
         const actualizado = await actualizarEstadoServicio(id, servicioId, estado);
         if (!actualizado) {
             return res.status(404).json({ error: "No se encontró el servicio" });
+        }
+
+        if (servicio.cliente_id) {
+            enviarEvento(servicio.cliente_id, "estado-actualizado", { servicioId: Number(servicioId), estado });
         }
 
         return res.status(200).json({ estado });
@@ -231,6 +240,7 @@ export const putUbicacion = async (req, res) => {
         return res.status(500).json({ error: "Error al guardar tu ubicación" });
     }
 };
+
 import { obtenerDireccionesPorUsuario } from "../models/direccion.models.js";
 
 import { 
@@ -303,16 +313,12 @@ export const postSesion = async (req, res) => {
             return res.status(400).json({ error: "Faltan datos obligatorios" });
         }
 
-        // Buscar el usuario en la BD
-
         const usuarioEncontrado = await inicioSesion({ email, password });
 
-        // Si no se encontró ningún registro
         if (!usuarioEncontrado) {
             return res.status(401).json({ error: "Credenciales inválidas" });
         }
 
-        // Si existe, devolver mensaje Y los datos del usuario para el frontend
         return res.status(200).json({
             mensaje: "Inicio de sesión exitoso",
             usuario: usuarioEncontrado

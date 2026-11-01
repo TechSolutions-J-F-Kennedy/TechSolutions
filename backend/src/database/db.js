@@ -2,12 +2,14 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from "url";
 
-// Forzar a dotenv a encontrar el archivo .env en la raíz del backend
-dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+// Forzar a dotenv a encontrar el archivo .env en la raíz del backend sin importar el cwd
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 // Imprimir en consola para depuración local
-console.log("🔌 Conectando a la base de datos en:", process.env.DB_HOST);
+console.log("🔌 Conectando a la base de datos en:", process.env.DB_HOST || "(sin host)");
 
 const connection = mysql.createPool({
   host: process.env.DB_HOST,
