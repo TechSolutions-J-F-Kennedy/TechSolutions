@@ -1,5 +1,5 @@
-const solicitudesModel = require("../models/solicitudes.model");
-const cloudinary = require("../config/cloudinary");
+import solicitudesModel from "../models/solicitudes.model.js";
+import cloudinary from "../config/cloudinary.js";
 
 function subirImagen(buffer) {
     const variablesFaltantes = [
@@ -37,7 +37,7 @@ function subirImagen(buffer) {
     });
 }
 
-async function crearSolicitud(req, res) {
+export async function crearSolicitud(req, res) {
     try {
         const { id_usuario, direccion, descripcion } = req.body;
 
@@ -89,6 +89,7 @@ async function crearSolicitud(req, res) {
     }
 }
 
-module.exports = {
+export default {
     crearSolicitud
 };
+

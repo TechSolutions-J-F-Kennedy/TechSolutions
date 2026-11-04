@@ -4,9 +4,6 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.join(__dirname, ".env") });
-
 import chatRoutes from "./src/routes/chat.routes.js";
 import clientesRoutes from "./src/routes/cliente.routes.js";
 import usuariosRoutes from "./src/routes/usuario.routes.js";
@@ -14,7 +11,10 @@ import tecnicosRoutes from "./src/routes/tecnico.routes.js";
 import serviciosRoutes from "./src/routes/servicio.routes.js"; 
 import pedidosRoutes from "./src/routes/pedido.routes.js"; 
 import mensajesRoutes from "./src/routes/mensaje.routes.js"; 
+import solicitudesRoutes from "./src/routes/solicitudes.routes.js";
+import stockRoutes from "./src/routes/stock.routes.js";
 
+dotenv.config();
 const app = express();
 
 app.use(cors());
@@ -28,9 +28,14 @@ app.use("/api/pedidos", pedidosRoutes);
 app.use("/api/mensajes", mensajesRoutes); 
 app.use("/api/chat", chatRoutes);
 app.use("/api/clientes", clientesRoutes);
+app.use("/api/solicitudes", solicitudesRoutes);
+app.use("/api/stock", stockRoutes);
+app.use("/api/productos-stock", stockRoutes);
 
 // 2. Servir archivos estáticos del frontend
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const carpetaFrontend = path.join(__dirname, "../frontend");
+
 app.use(express.static(carpetaFrontend));
 
 app.get("/", (req, res) => {

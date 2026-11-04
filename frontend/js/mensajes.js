@@ -1,6 +1,6 @@
-const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const BASE_URL = (window.location.protocol === 'file:' || window.location.port === '5500')
   ? 'http://localhost:3000'
-  : window.location.origin;
+  : '';
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (window.lucide) {

@@ -1,17 +1,6 @@
-const mysql = require("mysql2/promise");
+import connection from "../database/db.js";
 
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: Number(process.env.DB_PORT),
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
-
-async function crearSolicitud(datos) {
+export async function crearSolicitud(datos) {
     const sql = `
         INSERT INTO Solicitudes
         (id_usuario, direccion, descripcion, foto, estado)
@@ -25,7 +14,7 @@ async function crearSolicitud(datos) {
         datos.foto
     ];
 
-    const [resultado] = await db.execute(sql, valores);
+    const [resultado] = await connection.query(sql, valores);
 
     return {
         id: resultado.insertId,
@@ -33,6 +22,7 @@ async function crearSolicitud(datos) {
     };
 }
 
-module.exports = {
+export default {
     crearSolicitud
 };
+

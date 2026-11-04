@@ -115,3 +115,49 @@ export const guardarUbicacionTecnico = async (tecnicoId, { direccion, latitud, l
     }
     return getUbicacionTecnico(tecnicoId);
 };
+
+// Obtener todos los técnicos con su ubicación principal
+export const getTodosTecnicosConUbicacion = async () => {
+    const sql = `
+        SELECT 
+            u.id,
+            u.nombre,
+            u.apellido,
+            u.email,
+            u.telefono,
+            u.categoria,
+            u.descripcion,
+            u.reputacion_promedio,
+            d.direccion_completa,
+            d.latitud,
+            d.longitud
+        FROM Usuarios u
+        INNER JOIN direcciones_usuario d ON u.id = d.usuario_id
+        WHERE u.rol = ? AND d.es_principal = 1
+    `;
+    const [rows] = await connection.query(sql, ["tecnico"]);
+    return rows;
+};
+
+// Obtener técnicos por categoría con su ubicación principal
+export const getTecnicosPorCategoriaConUbicacion = async (categoria) => {
+    const sql = `
+        SELECT 
+            u.id,
+            u.nombre,
+            u.apellido,
+            u.email,
+            u.telefono,
+            u.categoria,
+            u.descripcion,
+            u.reputacion_promedio,
+            d.direccion_completa,
+            d.latitud,
+            d.longitud
+        FROM Usuarios u
+        INNER JOIN direcciones_usuario d ON u.id = d.usuario_id
+        WHERE u.rol = ? AND u.categoria = ? AND d.es_principal = 1
+    `;
+    const [rows] = await connection.query(sql, ["tecnico", categoria]);
+    return rows;
+};

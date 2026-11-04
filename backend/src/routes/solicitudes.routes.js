@@ -1,7 +1,6 @@
-const express = require("express");
-const multer = require("multer");
-
-const solicitudesController = require("../controllers/solicitudes.controller");
+import express from "express";
+import multer from "multer";
+import solicitudesController from "../controllers/solicitudes.controller.js";
 
 const router = express.Router();
 
@@ -41,4 +40,5 @@ router.post("/", (req, res, next) => {
     });
 }, solicitudesController.crearSolicitud);
 
-module.exports = router;
+export default router;
+

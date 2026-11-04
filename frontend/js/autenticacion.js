@@ -1,175 +1,194 @@
-"use strict";
 
-const API_URL =
-  location.protocol === "file:" || location.port === "5500"
-    ? "http://localhost:3000"
-    : "";
 
-const INICIO_POR_ROL = {
-  tecnico: "inicio.html",
-  usuario: "grupo-2/html/home.html",
-};
+const BASE_URL = (window.location.protocol === 'file:' || window.location.port === '5500')
+  ? 'http://localhost:3000'
+  : '';
+lucide.createIcons();
 
-const loginForm      = document.getElementById("login-form");
-const registerForm   = document.getElementById("register-form");
-const btnLogin       = document.getElementById("btn-login");
-const btnRegistro    = document.getElementById("btn-registro");
-const goToRegister   = document.getElementById("go-to-register");
-const goToLogin      = document.getElementById("go-to-login");
-const formSubtitle   = document.getElementById("form-subtitle");
-const authMensaje    = document.getElementById("auth-mensaje");
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const goToRegister = document.getElementById('go-to-register');
+const goToLogin = document.getElementById('go-to-login');
+const formSubtitle = document.getElementById('form-subtitle');
 
-function mostrarMensaje(texto, tipo = "error") {
-  if (!authMensaje) return;
-  authMensaje.textContent = texto;
-  authMensaje.className = `auth-mensaje auth-mensaje--${tipo}`;
-  authMensaje.hidden = false;
-}
-
-function limpiarMensaje() {
-  if (!authMensaje) return;
-  authMensaje.hidden = true;
-  authMensaje.textContent = "";
-}
-
-if (goToRegister && registerForm && loginForm) {
-  goToRegister.addEventListener("click", (e) => {
+// Alternar a Registro
+if (goToRegister) {
+  goToRegister.addEventListener('click', (e) => {
     e.preventDefault();
-    limpiarMensaje();
-    loginForm.classList.add("hidden");
-    registerForm.classList.remove("hidden");
-    if (formSubtitle) formSubtitle.textContent = "Completá tus datos para crear una cuenta.";
+    loginForm.classList.add('hidden');
+    registerForm.classList.remove('hidden');
+    formSubtitle.textContent = 'Creá tu cuenta completando el siguiente formulario.';
   });
 }
 
-if (goToLogin && registerForm && loginForm) {
-  goToLogin.addEventListener("click", (e) => {
+// Alternar a Login
+if (goToLogin) {
+  goToLogin.addEventListener('click', (e) => {
     e.preventDefault();
-    limpiarMensaje();
-    registerForm.classList.add("hidden");
-    loginForm.classList.remove("hidden");
-    if (formSubtitle) formSubtitle.textContent = "Ingresá tus credenciales para acceder a la plataforma.";
+    registerForm.classList.add('hidden');
+    loginForm.classList.remove('hidden');
+    formSubtitle.textContent = 'Ingresá tus credenciales para acceder a la plataforma.';
   });
 }
 
-/* ── Login ── */
-if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    limpiarMensaje();
+// Variable global para almacenar el objeto de la dirección seleccionada
 
-    const inputUser = document.getElementById("login-user") || document.getElementById("u");
-    const inputPass = document.getElementById("login-password") || document.getElementById("p");
+let direccionSeleccionadaObj = null;
 
-    const email = inputUser ? inputUser.value.trim() : "";
-    const password = inputPass ? inputPass.value : "";
+const inputAddress = document.getElementById('reg-address');
+const suggestionsList = document.getElementById('address-suggestions');
 
-    if (!email || !password) {
-      mostrarMensaje("Completá usuario y contraseña.");
-      return;
-    }
+if (inputAddress && suggestionsList) {
+    let timeoutTimer;
 
-    if (btnLogin) {
-      btnLogin.disabled = true;
-      btnLogin.textContent = "Ingresando...";
-    }
+    inputAddress.addEventListener('input', () => {
+        clearTimeout(timeoutTimer);
+        const query = inputAddress.value.trim();
 
-    try {
-      const response = await fetch(`${API_URL}/api/usuarios/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+        if (query.length < 4) {
+            suggestionsList.innerHTML = '';
+            direccionSeleccionadaObj = null;
+            return;
+        }
 
-      const data = await response.json();
+        timeoutTimer = setTimeout(async () => {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=ar&addressdetails=1&limit=5`;
 
-      if (!response.ok) {
-        mostrarMensaje(data.error || "Credenciales inválidas.");
-        return;
-      }
+            try {
+                const res = await fetch(url, {
+                    headers: { 'User-Agent': 'KennedyTechSolutions/1.0' }
+                });
+                const data = await res.json();
 
-      const destino = INICIO_POR_ROL[data.usuario.rol] || "grupo-2/html/home.html";
-      localStorage.setItem("usuario", JSON.stringify(data.usuario));
-      window.location.href = destino;
-    } catch {
-      mostrarMensaje("No se pudo conectar con el servidor.");
-    } finally {
-      if (btnLogin) {
-        btnLogin.disabled = false;
-        btnLogin.innerHTML = '<i data-lucide="log-in"></i> Iniciar sesión';
-        if (typeof lucide !== "undefined") lucide.createIcons();
-      }
-    }
-  });
+                suggestionsList.innerHTML = '';
+
+                data.forEach(place => {
+                    const li = document.createElement('li');
+                    li.className = 'suggestion-item';
+
+                    const nombreCalle = place.address.road || place.name || 'Dirección';
+                    const localidadProvincia = [
+                        place.address.city || place.address.town || place.address.suburb || place.address.city_district,
+                        place.address.state || 'Buenos Aires'
+                    ].filter(Boolean).join(', ');
+
+                    li.innerHTML = `
+                        <div class="suggestion-icon"><i data-lucide="map-pin"></i></div>
+                        <div class="suggestion-text">
+                            <span class="street-name">${nombreCalle}</span>
+                            <span class="location-name">${localidadProvincia}</span>
+                        </div>
+                    `;
+
+                    li.onclick = () => {
+                        inputAddress.value = place.display_name;
+                        suggestionsList.innerHTML = '';
+
+                        // Guardamos el objeto completo para el Submit
+                        direccionSeleccionadaObj = {
+                            direccion_completa: place.display_name,
+                            latitud: place.lat,
+                            longitud: place.lon
+                        };
+                    };
+
+                    suggestionsList.appendChild(li);
+                });
+
+                if (window.lucide) lucide.createIcons();
+
+            } catch (error) {
+                console.error("Error al buscar direcciones:", error);
+            }
+        }, 400);
+    });
 }
 
-/* ── Registro ── */
+// En el evento Submit del registro:
 if (registerForm) {
-  registerForm.addEventListener("submit", async (e) => {
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const nombre = document.getElementById('reg-username').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+        const confirmPassword = document.getElementById('reg-confirm-password').value;
+        const telefono = document.getElementById('reg-phone') ? document.getElementById('reg-phone').value : '';
+
+        if (password !== confirmPassword) {
+            alert('Las contraseñas no coinciden.');
+            return;
+        }
+
+        // Si escribió algo pero no eligió de la lista, tomamos el texto directo
+        const direccionFinal = direccionSeleccionadaObj || {
+            direccion_completa: inputAddress ? inputAddress.value.trim() : ''
+        };
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/usuarios/registro`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    nombre, 
+                    email, 
+                    password, 
+                    telefono,
+                    direccion: direccionFinal 
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                
+                if (goToLogin) goToLogin.click();
+            } else {
+                alert('Error: ' + (data.error || 'No se pudo crear la cuenta'));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('No se pudo conectar con el servidor.');
+        }
+    });
+}
+
+// Login
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    limpiarMensaje();
 
-    const nombre    = (document.getElementById("reg-username")?.value || "").trim();
-    const email     = (document.getElementById("reg-email")?.value || "").trim();
-    const telefono  = (document.getElementById("reg-phone")?.value || "").trim();
-    const direccion = (document.getElementById("reg-address")?.value || "").trim();
-    const password  = document.getElementById("reg-password")?.value || "";
-    const confirmar = document.getElementById("reg-confirm-password")?.value || "";
-
-    if (!nombre || !email || !password) {
-      mostrarMensaje("Usuario, email y contraseña son obligatorios.");
-      return;
-    }
-    if (password !== confirmar) {
-      mostrarMensaje("Las contraseñas no coinciden.");
-      return;
-    }
-    if (password.length < 6) {
-      mostrarMensaje("La contraseña debe tener al menos 6 caracteres.");
-      return;
-    }
-
-    if (btnRegistro) {
-      btnRegistro.disabled = true;
-      btnRegistro.textContent = "Creando cuenta...";
-    }
+    const email = document.getElementById('login-user').value;
+    const password = document.getElementById('login-password').value;
 
     try {
-      const body = { nombre, email, password, telefono };
-      if (direccion) {
-        body.direccion = { direccion_completa: direccion };
-      }
-
-      const response = await fetch(`${API_URL}/api/usuarios/registro`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+      const response = await fetch(`${BASE_URL}/api/usuarios/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        mostrarMensaje(data.error || "No se pudo crear la cuenta.");
-        return;
-      }
+      if (response.ok) {
+        alert('¡Bienvenido, ' + data.usuario.nombre + '!');
+        localStorage.setItem('usuario', JSON.stringify(data.usuario));
 
-      mostrarMensaje("¡Cuenta creada con éxito! Ahora podés iniciar sesión.", "exito");
-      registerForm.reset();
-
-      setTimeout(() => {
-        registerForm.classList.add("hidden");
-        loginForm.classList.remove("hidden");
-        if (formSubtitle) formSubtitle.textContent = "Ingresá tus credenciales para acceder a la plataforma.";
-        limpiarMensaje();
-      }, 1500);
-    } catch {
-      mostrarMensaje("No se pudo conectar con el servidor.");
-    } finally {
-      if (btnRegistro) {
-        btnRegistro.disabled = false;
-        btnRegistro.innerHTML = '<i data-lucide="user-plus"></i> Crear mi cuenta';
-        if (typeof lucide !== "undefined") lucide.createIcons();
+        // Redirecciones según el Rol
+        if (data.usuario.rol === "usuario") {
+          window.location.href = 'grupo-2/html/home.html';
+        } else if (data.usuario.rol === "tecnico") {
+          window.location.href = 'inicio.html'; // Ajustar ruta deseada
+        } else if (data.usuario.rol === "deposito") {
+          window.location.href = 'html/deposito-dashboard.html'; // Ajustar ruta deseada
+        }
+      } else {
+        alert('Error: ' + (data.error || 'Credenciales inválidas'));
       }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('No se pudo conectar con el servidor.');
     }
   });
 }
+
