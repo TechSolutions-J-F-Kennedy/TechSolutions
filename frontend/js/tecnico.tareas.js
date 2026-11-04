@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+const API_URL = location.protocol === 'file:' || location.port === '5500' ? 'http://localhost:3000' : ''; // '' = el mismo servidor que entregó la página (compu, celu o internet)
 
 function obtenerTecnico() {
     try {

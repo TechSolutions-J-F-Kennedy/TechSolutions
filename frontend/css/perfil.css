@@ -92,3 +92,78 @@
   grid-template-columns: 1fr 1fr;
 }
 
+
+/* ===== Foto de perfil ===== */
+.av-wrap {
+  position: relative;
+  width: 88px;
+  margin: 0 auto 12px;
+}
+
+.av-wrap .av {
+  margin: 0;
+  overflow: hidden;
+}
+
+.av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.av-cam {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--s3);
+  color: var(--p9);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: 2px solid var(--p8);
+}
+
+.av-cam svg {
+  width: 16px;
+  height: 16px;
+}
+
+.av-quitar {
+  background: none;
+  border: 0;
+  color: var(--p100);
+  font: 600 12px 'Manrope';
+  text-decoration: underline;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+/* ===== Mi zona de trabajo (técnico) ===== */
+.zona .mapa {
+  margin-top: 4px;
+}
+
+.zona-botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.zona-botones .btn {
+  padding: 11px 8px;
+  font-size: 12px;
+}
+
+.zona-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.zona-form .btn {
+  flex: none;
+}

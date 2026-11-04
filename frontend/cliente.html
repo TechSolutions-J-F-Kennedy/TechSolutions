@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Inicio · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/cliente.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="head">
+        <small>KENNEDY TECH</small>
+        <h1 id="saludo">Hola</h1>
+      </div>
+
+      <div class="wrap">
+        <div class="card cta">
+          <div>
+            <b>¿Necesitás un técnico?</b>
+            <p class="m">Contanos qué pasó y te asignamos uno.</p>
+          </div>
+          <a class="btn btn-primary" href="pedir.html"><i data-lucide="circle-plus"></i> Pedir</a>
+        </div>
+
+        <h2>Tus pedidos</h2>
+        <p class="m" id="mensaje">Cargando tus pedidos...</p>
+        <div id="lista"></div>
+      </div>
+    </div>
+
+    <!-- Calificar al técnico -->
+    <div class="sheet" id="hoja-resena">
+      <div class="panel">
+        <div class="grab"></div>
+        <h3>¿Cómo te fue con <span id="resena-tecnico"></span>?</h3>
+        <p class="m">Tocá las estrellas para calificar el servicio.</p>
+        <div class="estrellas" id="estrellas"></div>
+        <textarea class="input" id="resena-comentario" rows="3" maxlength="500" placeholder="Contanos cómo fue (opcional)"></textarea>
+        <div class="btns-resena">
+          <button class="btn btn-ghost" id="resena-cancelar">Cancelar</button>
+          <button class="btn btn-primary" id="resena-enviar" disabled>Enviar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/cliente.inicio.js"></script>
+  </body>
+</html>

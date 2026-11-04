@@ -1,5 +1,2 @@
-# Ignorar dependencias descargadas
-node_modules/
-
-# Ignorar archivo local de variables de entorno y claves secretas
 .env
+node_modules/
