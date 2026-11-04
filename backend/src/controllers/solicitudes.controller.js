@@ -92,3 +92,4 @@ export async function crearSolicitud(req, res) {
 export default {
     crearSolicitud
 };
+

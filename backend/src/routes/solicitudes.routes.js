@@ -41,3 +41,4 @@ router.post("/", (req, res, next) => {
 }, solicitudesController.crearSolicitud);
 
 export default router;
+
