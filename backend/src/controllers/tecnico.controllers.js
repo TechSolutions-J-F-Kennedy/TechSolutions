@@ -236,7 +236,7 @@ import { obtenerDireccionesPorUsuario } from "../models/direccion.models.js";
 import { 
     getTodosTecnicosConUbicacion, 
     getTecnicosPorCategoriaConUbicacion 
-} from "../models/tecnicos/tecnico.models.js";
+} from "../models/tecnico.models.js";
 
 const calcularDistanciaKM = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
