@@ -39,7 +39,7 @@ const carpetaFrontend = path.join(__dirname, "../frontend");
 app.use(express.static(carpetaFrontend));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(carpetaFrontend, "index.html"));
+  res.sendFile(path.join(carpetaFrontend, "inicio.html"));
 });
 
 // 3. Escuchar en puerto solo en entorno local
