@@ -16,7 +16,6 @@ import stockRoutes from "./src/routes/stock.routes.js";
 import resenasRouter from "./src/routes/resena.routes.js";
 import direccionesRouter from "./src/routes/direccion.routes.js";
 
-
 dotenv.config();
 const app = express();
 
@@ -41,6 +40,13 @@ app.use("/api/direcciones", direccionesRouter);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const carpetaFrontend = path.join(__dirname, "../frontend");
 
+// Servir sw.js sin caché HTTP para que el navegador busque cambios al instante
+app.get("/sw.js", (req, res) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.sendFile(path.join(carpetaFrontend, "sw.js"));
+});
+
+// Middleware general para archivos estáticos (HTML, CSS, JS, manifest, imágenes)
 app.use(express.static(carpetaFrontend));
 
 app.get("/", (req, res) => {
