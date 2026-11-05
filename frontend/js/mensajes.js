@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           card.onclick = () => {
             localStorage.setItem('chatActivo_tecnicoId', chat.tecnico_id);
             localStorage.setItem('chatActivo_nombreTecnico', chat.nombre_tecnico);
-            window.location.href = 'chat.html';
+            window.location.href = 'chat-usuario.html';
           };
 
           contenedorChats.appendChild(card);
