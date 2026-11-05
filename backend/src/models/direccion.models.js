@@ -45,3 +45,14 @@ export const marcarDireccionPrincipal = async (usuario_id, direccion_id) => {
 
     return result.affectedRows > 0;
 };
+
+export const getDireccionPrincipalBD = async (usuarioId) => {
+    const sql = `
+        SELECT id, direccion_completa, latitud, longitud, es_principal
+        FROM direcciones_usuario
+        WHERE usuario_id = ? AND es_principal = 1
+        LIMIT 1
+    `;
+    const [rows] = await connection.query(sql, [usuarioId]);
+    return rows[0] || null;
+};

@@ -13,11 +13,11 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/home-styles.css">
+  <link rel="stylesheet" href="../css/base-dos.css">
+  <link rel="stylesheet" href="../css/home-styles.css">
   <!-- en el <head>, al final -->
-<link rel="stylesheet" href="css/tema.css">   <!-- después de los demás CSS -->
-<script src="js/tema.js"></script>
+<link rel="stylesheet" href="../css/tema.css">   <!-- después de los demás CSS -->
+<script src="../js/tema.js"></script>
 </head>
 <body>
 
@@ -168,19 +168,19 @@
           <span id="active-filter-label" class="filter-label">Todos los técnicos</span>
         </div>
 
-        <!-- Ubicación Actual para el Servicio -->
-        <section class="section">
-          <div class="location-banner">
-            <div class="location-info">
-              <i data-lucide="map-pin"></i>
-              <div>
-                <small>Ubicación del servicio</small>
-                <strong>Av. Principal 1234, CABA</strong>
-              </div>
-            </div>
-            <button class="btn btn-ghost btn-sm">Cambiar</button>
-          </div>
-        </section>
+        <!-- Banner de Ubicación Actual para el Servicio -->
+<section class="section">
+  <div class="location-banner">
+    <div class="location-info">
+      <i data-lucide="map-pin"></i>
+      <div>
+        <small>Ubicación del servicio</small>
+        <strong id="user-location-display">Cargando dirección...</strong>
+      </div>
+    </div>
+    <button id="btn-change-location" class="btn btn-ghost btn-sm">Cambiar</button>
+  </div>
+</section>
 
         <section class="section">
           <div class="categories-scroll">
@@ -327,7 +327,7 @@
           <span> Mis Chats</span>
           </div>
         </a>
-      <a href="perfil.html" style="text-decoration: none; color: inherit;">
+      <a href="cliente-perfil.html" style="text-decoration: none; color: inherit;">
         <div class="nav-item">
           <i data-lucide="user"></i>
           <span>Perfil</span>
@@ -390,7 +390,16 @@
   </div>
 </div>
 
-  <script src="js/home.filtro.js">
+<!-- Modal de Alerta Personalizado (Sustituto de alert) -->
+<div id="custom-alert-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999999; align-items: center; justify-content: center;">
+  <div class="modal-content" style="background: var(--bg-card, #1e1e1e); color: #fff; padding: 24px; border-radius: 14px; width: 85%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    <h4 id="custom-alert-title" style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--primary-color, #e63946);">Notificación</h4>
+    <p id="custom-alert-message" style="margin: 0 0 20px 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;"></p>
+    <button type="button" onclick="cerrarAlertaPersonalizada()" style="background: var(--primary-color, #e63946); border: none; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;">Aceptar</button>
+  </div>
+</div>
+
+  <script src="../js/home.filtro.js">
   </script>
 </body>
 </html>

@@ -231,11 +231,18 @@ export const putUbicacion = async (req, res) => {
         return res.status(500).json({ error: "Error al guardar tu ubicación" });
     }
 };
+
+
+
+
 import { obtenerDireccionesPorUsuario } from "../models/direccion.models.js";
 
 import { 
     getTodosTecnicosConUbicacion, 
-    getTecnicosPorCategoriaConUbicacion 
+    getTecnicosPorCategoriaConUbicacion,
+    getReputacionTecnico,
+    getTecnicoById,
+    getResenasByTecnicoId
 } from "../models/tecnico.models.js";
 
 const calcularDistanciaKM = (lat1, lon1, lat2, lon2) => {
@@ -252,7 +259,7 @@ const calcularDistanciaKM = (lat1, lon1, lat2, lon2) => {
     return Number((R * c).toFixed(2));
 };
 
-// 2. Controlador principal
+// 1. Obtener técnicos cercanos calculando distancia y reputación promedio real
 export const getTecnicosCercanosController = async (req, res) => {
     try {
         const { usuarioId } = req.params;
@@ -272,26 +279,63 @@ export const getTecnicosCercanosController = async (req, res) => {
             tecnicos = await getTodosTecnicosConUbicacion();
         }
 
-        const tecnicosConDistancia = tecnicos.map(tecnico => {
+        // Mapear cada técnico agregando la distancia y la reputación real calculada en la BD
+        const tecnicosProcesados = await Promise.all(tecnicos.map(async (tecnico) => {
             const distancia = calcularDistanciaKM(
                 dirCliente.latitud,
                 dirCliente.longitud,
                 tecnico.latitud,
                 tecnico.longitud
             );
-            return { ...tecnico, distancia_km: distancia };
-        });
 
-        tecnicosConDistancia.sort((a, b) => a.distancia_km - b.distancia_km);
+            const reputacionData = await getReputacionTecnico(tecnico.id);
+
+            return { 
+                ...tecnico, 
+                distancia_km: distancia,
+                reputacion_promedio: parseFloat(reputacionData.reputacion_promedio) || 5.0,
+                total_resenas: reputacionData.total_resenas || 0
+            };
+        }));
+
+        tecnicosProcesados.sort((a, b) => a.distancia_km - b.distancia_km);
 
         return res.status(200).json({
             origen: dirCliente.direccion_completa,
-            tecnicos: tecnicosConDistancia
+            tecnicos: tecnicosProcesados
         });
 
     } catch (error) {
         console.error("Error al obtener técnicos cercanos:", error);
         return res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+// 2. Controlador para ver la información detallada del perfil profesional del técnico
+export const getPerfilTecnicoController = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const tecnico = await getTecnicoById(id);
+        if (!tecnico) {
+            return res.status(404).json({ error: "Técnico no encontrado." });
+        }
+
+        const reputacionData = await getReputacionTecnico(id);
+        const resenas = await getResenasByTecnicoId(id);
+
+        return res.status(200).json({
+            payload: {
+                ...tecnico,
+                reputacion_promedio: parseFloat(reputacionData.reputacion_promedio) || 0.0,
+                total_resenas: reputacionData.total_resenas || 0,
+                resenas
+            }
+        });
+
+    } catch (error) {
+        console.error("Error al obtener perfil del técnico:", error);
+        return res.status(500).json({ error: "Error interno del servidor al consultar perfil." });
     }
 };
 
@@ -303,16 +347,12 @@ export const postSesion = async (req, res) => {
             return res.status(400).json({ error: "Faltan datos obligatorios" });
         }
 
-        // Buscar el usuario en la BD
-
         const usuarioEncontrado = await inicioSesion({ email, password });
 
-        // Si no se encontró ningún registro
         if (!usuarioEncontrado) {
             return res.status(401).json({ error: "Credenciales inválidas" });
         }
 
-        // Si existe, devolver mensaje Y los datos del usuario para el frontend
         return res.status(200).json({
             mensaje: "Inicio de sesión exitoso",
             usuario: usuarioEncontrado

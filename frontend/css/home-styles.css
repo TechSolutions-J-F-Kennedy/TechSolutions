@@ -566,3 +566,11 @@
 .time-block.disabled { color: var(--n400); background: var(--n100); text-decoration: line-through; pointer-events: none; }
 
 .modal-footer { padding: 14px 20px calc(14px + var(--safe-bottom)); border-top: 1px solid var(--n100); }
+
+#user-location-display {
+  display: block;
+  max-width: 180px; /* O el porcentaje/ancho disponible */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

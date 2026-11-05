@@ -13,6 +13,9 @@ import pedidosRoutes from "./src/routes/pedido.routes.js";
 import mensajesRoutes from "./src/routes/mensaje.routes.js"; 
 import solicitudesRoutes from "./src/routes/solicitudes.routes.js";
 import stockRoutes from "./src/routes/stock.routes.js";
+import resenasRouter from "./src/routes/resena.routes.js";
+import direccionesRouter from "./src/routes/direccion.routes.js";
+
 
 dotenv.config();
 const app = express();
@@ -31,6 +34,8 @@ app.use("/api/clientes", clientesRoutes);
 app.use("/api/solicitudes", solicitudesRoutes);
 app.use("/api/stock", stockRoutes);
 app.use("/api/productos-stock", stockRoutes);
+app.use("/api/resenas", resenasRouter);
+app.use("/api/direcciones", direccionesRouter);
 
 // 2. Servir archivos estáticos del frontend
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
