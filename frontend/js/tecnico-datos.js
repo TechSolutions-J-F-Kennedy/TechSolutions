@@ -17,8 +17,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tecnicoId = params.get('id');
 
     if (!tecnicoId) {
-        alert("No se especificó un técnico.");
-        window.location.href = 'home.html';
+        Swal.fire({
+            icon: 'warning',
+            title: 'Técnico no especificado',
+            text: 'No se encontró la identificación del técnico.'
+        }).then(() => {
+            window.location.href = 'home.html';
+        });
         return;
     }
 
@@ -50,13 +55,25 @@ async function cargarPerfilTecnico(tecnicoId) {
             return;
         }
 
-        const t = data.payload;
+        const t = data.payload || data.tecnico || data;
 
-        // Datos del Técnico (sí usan nombre_real y apellido)
+        // Datos del Técnico
         const nombreTecnico = `${t.nombre_real || t.nombre || ''} ${t.apellido || ''}`.trim();
         const iniciales = (t.nombre_real && t.apellido)
             ? `${t.nombre_real[0]}${t.apellido[0]}`.toUpperCase()
             : nombreTecnico.slice(0, 2).toUpperCase();
+
+        // Manejo de foto de perfil
+        const fotoFinal = t.foto_perfil || t.foto;
+        const avatarHTML = fotoFinal
+            ? `<img src="${esc(fotoFinal)}" alt="${esc(nombreTecnico)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
+            : esc(iniciales);
+
+        // Manejo de Precio
+        const precioNumerico = parseFloat(t.precio) || 0;
+        const textoPrecio = precioNumerico > 0
+            ? `$${precioNumerico.toLocaleString('es-AR')}`
+            : 'A convenir';
 
         const promedio = parseFloat(t.reputacion_promedio);
         const tienePromedio = promedio > 0;
@@ -71,7 +88,7 @@ async function cargarPerfilTecnico(tecnicoId) {
         // Renderizar tarjeta del Técnico
         cardContenedor.innerHTML = `
             <div class="tecnico-top">
-                <div class="tecnico-avatar">${t.foto_perfil ? `<img src="${esc(t.foto_perfil)}" alt="">` : esc(iniciales)}</div>
+                <div class="tecnico-avatar">${avatarHTML}</div>
                 <div class="tecnico-ident">
                     <h2 class="tecnico-nombre">${esc(nombreTecnico)}</h2>
                     <span class="tecnico-cat">${esc(t.categoria || 'Servicio técnico')}</span>
@@ -87,11 +104,16 @@ async function cargarPerfilTecnico(tecnicoId) {
                     <span class="stat-valor">${totalResenas}</span>
                     <span class="stat-label">${totalResenas === 1 ? 'opinión' : 'opiniones'}</span>
                 </div>
+                <div class="tecnico-stat">
+                    <span class="stat-valor" style="color: #16a34a; font-weight: 700;">${esc(textoPrecio)}</span>
+                    <span class="stat-label">Precio por servicio</span>
+                </div>
             </div>
 
             <p class="tecnico-desc ${t.descripcion ? '' : 'vacio'}">${esc(t.descripcion || 'Sin descripción disponible.')}</p>
 
             <ul class="tecnico-contacto">
+                ${filaContacto('tag', `Tarifa: ${textoPrecio}`)}
                 ${filaContacto('mail', t.email || 'No disponible')}
                 ${filaContacto('phone', t.telefono || 'No disponible')}
                 ${t.direccion_completa ? filaContacto('map-pin', t.direccion_completa) : ''}

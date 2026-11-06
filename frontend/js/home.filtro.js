@@ -7,6 +7,7 @@ let idTecnicoSeleccionado = null;
 let fechaSeleccionada = null;
 let horaSeleccionada = null;
 let listaTecnicosOriginal = []; // Almacena la lista de técnicos recuperada del backend
+let ordenPrecioActual = 'ninguno'; // 'menor', 'mayor' o 'ninguno'
 
 // -------------------------------------------------------------
 // FUNCIONES GLOBALES (MODAL ALERTA SWEETALERT2)
@@ -71,7 +72,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     globalSearchInput.addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase().trim();
 
-      // Si el usuario empieza a escribir en la vista principal, lo pasamos a la lista de técnicos
       if (query.length > 0 && viewWelcome && viewWelcome.classList.contains('active')) {
         showTechListView('Todos');
       }
@@ -114,6 +114,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const filterChips = document.querySelectorAll('.chip-filter');
   const contenedor = document.getElementById('tech-list-container');
   const techCount = document.getElementById('tech-count');
+
+  // Selector de filtro por precio (si existe en tu HTML un <select id="select-filtro-precio">)
+  const selectFiltroPrecio = document.getElementById('select-filtro-precio');
+  if (selectFiltroPrecio) {
+    selectFiltroPrecio.addEventListener('change', (e) => {
+      ordenPrecioActual = e.target.value;
+      const currentQuery = globalSearchInput ? globalSearchInput.value.toLowerCase().trim() : '';
+      filtrarTecnicosEnPantalla(currentQuery);
+    });
+  }
 
   function showWelcomeView() {
     if (viewWelcome) viewWelcome.classList.add('active');
@@ -172,7 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // Renderizado dinámico de la tarjeta del técnico
+  // Renderizado dinámico de la tarjeta del técnico (con FOTO/INICIALES y PRECIO)
   function agregarTarjetaTecnico(tecnico) {
     const nombreReal = tecnico.nombre || tecnico.nombre_real || 'Técnico';
     const apellido = tecnico.apellido || '';
@@ -180,6 +190,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const iniciales = (nombreReal && apellido) 
       ? `${nombreReal[0]}${apellido[0]}`.toUpperCase() 
       : nombreReal.slice(0, 2).toUpperCase();
+
+    // Imagen de Perfil vs Iniciales
+    const avatarHTML = tecnico.foto 
+      ? `<img src="${tecnico.foto}" alt="${nombreReal}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
+      : iniciales;
 
     const categoriasLegibles = {
       'reparacion-pc': 'Reparación PC',
@@ -202,11 +217,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       ? parseFloat(tecnico.reputacion_promedio).toFixed(1)
       : '5.0';
 
+    // Formatear precio
+    const precioNumerico = parseFloat(tecnico.precio) || 0;
+    const textoPrecio = precioNumerico > 0 
+      ? `$${precioNumerico.toLocaleString('es-AR')}` 
+      : 'A convenir';
+
     contenedor.innerHTML += `
       <a href="tecnico-datos.html?id=${tecnico.id}" style="text-decoration: none; color: inherit; display: block;">
         <div class="tech-card tech-item-card" data-category="${tecnico.categoria || 'general'}" style="cursor: pointer;">
           <div class="tech-header">
-            <div class="tech-avatar">${iniciales}</div>
+            <div class="tech-avatar">${avatarHTML}</div>
             <div class="tech-details">
               <h4>${nombreReal} ${apellido}</h4>
               <div class="rating">
@@ -226,7 +247,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           <p class="tech-spec">${descripcionTecnico}</p>
 
           <div class="tech-meta" style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
-            <span><i data-lucide="clock"></i> Disponible hoy</span>
+            <span style="font-weight: 700; color: #16a34a; font-size: 14px;">
+              <i data-lucide="tag"></i> ${textoPrecio}
+            </span>
             ${textoDistancia}
           </div>
 
@@ -248,33 +271,39 @@ document.addEventListener('DOMContentLoaded', async () => {
       .replace(/[\u0300-\u036f]/g, "");
   }
 
-  // Filtrado dinámico insensible a tildes, mayúsculas y minúsculas
+  // Filtrado dinámico por búsqueda + orden de PRECIO
   function filtrarTecnicosEnPantalla(query) {
     if (!contenedor) return;
 
     const queryLimpia = quitarTildes(query).trim();
 
-    if (!queryLimpia) {
-      renderizarListaTecnicos(listaTecnicosOriginal);
-      return;
+    let filtrados = [...listaTecnicosOriginal];
+
+    if (queryLimpia) {
+      filtrados = filtrados.filter(t => {
+        const nombre = quitarTildes(t.nombre || t.nombre_real || '');
+        const apellido = quitarTildes(t.apellido || '');
+        const nombreCompleto = `${nombre} ${apellido}`.trim();
+        
+        const username = quitarTildes(t.username || t.nombre_usuario || t.usuario || '');
+        const categoria = quitarTildes(t.categoria || '');
+        const descripcion = quitarTildes(t.descripcion || '');
+
+        return nombreCompleto.includes(queryLimpia) || 
+               nombre.includes(queryLimpia) || 
+               apellido.includes(queryLimpia) || 
+               username.includes(queryLimpia) || 
+               categoria.includes(queryLimpia) || 
+               descripcion.includes(queryLimpia);
+      });
     }
 
-    const filtrados = listaTecnicosOriginal.filter(t => {
-      const nombre = quitarTildes(t.nombre || t.nombre_real || '');
-      const apellido = quitarTildes(t.apellido || '');
-      const nombreCompleto = `${nombre} ${apellido}`.trim();
-      
-      const username = quitarTildes(t.username || t.nombre_usuario || t.usuario || '');
-      const categoria = quitarTildes(t.categoria || '');
-      const descripcion = quitarTildes(t.descripcion || '');
-
-      return nombreCompleto.includes(queryLimpia) || 
-             nombre.includes(queryLimpia) || 
-             apellido.includes(queryLimpia) || 
-             username.includes(queryLimpia) || 
-             categoria.includes(queryLimpia) || 
-             descripcion.includes(queryLimpia);
-    });
+    // Ordenamiento por precio si está seleccionado
+    if (ordenPrecioActual === 'menor') {
+      filtrados.sort((a, b) => (parseFloat(a.precio) || 0) - (parseFloat(b.precio) || 0));
+    } else if (ordenPrecioActual === 'mayor') {
+      filtrados.sort((a, b) => (parseFloat(b.precio) || 0) - (parseFloat(a.precio) || 0));
+    }
 
     renderizarListaTecnicos(filtrados);
   }
@@ -321,11 +350,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         listaTecnicosOriginal = data.tecnicos || data.payload || [];
         
         const currentQuery = globalSearchInput ? globalSearchInput.value.toLowerCase().trim() : '';
-        if (currentQuery) {
-          filtrarTecnicosEnPantalla(currentQuery);
-        } else {
-          renderizarListaTecnicos(listaTecnicosOriginal);
-        }
+        filtrarTecnicosEnPantalla(currentQuery);
       } else {
         mostrarAlerta(data.error || 'No se pudieron consultar los técnicos.', 'Error');
       }

@@ -164,7 +164,9 @@ function mostrarModalResolucion(pedido) {
     const spanId = document.getElementById('res-pedido-id');
     const inputId = document.getElementById('res-pedido-id-input');
 
-    if (spanId) spanId.textContent = `#ORD-${pedido.id}`;
+    const categoriaNombre = pedido.tecnico_categoria || 'Servicio Solicitado';
+
+    if (spanId) spanId.textContent = categoriaNombre;
     if (inputId) inputId.value = pedido.id;
 
     abrirModal('modal-resolucion');
@@ -570,6 +572,17 @@ function generarTarjetaPedidoHTML(pedido) {
     const apellido = pedido.tecnico_apellido || '';
     const tecnicoNombre = nombreReal ? `${nombreReal} ${apellido}`.trim() : 'Técnico asignado';
     const idTecnico = pedido.tecnico_id || 0;
+    const categoriaServicio = pedido.tecnico_categoria || 'Servicio Técnico';
+
+    // Generar foto o iniciales del técnico
+    const fotoTecnico = pedido.tecnico_foto || pedido.foto_perfil || pedido.foto;
+    const iniciales = (nombreReal && apellido) 
+        ? `${nombreReal[0]}${apellido[0]}`.toUpperCase() 
+        : (nombreReal ? nombreReal.slice(0, 2).toUpperCase() : 'TC');
+
+    const avatarHTML = fotoTecnico
+        ? `<img src="${esc(fotoTecnico)}" alt="${esc(tecnicoNombre)}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">`
+        : `<div style="width: 44px; height: 44px; border-radius: 50%; background: var(--border, #334155); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">${esc(iniciales)}</div>`;
 
     const { horaFormateada } = formatearFechaHora(pedido.fecha_servicio, pedido.hora_servicio);
     const partesFecha = obtenerPartesFecha(pedido.fecha_servicio);
@@ -579,7 +592,6 @@ function generarTarjetaPedidoHTML(pedido) {
     const cuandoTxt = horaFormateada !== '--:--' ? `${fechaTxt} · ${horaFormateada} hs` : fechaTxt;
 
     const detalleTxt = [
-        pedido.tecnico_categoria,
         cuandoTxt,
         pedido.direccion || 'Dirección no especificada'
     ].filter(Boolean).join(' · ');
@@ -640,10 +652,12 @@ function generarTarjetaPedidoHTML(pedido) {
 
     return `
         <article class="pedido-card ${esc(estado)}">
-            <i data-lucide="clipboard-list" class="pedido-icono" aria-hidden="true"></i>
+            <div class="pedido-avatar-wrapper" style="margin-right: 12px; display: flex; align-items: center; justify-content: center;">
+                ${avatarHTML}
+            </div>
 
             <div class="pedido-main">
-                <h4 class="pedido-titulo">#ORD-${esc(pedido.id)} · ${tecnicoHTML}</h4>
+                <h4 class="pedido-titulo">${esc(categoriaServicio)} · ${tecnicoHTML}</h4>
                 <p class="pedido-sub">${esc(detalleTxt)}</p>
                 ${pedido.descripcion ? `<p class="pedido-desc">${esc(pedido.descripcion)}</p>` : ''}
             </div>

@@ -7,12 +7,13 @@
 
   <link rel="manifest" href="../manifest.json">
 
-<!-- Meta etiquetas y favicons -->
-<meta name="theme-color" content="#172554">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Kennedy Tech">
-<link rel="apple-touch-icon" href="../img/icono-192.png">
+  <!-- Meta etiquetas y favicons -->
+  <meta name="theme-color" content="#172554">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  <link rel="apple-touch-icon" href="../img/icono-192.png">
+
   <!-- Google Fonts: Space Grotesk + Manrope -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,10 +24,65 @@
 
   <link rel="stylesheet" href="../css/base-dos.css">
   <link rel="stylesheet" href="../css/home-styles.css">
-  <!-- en el <head>, al final -->
-<link rel="stylesheet" href="../css/tema.css">   <!-- después de los demás CSS -->
-<script src="../js/tema.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="../css/tema.css">
+  <script src="../js/tema.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* Estilos del selector de precio integrado en el header */
+    .section-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filtro-precio-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .filtro-precio-wrapper .icono-filtro {
+      position: absolute;
+      left: 10px;
+      width: 14px;
+      height: 14px;
+      color: #94a3b8;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .filtro-precio-wrapper .flecha-filtro {
+      position: absolute;
+      right: 10px;
+      width: 12px;
+      height: 12px;
+      color: #94a3b8;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .select-filtro-precio {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: var(--card-bg, #1e293b);
+      color: var(--text-color, #f8fafc);
+      border: 1px solid var(--border-color, #334155);
+      border-radius: 20px;
+      padding: 6px 28px 6px 30px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .select-filtro-precio:hover {
+      border-color: var(--primary, #3b82f6);
+    }
+  </style>
 </head>
 <body>
 
@@ -49,20 +105,17 @@
         <a href="home.html" class="drawer-item active">
           <i data-lucide="house"></i> Inicio
         </a>
-        <a href="#" class="drawer-item">
+        <a href="pedidos.html" class="drawer-item">
           <i data-lucide="clipboard-list"></i> Mis Solicitudes
         </a>
         <a href="mensajes.html" class="drawer-item">
           <i data-lucide="message-square"></i> Mis Chats
         </a>
-        <a href="perfil.html" class="drawer-item">
+        <a href="cliente-perfil.html" class="drawer-item">
           <i data-lucide="user-round"></i> Mi Perfil
         </a>
-        <a href="#" class="drawer-item">
+        <a href="cliente-perfil.html#direcciones" class="drawer-item">
           <i data-lucide="map-pin"></i> Mis Direcciones
-        </a>
-        <a href="#" class="drawer-item">
-          <i data-lucide="settings"></i> Configuración
         </a>
       </nav>
 
@@ -95,11 +148,11 @@
 
     <main class="phone-body">
 
+      <!-- VISTA BIENVENIDA -->
       <div id="view-welcome" class="view-section active">
         
         <section class="welcome-card">
           <small class="welcome-subtitle">¡HOLA DE NUEVO!</small>
-          <!-- ID para modificar el nombre con el Backend -->
           <h2 class="welcome-title">Bienvenido, <span id="user-display-name">Juan</span> 👋</h2>
           <p class="welcome-text">¿Con qué problema técnico podemos ayudarte hoy?</p>
         </section>
@@ -111,52 +164,51 @@
 
           <p class="section-desc">Selecciona el tipo de servicio que necesitas:</p>
 
-         <div class="category-grid">
-  <button class="category-card" data-category="reparación-pc">
-    <div class="cat-icon-wrapper">
-      <i data-lucide="laptop"></i>
-    </div>
-    <span>Reparación PC</span>
-  </button>
+          <div class="category-grid">
+            <button class="category-card" data-category="reparación-pc">
+              <div class="cat-icon-wrapper">
+                <i data-lucide="laptop"></i>
+              </div>
+              <span>Reparación PC</span>
+            </button>
 
-  <button class="category-card" data-category="redes">
-    <div class="cat-icon-wrapper">
-      <i data-lucide="wifi"></i>
-    </div>
-    <span>Redes / Wi-Fi</span>
-  </button>
+            <button class="category-card" data-category="redes">
+              <div class="cat-icon-wrapper">
+                <i data-lucide="wifi"></i>
+              </div>
+              <span>Redes / Wi-Fi</span>
+            </button>
 
-  <button class="category-card" data-category="software">
-    <div class="cat-icon-wrapper">
-      <i data-lucide="shield-check"></i>
-    </div>
-    <span>Software</span>
-  </button>
+            <button class="category-card" data-category="software">
+              <div class="cat-icon-wrapper">
+                <i data-lucide="shield-check"></i>
+              </div>
+              <span>Software</span>
+            </button>
 
-  <button class="category-card" data-category="electricidad">
-    <div class="cat-icon-wrapper">
-      <i data-lucide="zap"></i>
-    </div>
-    <span>Electricista</span>
-  </button>
+            <button class="category-card" data-category="electricidad">
+              <div class="cat-icon-wrapper">
+                <i data-lucide="zap"></i>
+              </div>
+              <span>Electricista</span>
+            </button>
 
-  <button class="category-card" data-category="plomeria-gas">
-    <div class="cat-icon-wrapper">
-      <i data-lucide="droplet"></i>
-    </div>
-    <span>Plomería / Gas</span>
-  </button>
+            <button class="category-card" data-category="plomeria-gas">
+              <div class="cat-icon-wrapper">
+                <i data-lucide="droplet"></i>
+              </div>
+              <span>Plomería / Gas</span>
+            </button>
 
-  <button class="category-card" data-category="electrodomesticos">
-    <div class="cat-icon-wrapper">
-      <i data-lucide="tv"></i>
-    </div>
-    <span>Electrodomésticos</span>
-  </button>
-</div>
+            <button class="category-card" data-category="electrodomesticos">
+              <div class="cat-icon-wrapper">
+                <i data-lucide="tv"></i>
+              </div>
+              <span>Electrodomésticos</span>
+            </button>
+          </div>
         </section>
 
-        <!-- Botón para Explorar General -->
         <section class="section text-center">
           <div class="divider"><span>O TAMBIÉN</span></div>
           <button id="btn-explore-all" class="btn btn-outline-primary btn-touch">
@@ -166,10 +218,9 @@
 
       </div>
 
-
+      <!-- VISTA LISTADO DE TÉCNICOS -->
       <div id="view-tech-list" class="view-section">
 
-        <!-- Barra de retorno -->
         <div class="back-bar">
           <button id="btn-back-home" class="btn-back">
             <i data-lucide="arrow-left"></i> Volver
@@ -177,135 +228,68 @@
           <span id="active-filter-label" class="filter-label">Todos los técnicos</span>
         </div>
 
-        <!-- Banner de Ubicación Actual para el Servicio -->
-<section class="section">
-  <div class="location-banner">
-    <div class="location-info">
-      <i data-lucide="map-pin"></i>
-      <div>
-        <small>Ubicación del servicio</small>
-        <strong id="user-location-display">Cargando dirección...</strong>
-      </div>
-    </div>
-    <button id="btn-change-location" class="btn btn-ghost btn-sm">Cambiar</button>
-  </div>
-</section>
-
         <section class="section">
-          <div class="categories-scroll">
-  <button class="chip-filter active" data-filter="Todos">
-    <i data-lucide="grid"></i> Todos
-  </button>
-  <button class="chip-filter" data-filter="reparacion-pc">
-    <i data-lucide="laptop"></i> Reparación PC
-  </button>
-  <button class="chip-filter" data-filter="redes">
-    <i data-lucide="wifi"></i> Redes / Wi-Fi
-  </button>
-  <button class="chip-filter" data-filter="software">
-    <i data-lucide="shield-check"></i> Software
-  </button>
-  <button class="chip-filter" data-filter="electricidad">
-    <i data-lucide="zap"></i> Electricista
-  </button>
-  <button class="chip-filter" data-filter="plomeria-gas">
-    <i data-lucide="droplet"></i> Plomería
-  </button>
-  <button class="chip-filter" data-filter="electrodomesticos">
-    <i data-lucide="tv"></i> Electrodomésticos
-  </button>
-</div>
+          <div class="location-banner">
+            <div class="location-info">
+              <i data-lucide="map-pin"></i>
+              <div>
+                <small>Ubicación del servicio</small>
+                <strong id="user-location-display">Cargando dirección...</strong>
+              </div>
+            </div>
+            <button id="btn-change-location" class="btn btn-ghost btn-sm">Cambiar</button>
+          </div>
         </section>
 
+        <!-- Chips de Filtros de Categoría -->
         <section class="section">
-          <div class="section-header">
-            <span class="section-title">Técnicos Disponibles</span>
-            <span class="count-badge" id="tech-count">3 disponibles</span>
+          <div class="categories-scroll">
+            <button class="chip-filter active" data-filter="Todos">
+              <i data-lucide="grid"></i> Todos
+            </button>
+            <button class="chip-filter" data-filter="reparacion-pc">
+              <i data-lucide="laptop"></i> Reparación PC
+            </button>
+            <button class="chip-filter" data-filter="redes">
+              <i data-lucide="wifi"></i> Redes / Wi-Fi
+            </button>
+            <button class="chip-filter" data-filter="software">
+              <i data-lucide="shield-check"></i> Software
+            </button>
+            <button class="chip-filter" data-filter="electricidad">
+              <i data-lucide="zap"></i> Electricista
+            </button>
+            <button class="chip-filter" data-filter="plomeria-gas">
+              <i data-lucide="droplet"></i> Plomería
+            </button>
+            <button class="chip-filter" data-filter="electrodomesticos">
+              <i data-lucide="tv"></i> Electrodomésticos
+            </button>
+          </div>
+        </section>
+
+        <!-- Sección Lista de Técnicos con el Filtro de Precio Integrado a la Derecha -->
+        <section class="section">
+          <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+              <span class="section-title">Técnicos</span>
+              <span class="count-badge" id="tech-count">0 disponibles</span>
+            </div>
+
+            <!-- FILTRO REUBICADO A LA DERECHA -->
+            <div class="filtro-precio-wrapper">
+              <i data-lucide="sliders-horizontal" class="icono-filtro"></i>
+              <select id="select-filtro-precio" class="select-filtro-precio" aria-label="Ordenar por precio">
+                <option value="ninguno">Precio</option>
+                <option value="menor">Menor a Mayor</option>
+                <option value="mayor">Mayor a Menor</option>
+              </select>
+              <i data-lucide="chevron-down" class="flecha-filtro"></i>
+            </div>
           </div>
 
           <div class="tech-list" id="tech-list-container">
-
-            <!-- Técnico 1 -->
-            <div class="tech-card" data-category="Reparación PC">
-              <div class="tech-header">
-                <div class="tech-avatar">LM</div>
-                <div class="tech-details">
-                  <h4>Lucía Martínez</h4>
-                  <div class="rating">
-                    <span class="stars">★ 4.9</span>
-                    <small>(32 servicios)</small>
-                  </div>
-                </div>
-                <span class="status-badge available">Disponible</span>
-              </div>
-
-              <p class="tech-spec">
-                Especialista en Diagnóstico PC, Redes y Mantenimiento Preventivo.
-              </p>
-
-              <div class="tech-meta">
-                <span><i data-lucide="clock"></i> Disponible hoy</span>
-              </div>
-
-              <button class="btn btn-primary btn-touch-sm">
-                <i data-lucide="plus"></i> Solicitar servicio
-              </button>
-            </div>
-
-            <!-- Técnico 2 -->
-            <div class="tech-card" data-category="Redes / Wi-Fi">
-              <div class="tech-header">
-                <div class="tech-avatar alt">PR</div>
-                <div class="tech-details">
-                  <h4>Pedro Rodríguez</h4>
-                  <div class="rating">
-                    <span class="stars">★ 4.7</span>
-                    <small>(19 servicios)</small>
-                  </div>
-                </div>
-                <span class="status-badge available">Disponible</span>
-              </div>
-
-              <p class="tech-spec">
-                Instalación de Routers, Cableado Estructurado y Fibra Óptica.
-              </p>
-
-              <div class="tech-meta">
-                <span><i data-lucide="clock"></i> En camino</span>
-              </div>
-
-              <button class="btn btn-primary btn-touch-sm">
-                <i data-lucide="plus"></i> Solicitar servicio
-              </button>
-            </div>
-
-            <!-- Técnico 3 -->
-            <div class="tech-card" data-category="Impresoras">
-              <div class="tech-header">
-                <div class="tech-avatar alt2">MS</div>
-                <div class="tech-details">
-                  <h4>Martín Silva</h4>
-                  <div class="rating">
-                    <span class="stars">★ 4.8</span>
-                    <small>(41 servicios)</small>
-                  </div>
-                </div>
-                <span class="status-badge busy">En servicio</span>
-              </div>
-
-              <p class="tech-spec">
-                Mantenimiento de impresoras industriales, tóner y hardware.
-              </p>
-
-              <div class="tech-meta">
-                <span><i data-lucide="clock"></i> Resp. en 30m</span>
-              </div>
-
-              <button class="btn btn-ghost btn-touch-sm">
-                <i data-lucide="calendar"></i> Agendar turno
-              </button>
-            </div>
-
+            <!-- Tarjetas renderizadas dinámicamente -->
           </div>
         </section>
 
@@ -319,23 +303,23 @@
         <span>Inicio</span>
       </div>
       <a href="servicios.html" style="text-decoration: none; color: inherit;">
-       <div class="nav-item">
-        <i data-lucide="clipboard-list"></i>
-        <span>Solicitar</span>
-      </div>
+        <div class="nav-item">
+          <i data-lucide="clipboard-list"></i>
+          <span>Solicitar</span>
+        </div>
       </a>
       <a href="pedidos.html" style="text-decoration: none; color: inherit;">
-      <div class="nav-item">
-        <i data-lucide="clipboard-list"></i>
-        <span>Pedidos</span>
-      </div>
+        <div class="nav-item">
+          <i data-lucide="clipboard-list"></i>
+          <span>Pedidos</span>
+        </div>
       </a>
       <a href="mensajes.html" style="text-decoration: none; color: inherit;">
         <div class="nav-item">
           <i data-lucide="message-square"></i>
-          <span> Mis Chats</span>
-          </div>
-        </a>
+          <span>Mis Chats</span>
+        </div>
+      </a>
       <a href="cliente-perfil.html" style="text-decoration: none; color: inherit;">
         <div class="nav-item">
           <i data-lucide="user"></i>
@@ -346,70 +330,51 @@
 
   </div>
 
-<div id="modal-agendar" class="modal-overlay">
-  <div class="modal-content">
-    
-    <div class="modal-header">
-      <div class="modal-tech-info">
-        <div class="tech-avatar sm" id="modal-tech-avatar">LM</div>
-        <div>
-          <h4 id="modal-tech-name">Lucía Martínez</h4>
-          <small id="modal-tech-cat">Reparación PC</small>
+  <!-- Modal Agendar -->
+  <div id="modal-agendar" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-tech-info">
+          <div class="tech-avatar sm" id="modal-tech-avatar">LM</div>
+          <div>
+            <h4 id="modal-tech-name">Lucía Martínez</h4>
+            <small id="modal-tech-cat">Reparación PC</small>
+          </div>
+        </div>
+        <button id="btn-close-modal" class="btn-icon-close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="calendar-section">
+          <div class="calendar-header">
+            <span class="label-title">Selecciona la fecha</span>
+            <span class="month-label" id="calendar-month-label">Noviembre 2026</span>
+          </div>
+          <div class="days-carousel" id="days-carousel"></div>
+        </div>
+
+        <div class="time-section">
+          <span class="label-title">Horarios disponibles</span>
+          <div class="time-grid" id="time-grid"></div>
+        </div>
+
+        <div class="problem-section">
+          <label for="problem-desc" class="label-title">Detalle del problema (Opcional)</label>
+          <textarea id="problem-desc" class="form-control" rows="2" placeholder="Ej: La PC no enciende y hace tres pitidos..."></textarea>
         </div>
       </div>
-      <button id="btn-close-modal" class="btn-icon-close">
-        <i data-lucide="x"></i>
-      </button>
+
+      <div class="modal-footer">
+        <button id="btn-confirm-booking" class="btn btn-primary btn-block" disabled>
+          <i data-lucide="check"></i> Confirmar y Enviar Solicitud
+        </button>
+      </div>
     </div>
-
-    <div class="modal-body">
-      <!-- 1. Selector de Día / Calendario Carrusel -->
-      <div class="calendar-section">
-        <div class="calendar-header">
-          <span class="label-title">Selecciona la fecha</span>
-          <span class="month-label" id="calendar-month-label">Octubre 2026</span>
-        </div>
-        
-        <div class="days-carousel" id="days-carousel">
-          <!-- Días generados dinámicamente -->
-        </div>
-      </div>
-
-      <!-- 2. Selector de Bloque Horario -->
-      <div class="time-section">
-        <span class="label-title">Horarios disponibles</span>
-        <div class="time-grid" id="time-grid">
-          <!-- Bloques horarios generados -->
-        </div>
-      </div>
-
-      <!-- 3. Descripción opcional del problema -->
-      <div class="problem-section">
-        <label for="problem-desc" class="label-title">Detalle del problema (Opcional)</label>
-        <textarea id="problem-desc" class="form-control" rows="2" placeholder="Ej: La PC no enciende y hace tres pitidos..."></textarea>
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <button id="btn-confirm-booking" class="btn btn-primary btn-block" disabled>
-        <i data-lucide="check"></i> Confirmar y Enviar Solicitud
-      </button>
-    </div>
-
   </div>
-</div>
 
-<!-- Modal de Alerta Personalizado (Sustituto de alert) -->
-<div id="custom-alert-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999999; align-items: center; justify-content: center;">
-  <div class="modal-content" style="background: var(--bg-card, #1e1e1e); color: #fff; padding: 24px; border-radius: 14px; width: 85%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-    <h4 id="custom-alert-title" style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--primary-color, #e63946);">Notificación</h4>
-    <p id="custom-alert-message" style="margin: 0 0 20px 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;"></p>
-    <button type="button" onclick="cerrarAlertaPersonalizada()" style="background: var(--primary-color, #e63946); border: none; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;">Aceptar</button>
-  </div>
-</div>
-
-  <script src="../js/home.filtro.js">
-  </script>
+  <script src="../js/home.filtro.js"></script>
   <script src="../js/pwa-register.js"></script>
 </body>
 </html>

@@ -11,21 +11,45 @@ import {
     marcarDireccionPrincipal 
 } from "../models/direccion.models.js";
 
+// Helper de validación de formato Email
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const postUsuario = async (req, res) => {
     try {
-        const { nombre, email, password, telefono, direccion } = req.body;
+        let { nombre, email, password, telefono, direccion } = req.body;
 
+        // Sanitización (trim)
+        nombre = nombre?.trim();
+        email = email?.trim().toLowerCase();
+        telefono = telefono?.trim() || '';
+
+        // 1. Validar campos obligatorios
         if (!nombre || !email || !password) {
-            return res.status(400).json({ error: "Faltan datos obligatorios" });
+            return res.status(400).json({ error: "Faltan datos obligatorios (nombre, email y contraseña)" });
         }
 
-        const usuarioId = await crearUsuario({ nombre, email, password, telefono: telefono || '' });
+        // 2. Validar longitud del nombre
+        if (nombre.length < 2) {
+            return res.status(400).json({ error: "El nombre debe tener al menos 2 caracteres" });
+        }
+
+        // 3. Validar formato de email
+        if (!EMAIL_REGEX.test(email)) {
+            return res.status(400).json({ error: "El formato de correo electrónico no es válido" });
+        }
+
+        // 4. Validar fortaleza/longitud de contraseña
+        if (password.length < 6) {
+            return res.status(400).json({ error: "La contraseña debe tener al menos 6 caracteres" });
+        }
+
+        const usuarioId = await crearUsuario({ nombre, email, password, telefono });
 
         if (direccion && direccion.direccion_completa) {
             await crearDireccion({
                 usuario_id: usuarioId,
                 alias: 'Casa',
-                direccion_completa: direccion.direccion_completa,
+                direccion_completa: direccion.direccion_completa.trim(),
                 latitud: direccion.latitud,
                 longitud: direccion.longitud,
                 es_principal: 1
@@ -45,10 +69,18 @@ export const postUsuario = async (req, res) => {
 
 export const postSesion = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
 
+        email = email?.trim().toLowerCase();
+
+        // 1. Validar presencia de credenciales
         if (!email || !password) {
-            return res.status(400).json({ error: "Faltan datos obligatorios" });
+            return res.status(400).json({ error: "Email y contraseña son requeridos" });
+        }
+
+        // 2. Validar formato de email
+        if (!EMAIL_REGEX.test(email)) {
+            return res.status(400).json({ error: "El correo electrónico ingresado no es válido" });
         }
 
         const usuarioEncontrado = await inicioSesion({ email, password });
@@ -70,10 +102,24 @@ export const postSesion = async (req, res) => {
 export const putUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
-        const { nombre, email, telefono } = req.body;
+        let { nombre, email, telefono } = req.body;
 
+        nombre = nombre?.trim();
+        email = email?.trim().toLowerCase();
+        telefono = telefono?.trim() || '';
+
+        // 1. Campos obligatorios
         if (!nombre || !email) {
             return res.status(400).json({ error: "Nombre y email son obligatorios" });
+        }
+
+        // 2. Validaciones de formato
+        if (nombre.length < 2) {
+            return res.status(400).json({ error: "El nombre debe tener al menos 2 caracteres" });
+        }
+
+        if (!EMAIL_REGEX.test(email)) {
+            return res.status(400).json({ error: "El formato de correo electrónico no es válido" });
         }
 
         const actualizado = await actualizarUsuario(usuarioId, { nombre, email, telefono });
@@ -156,7 +202,9 @@ export const getDireccionesUsuario = async (req, res) => {
 export const postDireccionUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
-        const { alias, direccion_completa, latitud, longitud } = req.body;
+        let { alias, direccion_completa, latitud, longitud } = req.body;
+
+        direccion_completa = direccion_completa?.trim();
 
         if (!direccion_completa) {
             return res.status(400).json({ error: "La dirección completa es requerida" });
@@ -164,7 +212,7 @@ export const postDireccionUsuario = async (req, res) => {
 
         const id = await crearDireccion({
             usuario_id: usuarioId,
-            alias: alias || 'Otra',
+            alias: alias ? alias.trim() : 'Otra',
             direccion_completa,
             latitud,
             longitud,
