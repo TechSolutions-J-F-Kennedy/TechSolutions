@@ -725,3 +725,23 @@ a.pedido-tecnico:hover {
   background: var(--p50);
   border-radius: 99px;
 }
+
+
+.pedido-avatar-wrapper {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  flex-shrink: 0 !important;
+ 
+}
+
+.pedido-avatar-wrapper img {
+  width: 44px !important;
+  height: 44px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+.pedido-main{
+  margin-left: 12px;
+}

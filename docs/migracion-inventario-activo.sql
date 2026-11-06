@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 ALTER TABLE Productos_stock
 ADD COLUMN activo TINYINT(1) NOT NULL DEFAULT 1;
+=======
+ALTER TABLE Productos_stock
+ADD COLUMN activo TINYINT(1) NOT NULL DEFAULT 1;
+>>>>>>> ccd55be8e5b9f40cae7e7ae174e850120a332613
