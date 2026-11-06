@@ -200,7 +200,7 @@ if (loginForm) {
         } else if (data.usuario.rol === "tecnico") {
           window.location.href = 'html/inicio.html';
         } else if (data.usuario.rol === "insumos") {
-          window.location.href = 'inventario.html';
+          window.location.href = 'html/inventario.html';
         }
       } else {
         Swal.fire({

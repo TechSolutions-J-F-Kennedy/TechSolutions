@@ -4,12 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/inventario.css" />
-    <title>Inventario</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <title>Inventario · TechSolutions</title>
 </head>
 <body>
-    <main>
-        <h1>Inventario</h1>
+    <header class="page-header">
+        <div class="page-header-content">
+            <div class="page-intro">
+                <p class="page-eyebrow">DEPÓSITO / STOCK</p>
+                <h1>Inventario</h1>
+                <p>Consultá, filtrá y administrá los productos y repuestos.</p>
+            </div>
+            <nav class="page-actions" aria-label="Acciones de cuenta">
+                <a class="boton-enlace" href="qr.html">Escanear QR</a>
+                <button class="boton-peligro" id="cerrar-sesion" type="button">Cerrar sesión</button>
+            </nav>
+        </div>
+    </header>
 
+    <main>
         <section class="panel" aria-labelledby="filtros-titulo">
             <h2 id="filtros-titulo">Buscar productos</h2>
             <form id="form-filtros" class="filtros">
@@ -74,6 +89,13 @@
     </main>
 
     <script src="../js/stock.js"></script>
+    <script>
+        document.getElementById('cerrar-sesion').addEventListener('click', () => {
+            localStorage.removeItem('usuario');
+            localStorage.removeItem('user');
+            window.location.href = '../index.html';
+        });
+    </script>
     <script src="../js/pwa-register.js"></script>
 </body>
 </html>
