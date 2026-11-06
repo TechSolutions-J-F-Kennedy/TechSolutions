@@ -1,0 +1,207 @@
+/* ===== Pantallas del cliente (Inicio y Pedir) ===== */
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cta b {
+  font-size: 15px;
+}
+
+.cta .btn {
+  text-decoration: none;
+  flex: none;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--n500);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 6px;
+}
+
+textarea.input {
+  resize: vertical;
+  font: inherit;
+}
+
+/* Tarjeta de un pedido */
+.pedido h3 {
+  font-size: 15px;
+}
+
+.pedido .tecnico {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.pedido .tecnico .av {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--p7), var(--p5));
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 700 13px 'Space Grotesk';
+  position: relative;
+  overflow: hidden;
+  flex: none;
+}
+
+.pedido .tecnico .av img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pedido .tecnico b {
+  display: block;
+  font-size: 14px;
+}
+
+.pedido .etapas {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--n500);
+  margin-top: -8px;
+}
+
+.pedido .etapas .hecha {
+  color: var(--p7);
+}
+
+.pedido .foto-trabajo {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 12px;
+}
+
+.pedido .acciones-cliente {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.pedido .acciones-cliente .btn {
+  flex: 1;
+  text-decoration: none;
+}
+
+.mi-calificacion {
+  color: var(--wa);
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+/* Estrellas para calificar */
+.estrellas {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 16px 0;
+}
+
+.estrellas button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--n200);
+  padding: 2px;
+}
+
+.estrellas button svg {
+  width: 36px;
+  height: 36px;
+}
+
+.estrellas button.on {
+  color: #f5b301;
+}
+
+.estrellas button.on svg {
+  fill: currentColor;
+}
+
+.btns-resena {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btns-resena .btn {
+  flex: 1;
+}
+
+/* Pedido enviado */
+.listo {
+  text-align: center;
+}
+
+.listo svg {
+  width: 46px;
+  height: 46px;
+  color: var(--s4);
+}
+
+.listo b {
+  display: block;
+  font-size: 17px;
+  margin: 8px 0 4px;
+}
+
+.listo .btn {
+  margin-top: 14px;
+  text-decoration: none;
+}
+
+/* Elegir dirección al pedir */
+.direcciones {
+  display: grid;
+  gap: 8px;
+}
+
+.opcion-dir {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--n200);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--n500);
+}
+
+.opcion-dir:has(input:checked) {
+  border-color: var(--p5);
+  background: var(--p50);
+}
+
+.opcion-dir input {
+  margin-top: 3px;
+  accent-color: var(--p5);
+}
+
+.opcion-dir b {
+  display: block;
+  color: var(--p9);
+  font-size: 13px;
+}

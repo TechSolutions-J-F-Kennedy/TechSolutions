@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lector QR · TechSolutions</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/qr.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="qr-page">
+    <header class="head qr-header">
+        <a href="inventario.html" class="qr-back">← Volver</a>
+        <h1>TechSolutions · Lector QR</h1>
+    </header>
+
+    <main>
+        <section class="qr-section" aria-labelledby="qr-titulo">
+            <div class="qr-heading">
+                <p class="qr-eyebrow">REPUESTOS / HERRAMIENTAS</p>
+                <h2 id="qr-titulo">Escanear código QR de insumo</h2>
+                <p class="qr-lede">Usá la cámara para escanear el código QR del producto o repuesto.</p>
+            </div>
+
+            <div class="qr-layout">
+                <div class="qr-reader-panel">
+                    <div class="qr-reader-label">
+                        <span class="qr-live-dot" aria-hidden="true"></span>
+                        <span>Lector en vivo</span>
+                    </div>
+                    <div id="reader" aria-label="Visor de cámara para escanear códigos QR"></div>
+                    <p id="resultado" class="qr-result" role="status" aria-live="polite">
+                        Esperando permiso de cámara...
+                    </p>
+                </div>
+
+                <aside class="qr-guide" aria-labelledby="qr-guia-titulo">
+                    <p class="qr-eyebrow">PASOS</p>
+                    <h3 id="qr-guia-titulo">¿Cómo usarlo?</h3>
+                    <ol class="qr-steps">
+                        <li>
+                            <span class="qr-step-number">01</span>
+                            <div>
+                                <h4>Permití la cámara</h4>
+                                <p>Aceptá el permiso en el navegador para activar el visor.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="qr-step-number">02</span>
+                            <div>
+                                <h4>Enfocá el código</h4>
+                                <p>Centrá el QR del repuesto o herramienta dentro del recuadro.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="qr-step-number">03</span>
+                            <div>
+                                <h4>Consultá el resultado</h4>
+                                <p>Se detectará el código SKU/QR para consultar su stock en tiempo real.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script>
+        const resultado = document.getElementById("resultado");
+
+        const lector = new Html5QrcodeScanner("reader", {
+            fps: 10,
+            qrbox: (ancho, alto) => {
+                const lado = Math.min(320, Math.floor(ancho * 0.8), Math.floor(alto * 0.8));
+                return { width: lado, height: lado };
+            }
+        });
+
+        lector.render(
+            (textoLeido) => {
+                const mensaje = document.createElement("span");
+                const codigo = document.createElement("code");
+                const enlace = document.createElement("a");
+
+                mensaje.append("Código detectado: ");
+                codigo.textContent = textoLeido;
+                mensaje.append(codigo);
+                enlace.href = `inventario.html?codigo=${encodeURIComponent(textoLeido)}`;
+                enlace.className = "btn btn-primary btn-sm qr-result-link";
+                enlace.textContent = "Ver en inventario";
+
+                resultado.replaceChildren(mensaje, enlace);
+                resultado.classList.add("has-result");
+            },
+            () => {
+                // scanning frame ignored
+            }
+        );
+    </script>
+    <script src="../js/pwa-register.js"></script>
+</body>
+</html>

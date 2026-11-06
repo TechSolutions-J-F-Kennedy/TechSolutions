@@ -60,10 +60,156 @@ export const actualizarPerfilTecnico = async (tecnicoId, { nombre_real, apellido
     return actualizados[0];
 };
 
-//Form de inicio de sesion
-export const inicioSesion = async ({ email, password }) => {
-    const sql = `SELECT id, nombre, nombre_real, apellido, email, telefono, categoria, rol, disponibilidad
-        FROM Usuarios WHERE (email = ? OR nombre = ?) AND password = ?`;
-    const [resultado] = await connection.query(sql, [email, email, password]);
-    return resultado[0]; // Retorna el usuario encontrado o undefined
+//Obtener un servicio puntual del técnico (para la pantalla de pedido actual)
+export const getServicioDeTecnico = async (tecnicoId, servicioId) => {
+    const sql = `SELECT Servicios.*,
+        Usuarios.telefono AS telefono,
+        CONCAT_WS(' ', Usuarios.nombre_real, Usuarios.apellido) AS cliente
+        FROM Servicios
+        LEFT JOIN Usuarios ON Servicios.cliente_id = Usuarios.id
+        WHERE Servicios.id = ? AND Servicios.tecnico_id = ?`;
+    const [rows] = await connection.query(sql, [servicioId, tecnicoId]);
+    return rows[0];
+};
+
+//Cambiar el estado de un servicio del técnico (pendiente, yendo, en proceso, finalizado)
+export const actualizarEstadoServicio = async (tecnicoId, servicioId, estado) => {
+    const sql = 'UPDATE Servicios SET Estado = ? WHERE id = ? AND tecnico_id = ?';
+    const [resultado] = await connection.query(sql, [estado, servicioId, tecnicoId]);
+    return resultado.affectedRows > 0;
+};
+
+//Guardar (o quitar con null) la foto del trabajo terminado de un servicio del técnico
+export const actualizarFotoServicio = async (tecnicoId, servicioId, foto) => {
+    const sql = 'UPDATE Servicios SET foto_final = ? WHERE id = ? AND tecnico_id = ?';
+    const [resultado] = await connection.query(sql, [foto, servicioId, tecnicoId]);
+    return resultado.affectedRows > 0;
+};
+
+//Ubicación de trabajo del técnico: su dirección principal en direcciones_usuario
+export const getUbicacionTecnico = async (tecnicoId) => {
+    const [rows] = await connection.query(
+        `SELECT id, alias, direccion_completa, latitud, longitud
+        FROM direcciones_usuario
+        WHERE usuario_id = ?
+        ORDER BY es_principal DESC, id ASC LIMIT 1`,
+        [tecnicoId]
+    );
+    return rows[0] || null;
+};
+
+//Guardar la ubicación real del técnico (actualiza su dirección principal o crea una nueva)
+export const guardarUbicacionTecnico = async (tecnicoId, { direccion, latitud, longitud }) => {
+    const actual = await getUbicacionTecnico(tecnicoId);
+    if (actual) {
+        await connection.query(
+            "UPDATE direcciones_usuario SET direccion_completa = ?, latitud = ?, longitud = ?, es_principal = 1 WHERE id = ?",
+            [direccion, latitud, longitud, actual.id]
+        );
+    } else {
+        await connection.query(
+            `INSERT INTO direcciones_usuario (usuario_id, alias, direccion_completa, latitud, longitud, es_principal)
+            VALUES (?, 'Taller', ?, ?, ?, 1)`,
+            [tecnicoId, direccion, latitud, longitud]
+        );
+    }
+    return getUbicacionTecnico(tecnicoId);
+};
+
+// Obtener todos los técnicos con su ubicación principal
+export const getTodosTecnicosConUbicacion = async () => {
+    const sql = `
+        SELECT 
+            u.id,
+            u.nombre_real AS nombre,
+            u.apellido,
+            u.email,
+            u.telefono,
+            u.categoria,
+            u.descripcion,
+            d.direccion_completa,
+            d.latitud,
+            d.longitud
+        FROM Usuarios u
+        INNER JOIN direcciones_usuario d ON u.id = d.usuario_id
+        WHERE u.rol = ? AND d.es_principal = 1
+    `;
+    const [rows] = await connection.query(sql, ["tecnico"]);
+    return rows;
+};
+
+// 2. Obtener técnicos por categoría con su ubicación principal
+export const getTecnicosPorCategoriaConUbicacion = async (categoria) => {
+    const sql = `
+        SELECT 
+            u.id,
+            u.nombre_real AS nombre,
+            u.apellido,
+            u.email,
+            u.telefono,
+            u.categoria,
+            u.descripcion,
+            d.direccion_completa,
+            d.latitud,
+            d.longitud
+        FROM Usuarios u
+        INNER JOIN direcciones_usuario d ON u.id = d.usuario_id
+        WHERE u.rol = ? AND LOWER(u.categoria) = LOWER(?) AND d.es_principal = 1
+    `;
+    const [rows] = await connection.query(sql, ["tecnico", categoria]);
+    return rows;
+};
+
+// 3. Obtener el promedio real de estrellas y total de reseñas de un técnico
+export const getReputacionTecnico = async (tecnicoId) => {
+    const sql = `
+        SELECT 
+            COALESCE(ROUND(AVG(estrella), 1), 0.0) AS reputacion_promedio,
+            COUNT(id) AS total_resenas
+        FROM resenas
+        WHERE tecnico_id = ?
+    `;
+    const [rows] = await connection.query(sql, [tecnicoId]);
+    return rows[0];
+};
+
+// 4. Obtener la lista de reseñas de un técnico para su perfil
+export const getResenasByTecnicoId = async (tecnicoId) => {
+    const sql = `
+        SELECT 
+            r.id,
+            r.estrella,
+            r.comentario,
+            r.fecha,
+            r.cliente_id,
+            u.nombre AS cliente_nombre
+        FROM resenas r
+        INNER JOIN Usuarios u ON r.cliente_id = u.id
+        WHERE r.tecnico_id = ?
+        ORDER BY r.fecha DESC
+    `;
+    const [rows] = await connection.query(sql, [tecnicoId]);
+    return rows;
+};
+
+// 5. Obtener los datos de un único técnico por ID
+export const getTecnicoById = async (tecnicoId) => {
+    const sql = `
+        SELECT 
+            u.id,
+            u.nombre_real AS nombre,
+            u.apellido,
+            u.email,
+            u.telefono,
+            u.categoria,
+            u.descripcion,
+            d.direccion_completa,
+            d.latitud,
+            d.longitud
+        FROM Usuarios u
+        LEFT JOIN direcciones_usuario d ON u.id = d.usuario_id AND d.es_principal = 1
+        WHERE u.id = ? AND u.rol = ?
+    `;
+    const [rows] = await connection.query(sql, [tecnicoId, "tecnico"]);
+    return rows[0] || null;
 };

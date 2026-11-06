@@ -1,0 +1,148 @@
+/* ==========================================================================
+   chat-styles.css — Chat con el técnico (chat.html)
+   Requiere base.css
+   ========================================================================== */
+
+.chat-tech-header-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
+.chat-tech-header-info h4 { font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.chat-tech-header-info .tech-avatar { background: rgba(255, 255, 255, 0.18); }
+
+.chat-status-indicator { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--p100); }
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--s3);
+  border-radius: 50%;
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(77, 225, 178, 0.6); }
+  50% { box-shadow: 0 0 0 5px rgba(77, 225, 178, 0); }
+}
+
+.chat-body { padding: 14px 14px calc(var(--safe-bottom) + 92px); }
+
+.chat-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #92400e;
+  background: var(--wal);
+  border-radius: var(--r-md);
+}
+
+.chat-notice svg { flex: none; width: 18px; height: 18px; color: var(--wa); }
+
+.chat-messages-container { display: flex; flex-direction: column; gap: 8px; }
+
+/* Burbujas — cubro los nombres de clase más habituales que inyecta el JS */
+.message-bubble,
+.message,
+.msg,
+.mensaje,
+.chat-message {
+  max-width: 80%;
+  padding: 10px 14px;
+  font-size: 14.5px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  color: var(--n900);
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: 18px 18px 18px 6px;
+  align-self: flex-start;
+}
+
+.message-bubble.sent,
+.message.sent, .message.own, .message.mine, .message.me,
+.msg.sent, .msg.own, .msg.mine, .msg.y,
+.mensaje.sent, .mensaje.own, .mensaje.propio, .mensaje.enviado,
+.chat-message.sent, .chat-message.own {
+  align-self: flex-end;
+  color: #fff;
+  background: var(--p5);
+  border-color: var(--p5);
+  border-radius: 18px 18px 6px 18px;
+}
+
+.message-bubble .message-time,
+.message small, .msg small, .mensaje small, .chat-message small,
+.message-time, .msg-time {
+  display: block;
+  margin-top: 4px;
+  font-size: 10.5px;
+  text-align: right;
+  opacity: 0.7;
+}
+
+/* ---------- Barra de entrada ---------- */
+.chat-input-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  width: 100%;
+  max-width: var(--max-w);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px calc(10px + var(--safe-bottom));
+  background: #fff;
+  border-top: 1px solid var(--n200);
+}
+
+.chat-input-bar input {
+  flex: 1;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0 18px;
+  font-size: 16px;
+  background: var(--n50);
+  border: 1.5px solid var(--n200);
+  border-radius: 99px;
+  outline: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.chat-input-bar input:focus { background: #fff; border-color: var(--p5); box-shadow: var(--ring); }
+
+.btn-send-msg {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--p5);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+  transition: background 0.15s, transform 0.15s var(--ease);
+}
+
+.btn-send-msg:hover { background: var(--p6); }
+.btn-send-msg:active { transform: scale(0.92); }
+.btn-send-msg svg { width: 20px; height: 20px; }
+
+/* La hora de mis mensajes sobre fondo azul */
+.message-bubble.sent .message-time { color: #fff; opacity: 0.8; }
+
+/* Chat vacío */
+.chat-messages-container:empty::before {
+  content: 'Escribí tu primer mensaje para empezar la conversación.';
+  align-self: center;
+  max-width: 28ch;
+  margin-top: 40px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--n500);
+}
