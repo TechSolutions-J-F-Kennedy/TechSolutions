@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:23461/api/productos-stock';
+const API_URL = (window.location.protocol === 'file:' || window.location.port === '5500')
+  ? 'http://localhost:3000/api/stock'
+  : '/api/stock';
 // Mantiene los nombres de los campos sincronizados con la tabla y la API.
 const camposEditables = [
   'codigo_sku',
