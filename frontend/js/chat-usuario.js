@@ -2,29 +2,38 @@ const BASE_URL = (window.location.protocol === 'file:' || window.location.port =
   ? 'http://localhost:3000'
   : '';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   if (window.lucide) {
     lucide.createIcons();
-}
+  }
 
   const usuarioGuardado = localStorage.getItem('usuario');
   if (!usuarioGuardado) {
-    alert('Debes iniciar sesión para chatear.');
-    window.location.href = 'index.html';
+    Swal.fire({
+      icon: 'warning',
+      title: 'Sesión requerida',
+      text: 'Debes iniciar sesión para chatear.'
+    }).then(() => {
+      window.location.href = 'index.html';
+    });
     return;
   }
+
   const usuario = JSON.parse(usuarioGuardado);
   const tecnicoId = localStorage.getItem('chatActivo_tecnicoId') || '1';
   const nombreTecnico = localStorage.getItem('chatActivo_nombreTecnico') || 'Técnico';
 
-  // Mostrar datos del técnico
-  document.getElementById('chat-tech-name').textContent = nombreTecnico;
-  const techAvatarEl = document.getElementById('chat-tech-avatar');
-  if (techAvatarEl) {
-    techAvatarEl.textContent = nombreTecnico.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'TM';
-  }
+  // Mostrar nombre del técnico
+  const nameEl = document.getElementById('chat-tech-name');
+  if (nameEl) nameEl.textContent = nombreTecnico;
 
-  document.getElementById('btn-back-chat').addEventListener('click', () => window.history.back());
+  // Cargar foto o iniciales del técnico en el encabezado del chat
+  await cargarFotoEncabezadoTecnico(tecnicoId, nombreTecnico);
+
+  const btnBackChat = document.getElementById('btn-back-chat');
+  if (btnBackChat) {
+    btnBackChat.addEventListener('click', () => window.history.back());
+  }
 
   const inputMensaje = document.getElementById('mensaje-input');
   const btnEnviar = document.getElementById('btn-enviar-mensaje');
@@ -33,25 +42,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. Cargar historial inicial de mensajes desde la BD
   let ultimaCantidad = -1;
 
-async function cargarHistorial() {
-  try {
-    const res = await fetch(`${BASE_URL}/api/mensajes/${usuario.id}/${tecnicoId}`);
-    const mensajes = await res.json();
+  async function cargarHistorial() {
+    try {
+      const res = await fetch(`${BASE_URL}/api/mensajes/${usuario.id}/${tecnicoId}`);
+      const mensajes = await res.json();
 
-    if (res.ok) {
-      if (mensajes.length === ultimaCantidad) return; // nada nuevo
-      ultimaCantidad = mensajes.length;
+      if (res.ok) {
+        if (mensajes.length === ultimaCantidad) return; // Nada nuevo
+        ultimaCantidad = mensajes.length;
 
-      contenedorMensajes.innerHTML = '';
-      mensajes.forEach(msg => {
-        agregarBurbujaMensaje(msg.remitente === 'usuario', msg.mensaje, msg.hora);
-      });
-      window.scrollTo(0, document.documentElement.scrollHeight);
+        contenedorMensajes.innerHTML = '';
+        mensajes.forEach(msg => {
+          agregarBurbujaMensaje(msg.remitente === 'usuario', msg.mensaje, msg.hora);
+        });
+        window.scrollTo(0, document.documentElement.scrollHeight);
+      }
+    } catch (error) {
+      console.error('Error al cargar historial:', error);
     }
-  } catch (error) {
-    console.error('Error al cargar historial:', error);
   }
-}
 
   // 2. Enviar mensaje al backend vía POST
   async function enviarMensaje() {
@@ -76,10 +85,19 @@ async function cargarHistorial() {
         inputMensaje.value = '';
         cargarHistorial(); // Recarga el chat para mostrar el mensaje recién guardado
       } else {
-        alert('No se pudo enviar el mensaje.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al enviar',
+          text: 'No se pudo enviar el mensaje.'
+        });
       }
     } catch (error) {
       console.error('Error de conexión:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'Ocurrió un fallo al conectar con el servidor.'
+      });
     }
   }
 
@@ -95,19 +113,45 @@ async function cargarHistorial() {
   }
 
   if (btnEnviar) btnEnviar.addEventListener('click', enviarMensaje);
-  inputMensaje.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') enviarMensaje();
-  });
+  if (inputMensaje) {
+    inputMensaje.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') enviarMensaje();
+    });
+  }
 
   // Cargar al iniciar
   cargarHistorial();
 
-  // Opcional: Polling (consultar nuevos mensajes cada 4 segundos para simular tiempo real sin Socket.io)
+  // Polling cada 4 segundos
   setInterval(cargarHistorial, 4000);
 });
 
+// Función para consultar y renderizar la foto/iniciales del técnico en la cabecera
+async function cargarFotoEncabezadoTecnico(tecnicoId, nombreTecnico) {
+  const techAvatarEl = document.getElementById('chat-tech-avatar');
+  if (!techAvatarEl) return;
+
+  const iniciales = nombreTecnico.split(' ').filter(Boolean).map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'TM';
+
+  try {
+    const response = await fetch(`${BASE_URL}/api/usuarios/${tecnicoId}/foto`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.foto) {
+        techAvatarEl.innerHTML = `<img src="${data.foto}" alt="${escapeHTML(nombreTecnico)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+        return;
+      }
+    }
+  } catch (error) {
+    console.error("Error al obtener la foto del técnico:", error);
+  }
+
+  // Fallback si no tiene foto o falla la petición
+  techAvatarEl.textContent = iniciales;
+}
+
 function escapeHTML(str) {
-  return str.replace(/[&<>'"]/g, 
+  return String(str || '').replace(/[&<>'"]/g, 
     tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
   );
-} 
+}

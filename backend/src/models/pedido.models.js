@@ -11,6 +11,7 @@ export const getPedidosById = async (clienteId) => {
             u.telefono AS tecnico_telefono,
             u.categoria AS tecnico_categoria,
             u.reputacion_promedio AS tecnico_reputacion,
+            u.foto_perfil AS foto,
             r.id AS resena_id,
             r.estrella AS resena_estrella,
             r.comentario AS resena_comentario
