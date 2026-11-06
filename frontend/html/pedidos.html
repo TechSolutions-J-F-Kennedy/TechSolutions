@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mis pedidos — Kennedy Tech Solutions</title>
+
+  <link rel="manifest" href="../manifest.json">
+
+<!-- Meta etiquetas y favicons -->
+<meta name="theme-color" content="#172554">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+<link rel="apple-touch-icon" href="../img/icono-192.png">
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="../css/base-dos.css">
+  <link rel="stylesheet" href="../css/servicios-styles.css">
+  <link rel="stylesheet" href="../css/tema.css">
+  <script src="../js/tema.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+  <div class="mobile-container">
+
+    <!-- Encabezado de la App -->
+    <header class="phone-head">
+      <div class="head-top">
+        <a href="home.html" class="icon-btn" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </a>
+        <div class="brand">
+          <small>KENNEDY TECH</small>
+          <h4 id="page-title">Mis pedidos</h4>
+        </div>
+        <button class="icon-btn" aria-label="Ayuda">
+          <i data-lucide="help-circle"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="phone-body">
+
+      <div class="filtros" role="group" aria-label="Filtrar pedidos por estado">
+        <button class="chip-filter active" data-filter="todos">
+          <i data-lucide="grid"></i> Todos
+        </button>
+        <button class="chip-filter" data-filter="pendiente">
+          <i data-lucide="clock"></i> Pendientes
+        </button>
+        <button class="chip-filter" data-filter="confirmado">
+          <i data-lucide="check-circle"></i> Confirmados
+        </button>
+        <button class="chip-filter" data-filter="en_proceso">
+          <i data-lucide="loader"></i> En proceso
+        </button>
+        <button class="chip-filter" data-filter="finalizado">
+          <i data-lucide="check-check"></i> Finalizados
+        </button>
+        <button class="chip-filter" data-filter="cancelado">
+          <i data-lucide="x-circle"></i> Cancelados
+        </button>
+      </div>
+
+      <div id="contenedor-pedidos" class="contenedor-pedidos"></div>
+    </main>
+
+    <!-- Navegación Inferior -->
+    <nav class="bottom-nav">
+      <a href="home.html" style="text-decoration: none; color: inherit;">
+        <div id="nav-btn-home" class="nav-item">
+          <i data-lucide="house"></i>
+          <span>Inicio</span>
+        </div>
+      </a>
+      <a href="servicios.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item">
+          <i data-lucide="clipboard-list"></i>
+          <span>Solicitar</span>
+        </div>
+      </a>
+      <div class="nav-item active">
+        <i data-lucide="clipboard-list"></i>
+        <span>Pedidos</span>
+      </div>
+      <a href="mensajes.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item">
+          <i data-lucide="message-square"></i>
+          <span>Mis Chats</span>
+        </div>
+      </a>
+      <a href="cliente-perfil.html" style="text-decoration: none; color: inherit;">
+        <div class="nav-item">
+          <i data-lucide="user"></i>
+          <span>Perfil</span>
+        </div>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Modal de calificación -->
+  <div id="modal-resena" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="resena-titulo">
+    <div class="modal-content">
+      <h3 id="resena-titulo" class="modal-title">Calificar servicio</h3>
+      <p class="modal-sub">¿Cómo fue la atención del técnico?</p>
+
+      <form id="form-resena">
+        <input type="hidden" id="resena-pedido-id">
+        <input type="hidden" id="resena-tecnico-id">
+        <input type="hidden" id="resena-estrella" value="5">
+
+        <div class="stars-selector">
+          <i data-lucide="star" class="star-btn" data-val="1"></i>
+          <i data-lucide="star" class="star-btn" data-val="2"></i>
+          <i data-lucide="star" class="star-btn" data-val="3"></i>
+          <i data-lucide="star" class="star-btn" data-val="4"></i>
+          <i data-lucide="star" class="star-btn" data-val="5"></i>
+        </div>
+
+        <textarea id="resena-comentario" class="custom-textarea" rows="3" placeholder="Contanos cómo fue (opcional)"></textarea>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost btn-touch-sm" onclick="cerrarModalResena()">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-touch-sm">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de resolución de pedido vencido -->
+  <div id="modal-resolucion" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="res-titulo">
+    <div class="modal-content">
+      <div class="modal-icono"><i data-lucide="clock-alert"></i></div>
+      <h3 id="res-titulo" class="modal-title">¿Qué pasó con tu pedido?</h3>
+      <p class="modal-sub">
+        El horario del servicio <strong id="res-pedido-id">#ORD-0</strong> ya pasó. Indicanos cómo terminó:
+      </p>
+
+      <input type="hidden" id="res-pedido-id-input">
+
+      <div class="modal-opciones">
+        <button type="button" class="btn btn-secondary btn-touch" onclick="resolverPedidoAccion('finalizado')">
+          <i data-lucide="check-circle"></i> El servicio se hizo
+        </button>
+        <button type="button" class="btn btn-ghost btn-touch" onclick="abrirModalReprogramar()">
+          <i data-lucide="calendar"></i> Mover la fecha
+        </button>
+        <button type="button" class="btn btn-danger-ghost btn-touch" onclick="resolverPedidoAccion('cancelado')">
+          <i data-lucide="x-circle"></i> No se hizo, cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para reprogramar cita -->
+  <div id="modal-reprogramar" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="reprog-titulo">
+    <div class="modal-content reprog">
+      <div class="modal-head">
+        <h3 id="reprog-titulo" class="modal-title">Reprogramar cita</h3>
+        <button type="button" class="icon-btn" style="color: var(--n500); background: var(--n100);" onclick="cerrarModalReprogramar()" aria-label="Cerrar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="reprog-seccion">
+        <div class="reprog-seccion-head">
+          <span>Nueva fecha</span>
+          <small id="reprog-month-label"></small>
+        </div>
+        <div class="days-carousel" id="reprog-days-carousel"></div>
+      </div>
+
+      <div class="reprog-seccion">
+        <div class="reprog-seccion-head">
+          <span>Horarios disponibles</span>
+        </div>
+        <div class="time-grid" id="reprog-time-grid"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost btn-touch-sm" onclick="cerrarModalReprogramar()">Cancelar</button>
+        <button type="button" id="btn-confirm-reprogramar" class="btn btn-primary btn-touch-sm" onclick="guardarNuevaFecha()" disabled>Confirmar cambio</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal de Alerta Personalizado (Sustituto de alert) -->
+<div id="custom-alert-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999999; align-items: center; justify-content: center;">
+  <div class="modal-content" style="background: var(--bg-card, #1e1e1e); color: #fff; padding: 24px; border-radius: 14px; width: 85%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    <h4 id="custom-alert-title" style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--primary-color, #e63946);">Notificación</h4>
+    <p id="custom-alert-message" style="margin: 0 0 20px 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;"></p>
+    <button type="button" onclick="cerrarAlertaPersonalizada()" style="background: var(--primary-color, #e63946); border: none; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;">Aceptar</button>
+  </div>
+</div>
+  <script src="../js/pedidos.js"></script>
+  <script src="../js/pwa-register.js"></script>
+</body>
+</html>

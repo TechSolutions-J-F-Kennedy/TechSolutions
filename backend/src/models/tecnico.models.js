@@ -121,13 +121,12 @@ export const getTodosTecnicosConUbicacion = async () => {
     const sql = `
         SELECT 
             u.id,
-            u.nombre,
+            u.nombre_real AS nombre,
             u.apellido,
             u.email,
             u.telefono,
             u.categoria,
             u.descripcion,
-            u.reputacion_promedio,
             d.direccion_completa,
             d.latitud,
             d.longitud
@@ -139,25 +138,78 @@ export const getTodosTecnicosConUbicacion = async () => {
     return rows;
 };
 
-// Obtener técnicos por categoría con su ubicación principal
+// 2. Obtener técnicos por categoría con su ubicación principal
 export const getTecnicosPorCategoriaConUbicacion = async (categoria) => {
     const sql = `
         SELECT 
             u.id,
-            u.nombre,
+            u.nombre_real AS nombre,
             u.apellido,
             u.email,
             u.telefono,
             u.categoria,
             u.descripcion,
-            u.reputacion_promedio,
             d.direccion_completa,
             d.latitud,
             d.longitud
         FROM Usuarios u
         INNER JOIN direcciones_usuario d ON u.id = d.usuario_id
-        WHERE u.rol = ? AND u.categoria = ? AND d.es_principal = 1
+        WHERE u.rol = ? AND LOWER(u.categoria) = LOWER(?) AND d.es_principal = 1
     `;
     const [rows] = await connection.query(sql, ["tecnico", categoria]);
     return rows;
+};
+
+// 3. Obtener el promedio real de estrellas y total de reseñas de un técnico
+export const getReputacionTecnico = async (tecnicoId) => {
+    const sql = `
+        SELECT 
+            COALESCE(ROUND(AVG(estrella), 1), 0.0) AS reputacion_promedio,
+            COUNT(id) AS total_resenas
+        FROM resenas
+        WHERE tecnico_id = ?
+    `;
+    const [rows] = await connection.query(sql, [tecnicoId]);
+    return rows[0];
+};
+
+// 4. Obtener la lista de reseñas de un técnico para su perfil
+export const getResenasByTecnicoId = async (tecnicoId) => {
+    const sql = `
+        SELECT 
+            r.id,
+            r.estrella,
+            r.comentario,
+            r.fecha,
+            r.cliente_id,
+            u.nombre AS cliente_nombre
+        FROM resenas r
+        INNER JOIN Usuarios u ON r.cliente_id = u.id
+        WHERE r.tecnico_id = ?
+        ORDER BY r.fecha DESC
+    `;
+    const [rows] = await connection.query(sql, [tecnicoId]);
+    return rows;
+};
+
+// 5. Obtener los datos de un único técnico por ID
+export const getTecnicoById = async (tecnicoId) => {
+    const sql = `
+        SELECT 
+            u.id,
+            u.nombre_real AS nombre,
+            u.apellido,
+            u.email,
+            u.telefono,
+            u.categoria,
+            u.descripcion,
+            d.direccion_completa,
+            d.latitud,
+            d.longitud
+        FROM Usuarios u
+        LEFT JOIN direcciones_usuario d ON u.id = d.usuario_id AND d.es_principal = 1
+        WHERE u.id = ? AND u.rol = ?
+    `;
+    const [rows] = await connection.query(sql, [tecnicoId, "tecnico"]);
+    return rows[0] || null;
 };
