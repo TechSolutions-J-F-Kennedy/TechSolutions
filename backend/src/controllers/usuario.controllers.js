@@ -39,7 +39,7 @@ export const postUsuario = async (req, res) => {
         }
 
         // 4. Validar fortaleza/longitud de contraseña
-        if (password.length < 6) {
+        if (password.length < 3) {
             return res.status(400).json({ error: "La contraseña debe tener al menos 6 caracteres" });
         }
 
@@ -78,10 +78,6 @@ export const postSesion = async (req, res) => {
             return res.status(400).json({ error: "Email y contraseña son requeridos" });
         }
 
-        // 2. Validar formato de email
-        if (!EMAIL_REGEX.test(email)) {
-            return res.status(400).json({ error: "El correo electrónico ingresado no es válido" });
-        }
 
         const usuarioEncontrado = await inicioSesion({ email, password });
 
