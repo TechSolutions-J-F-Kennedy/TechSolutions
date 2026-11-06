@@ -39,7 +39,7 @@ export const postUsuario = async (req, res) => {
         }
 
         // 4. Validar fortaleza/longitud de contraseña
-        if (password.length < 6) {
+        if (password.length < 3) {
             return res.status(400).json({ error: "La contraseña debe tener al menos 6 caracteres" });
         }
 
