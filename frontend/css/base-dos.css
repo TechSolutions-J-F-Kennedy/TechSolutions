@@ -651,6 +651,116 @@ textarea::placeholder { color: var(--n400); }
 
 @keyframes sheet-up { from { transform: translateY(100%); } }
 
+/* ---------- Reseñas ----------
+   Las usan el perfil del técnico (tecnico-datos) y el historial del cliente. */
+.estrellas { display: flex; flex: none; gap: 2px; }
+
+.estrellas svg {
+  width: 15px;
+  height: 15px;
+  color: var(--n200);
+}
+
+.estrellas .on {
+  color: #f59e0b;
+  fill: #f59e0b;
+}
+
+.resena-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--n200);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-sm);
+}
+
+.resena-card + .resena-card { margin-top: 12px; }
+
+/* La reseña del usuario logueado */
+.resena-card.mia {
+  background: var(--p50);
+  border-color: var(--p200);
+}
+
+.resena-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.resena-avatar {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--p5), var(--p8));
+}
+
+.resena-quien {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.resena-nombre {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.resena-nombre strong {
+  min-width: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--n900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resena-tag {
+  flex: none;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--p5);
+  border-radius: 99px;
+}
+
+.resena-quien small {
+  font-size: 12px;
+  color: var(--n500);
+}
+
+.resena-texto {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--n700);
+  overflow-wrap: anywhere;
+}
+
+.resena-texto.vacio { color: var(--n400); font-style: italic; }
+
+.resena-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--n100);
+}
+
 /* ---------- Movimiento reducido ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,

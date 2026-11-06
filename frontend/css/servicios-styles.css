@@ -66,6 +66,18 @@
   gap: 14px;
 }
 
+/* Con pedidos, las filas se agrupan en una sola tarjeta, como una lista de tareas.
+   Si no hay pedidos (mensaje o estado vacío) el contenedor queda sin tarjeta. */
+.contenedor-pedidos:has(> .pedido-card) {
+  gap: 0;
+  padding: 0 16px;
+  overflow: hidden;
+  background: var(--surface, #fff);
+  border: 1px solid var(--n200);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+}
+
 .mensaje-lista {
   padding: 24px 12px;
   text-align: center;
@@ -104,21 +116,20 @@
   color: var(--n500);
 }
 
-/* ---------- Tarjeta de pedido ----------
-   Cada estado define dos variables (--estado y --estado-bg) y con eso se
-   colorean el bloque de fecha y la etiqueta de estado. */
+/* ---------- Fila de pedido ----------
+   icono | título + detalle | estado
+   Cada estado define --estado y --estado-bg, que colorean la etiqueta. */
 .pedido-card {
   --estado: var(--n500);
   --estado-bg: var(--n100);
   display: grid;
-  grid-template-columns: 68px minmax(0, 1fr);
-  gap: 12px 14px;
-  padding: 14px 16px;
-  background: #fff;
-  border: 1px solid var(--n200);
-  border-radius: var(--r-lg);
-  box-shadow: var(--sh-sm);
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
 }
+
+.pedido-card + .pedido-card { border-top: 1px solid var(--n100); }
 
 .pedido-card.pendiente { --estado: #b45309; --estado-bg: var(--wal); }
 .pedido-card.confirmado { --estado: var(--p6); --estado-bg: var(--p50); }
@@ -126,22 +137,68 @@
 .pedido-card.finalizado,
 .pedido-card.completado { --estado: var(--ok); --estado-bg: var(--okl); }
 .pedido-card.cancelado,
-.pedido-card.rechazado { --estado: var(--er); --estado-bg: var(--erl); background: var(--n50); }
+.pedido-card.rechazado { --estado: var(--er); --estado-bg: var(--erl); }
 
-.pedido-card.cancelado .pedido-fecha,
-.pedido-card.rechazado .pedido-fecha,
+.pedido-card.cancelado .pedido-icono,
+.pedido-card.rechazado .pedido-icono,
 .pedido-card.cancelado .pedido-main,
-.pedido-card.rechazado .pedido-main { opacity: 0.7; }
+.pedido-card.rechazado .pedido-main { opacity: 0.65; }
 
-/* Fila superior: estado + número de pedido */
-.pedido-head {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+.pedido-icono {
+  width: 24px;
+  height: 24px;
+  color: var(--p6);
+  stroke-width: 1.8;
 }
 
+/* Texto: título (#pedido · técnico) y detalle (fecha · hora · lugar) */
+.pedido-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pedido-titulo {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--n900);
+  overflow-wrap: anywhere;
+}
+
+.pedido-tecnico {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.pedido-tecnico:hover {
+  color: var(--p6);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pedido-sub {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--n500);
+  overflow-wrap: anywhere;
+}
+
+.pedido-desc {
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--n700);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Etiqueta de estado: punto + texto en minúscula */
 .status-badge {
   flex: none;
   display: inline-flex;
@@ -157,134 +214,28 @@
 .status-badge svg { width: 14px; height: 14px; }
 
 .pedido-card .status-badge {
+  gap: 7px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: lowercase;
   color: var(--estado);
   background: var(--estado-bg);
 }
 
-.pedido-id {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: var(--n400);
-}
-
-/* Bloque de fecha (lo primero que se mira en un turno) */
-.pedido-fecha {
-  align-self: start;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 4px 9px;
-  text-align: center;
-  color: var(--estado);
-  background: var(--estado-bg);
-  border-radius: var(--r-md);
-}
-
-.pf-dia {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.pf-mes {
-  margin-top: 3px;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.pf-hora {
-  width: 100%;
-  margin-top: 8px;
-  padding-top: 8px;
-  font-size: 13px;
-  font-weight: 800;
-  border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-}
-
-/* Columna principal */
-.pedido-main {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-}
-
-.tech-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  color: inherit;
-  text-decoration: none;
-}
-
-a.tech-info:hover h4 { color: var(--p6); }
-
-.tech-avatar-box {
-  flex: none;
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
+.pedido-card .status-badge::before {
+  content: '';
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, var(--p5), var(--p8));
-}
-
-.tech-text-info { min-width: 0; }
-
-.tech-text-info h4 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--n900);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color 0.15s;
-}
-
-.tech-text-info small {
-  display: block;
-  font-size: 12px;
-  color: var(--n500);
-}
-
-.pedido-desc {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--n700);
-  overflow-wrap: anywhere;
-}
-
-.pedido-lugar {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--n500);
-  overflow-wrap: anywhere;
-}
-
-.pedido-lugar svg {
-  flex: none;
-  width: 15px;
-  height: 15px;
-  margin-top: 2px;
-  color: var(--n400);
+  background: currentColor;
 }
 
 /* Reseña del cliente (cuando ya calificó) */
 .pedido-resena {
-  grid-column: 1 / -1;
+  grid-column: 2 / -1;
   padding: 10px 12px;
-  background: #fffbeb;
+  background: var(--wal);
   border-left: 3px solid #f59e0b;
   border-radius: var(--r-sm);
 }
@@ -307,27 +258,12 @@ a.tech-info:hover h4 { color: var(--p6); }
   overflow-wrap: anywhere;
 }
 
-.estrellas { display: flex; gap: 2px; }
-
-.estrellas svg {
-  width: 15px;
-  height: 15px;
-  color: var(--n200);
-}
-
-.estrellas .on {
-  color: #f59e0b;
-  fill: #f59e0b;
-}
-
 /* Acciones */
 .pedido-footer {
-  grid-column: 1 / -1;
+  grid-column: 2 / -1;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding-top: 12px;
-  border-top: 1px solid var(--n100);
 }
 
 .btn-action {
@@ -349,7 +285,7 @@ a.tech-info:hover h4 { color: var(--p6); }
 
 .btn-action.danger {
   color: var(--er);
-  background: #fff;
+  background: var(--surface, #fff);
   border-color: rgba(220, 38, 38, 0.3);
 }
 .btn-action.danger:hover { background: var(--erl); }
@@ -369,10 +305,38 @@ a.tech-info:hover h4 { color: var(--p6); }
 
 .btn-action.warn {
   color: #b45309;
-  background: #fff;
+  background: var(--surface, #fff);
   border-color: #f59e0b;
 }
-.btn-action.warn:hover { background: #fffbeb; }
+.btn-action.warn:hover { background: var(--wal); }
+
+/* Legado: avatar/enlace de técnico (ya no los usa la fila de pedido) */
+.tech-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tech-avatar-box {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--p5), var(--p8));
+}
+
+.tech-text-info { min-width: 0; }
+.tech-text-info h4 { font-size: 15px; font-weight: 700; color: var(--n900); }
+.tech-text-info small { display: block; font-size: 12px; color: var(--n500); }
 
 /* ---------- Modales (hojas inferiores) ---------- */
 .modal-overlay.active-modal {
@@ -600,3 +564,164 @@ a.tech-info:hover h4 { color: var(--p6); }
 }
 .switch input:checked + i { background: var(--ok); }
 .switch input:checked + i::before { transform: translateX(22px); }
+
+
+/* ==========================================================================
+   Perfil del técnico (tecnico-datos.html)
+   ========================================================================== */
+.tecnico-perfil {
+  overflow: hidden;
+  background: var(--surface, #fff);
+  border: 1px solid var(--n200);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+}
+
+.tecnico-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 18px 18px;
+}
+
+.tecnico-avatar {
+  flex: none;
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--p5), var(--p8));
+  box-shadow: 0 0 0 4px var(--p50), 0 0 0 6px var(--s4);
+}
+
+.tecnico-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tecnico-ident { min-width: 0; }
+
+.tecnico-nombre {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--n900);
+  overflow-wrap: anywhere;
+}
+
+.tecnico-cat {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 11px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--p6);
+  background: var(--p50);
+  border-radius: 99px;
+}
+
+/* Calificación y cantidad de opiniones, lado a lado */
+.tecnico-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--n100);
+  border-bottom: 1px solid var(--n100);
+}
+
+.tecnico-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 18px;
+}
+
+.tecnico-stat + .tecnico-stat { border-left: 1px solid var(--n100); }
+
+.stat-valor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--n900);
+}
+
+.stat-valor svg {
+  width: 22px;
+  height: 22px;
+  color: #f59e0b;
+  fill: #f59e0b;
+}
+
+.stat-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--n500);
+}
+
+.tecnico-desc {
+  padding: 16px 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--n700);
+  overflow-wrap: anywhere;
+}
+
+.tecnico-desc.vacio { color: var(--n400); font-style: italic; }
+
+.tecnico-contacto {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 16px 18px 18px;
+  list-style: none;
+  border-top: 1px solid var(--n100);
+}
+
+.contacto-fila {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--n700);
+  overflow-wrap: anywhere;
+}
+
+.contacto-icono {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: var(--p6);
+  background: var(--p50);
+  border-radius: var(--r-sm);
+}
+
+.contacto-icono svg { width: 17px; height: 17px; }
+
+/* Encabezado de reseñas con contador */
+.tecnico-resenas-head { margin: 26px 0 12px; }
+
+.conteo-pill {
+  min-width: 28px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  color: var(--p7);
+  background: var(--p50);
+  border-radius: 99px;
+}
