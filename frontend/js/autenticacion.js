@@ -199,8 +199,8 @@ if (loginForm) {
           window.location.href = 'html/home.html';
         } else if (data.usuario.rol === "tecnico") {
           window.location.href = 'html/inicio.html';
-        } else if (data.usuario.rol === "deposito") {
-          window.location.href = 'html/deposito-dashboard.html';
+        } else if (data.usuario.rol === "insumos") {
+          window.location.href = 'inventario.html';
         }
       } else {
         Swal.fire({

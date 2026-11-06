@@ -127,6 +127,8 @@ export const getTodosTecnicosConUbicacion = async () => {
             u.telefono,
             u.categoria,
             u.descripcion,
+            u.precio,
+            u.foto_perfil AS foto,
             d.direccion_completa,
             d.latitud,
             d.longitud
@@ -149,6 +151,8 @@ export const getTecnicosPorCategoriaConUbicacion = async (categoria) => {
             u.telefono,
             u.categoria,
             u.descripcion,
+            u.precio,
+            u.foto_perfil AS foto,
             d.direccion_completa,
             d.latitud,
             d.longitud
@@ -203,6 +207,8 @@ export const getTecnicoById = async (tecnicoId) => {
             u.telefono,
             u.categoria,
             u.descripcion,
+            u.precio,
+            u.foto_perfil AS foto,
             d.direccion_completa,
             d.latitud,
             d.longitud
