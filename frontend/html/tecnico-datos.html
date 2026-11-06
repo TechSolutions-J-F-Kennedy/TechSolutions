@@ -43,14 +43,17 @@
       </div>
     </header>
 
-    <main class="phone-body" style="padding: 16px;">
+    <main class="phone-body">
       <!-- Tarjeta Principal del Perfil -->
-      <div id="tech-profile-card" class="tech-card" style="text-align: center; padding: 24px 16px; margin-bottom: 20px;">
-        <p style="color: var(--muted);">Cargando perfil...</p>
+      <div id="tech-profile-card" class="tecnico-perfil">
+        <p class="mensaje-lista">Cargando perfil...</p>
       </div>
 
       <!-- Sección de Calificaciones y Reseñas -->
-      <h4 style="margin: 20px 0 12px 0;">Reseñas de Clientes</h4>
+      <div class="section-header tecnico-resenas-head">
+        <h4 class="section-title">Reseñas de clientes</h4>
+        <span class="conteo-pill" id="reviews-count">0</span>
+      </div>
       <div id="reviews-container" class="reviews-list"></div>
     </main>
 

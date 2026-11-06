@@ -9,31 +9,26 @@ let horaSeleccionada = null;
 let listaTecnicosOriginal = []; // Almacena la lista de técnicos recuperada del backend
 
 // -------------------------------------------------------------
-// FUNCIONES GLOBALES (MODAL ALERTA PERSONALIZADO)
+// FUNCIONES GLOBALES (MODAL ALERTA SWEETALERT2)
 // -------------------------------------------------------------
 
-window.mostrarAlerta = function(mensaje, titulo = "Notificación") {
-  const modal = document.getElementById('custom-alert-modal');
-  const msgElem = document.getElementById('custom-alert-message');
-  const titleElem = document.getElementById('custom-alert-title');
+window.mostrarAlerta = function(mensaje, titulo = "Notificación", tipo = "info") {
+  let iconType = 'info';
+  const lowerTitle = titulo.toLowerCase();
+  
+  if (lowerTitle.includes('error')) iconType = 'error';
+  else if (lowerTitle.includes('éxito') || lowerTitle.includes('enviada')) iconType = 'success';
+  else if (lowerTitle.includes('sesión') || lowerTitle.includes('requerida')) iconType = 'warning';
 
-  if (modal && msgElem) {
-    msgElem.textContent = mensaje;
-    if (titleElem) titleElem.textContent = titulo;
-    modal.classList.add('active-modal');
-    modal.style.setProperty('display', 'flex', 'important');
-  } else {
-    // Fallback simple si no existe el HTML
-    console.warn("Modal de alerta no encontrado en el HTML:", mensaje);
-  }
+  Swal.fire({
+    icon: iconType,
+    title: titulo,
+    text: mensaje
+  });
 };
 
 window.cerrarAlertaPersonalizada = function() {
-  const modal = document.getElementById('custom-alert-modal');
-  if (modal) {
-    modal.classList.remove('active-modal');
-    modal.style.setProperty('display', 'none', 'important');
-  }
+  Swal.close();
 };
 
 document.addEventListener('DOMContentLoaded', async () => {

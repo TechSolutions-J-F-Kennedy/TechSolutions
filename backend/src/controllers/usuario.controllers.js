@@ -1,23 +1,26 @@
-import { crearUsuario, inicioSesion, actualizarUsuario, getFotoPerfil, actualizarFotoPerfil } from "../models/usuario.models.js";
+import { 
+    crearUsuario, 
+    inicioSesion, 
+    actualizarUsuario, 
+    getFotoPerfil, 
+    actualizarFotoPerfil 
+} from "../models/usuario.models.js";
 import { 
     crearDireccion, 
     obtenerDireccionesPorUsuario, 
     marcarDireccionPrincipal 
 } from "../models/direccion.models.js";
 
-
 export const postUsuario = async (req, res) => {
     try {
         const { nombre, email, password, telefono, direccion } = req.body;
 
-
         if (!nombre || !email || !password) {
             return res.status(400).json({ error: "Faltan datos obligatorios" });
         }
-        // 1. Crear el usuario
+
         const usuarioId = await crearUsuario({ nombre, email, password, telefono: telefono || '' });
 
-        // 2. Si se envió una dirección seleccionada, guardarla como la principal
         if (direccion && direccion.direccion_completa) {
             await crearDireccion({
                 usuario_id: usuarioId,
@@ -48,16 +51,12 @@ export const postSesion = async (req, res) => {
             return res.status(400).json({ error: "Faltan datos obligatorios" });
         }
 
-        // Buscar el usuario en la BD
-
         const usuarioEncontrado = await inicioSesion({ email, password });
 
-        // Si no se encontró ningún registro
         if (!usuarioEncontrado) {
             return res.status(401).json({ error: "Credenciales inválidas" });
         }
 
-        // Si existe, devolver mensaje Y los datos del usuario para el frontend
         return res.status(200).json({
             mensaje: "Inicio de sesión exitoso",
             usuario: usuarioEncontrado
@@ -68,7 +67,6 @@ export const postSesion = async (req, res) => {
     }
 };
 
-// --- AGREGADA: Actualizar datos de usuario (PUT /api/usuarios/:usuarioId) ---
 export const putUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
@@ -90,7 +88,8 @@ export const putUsuario = async (req, res) => {
         return res.status(500).json({ error: "Error al actualizar perfil" });
     }
 };
-//Máximo ~375 KB de imagen (el frontend la achica antes de mandarla)
+
+// Máximo ~375 KB de imagen Base64
 const MAX_FOTO = 500000;
 const FORMATO_FOTO = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
 
@@ -111,7 +110,6 @@ export const putFoto = async (req, res) => {
     try {
         const { foto } = req.body;
 
-        //foto = null sirve para quitar la foto
         if (foto !== null && (typeof foto !== "string" || foto.length > MAX_FOTO || !FORMATO_FOTO.test(foto))) {
             return res.status(400).json({ error: "La foto tiene que ser una imagen JPG, PNG o WEBP de menos de 375 KB" });
         }
@@ -127,7 +125,6 @@ export const putFoto = async (req, res) => {
     }
 };
 
-//Devolver la foto como una imagen común, para usarla en <img src="..."> (chat, listas)
 export const enviarImagenBase64 = (res, foto) => {
     const partes = /^data:(image\/[a-z]+);base64,(.+)$/.exec(foto || "");
     if (!partes) return res.status(404).end();
@@ -145,8 +142,6 @@ export const getFotoImagen = async (req, res) => {
     }
 };
 
-
-
 export const getDireccionesUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
@@ -158,7 +153,6 @@ export const getDireccionesUsuario = async (req, res) => {
     }
 };
 
-// --- AGREGADA: Crear nueva dirección (POST /api/usuarios/:usuarioId/direcciones) ---
 export const postDireccionUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
