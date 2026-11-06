@@ -1,224 +1,188 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mi Perfil — Kennedy Tech Solutions</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Perfil · Kennedy Tech</title>
 
-  <link rel="manifest" href="../manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/perfil.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  </head>
 
-  <!-- Meta etiquetas y favicons -->
-  <meta name="theme-color" content="#172554">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
-  <link rel="apple-touch-icon" href="../img/icono-192.png">
-
-  <!-- Google Fonts: Space Grotesk + Manrope -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <link rel="stylesheet" href="../css/base-dos.css">
-  <link rel="stylesheet" href="../css/perfil-styles.css">
-  <link rel="stylesheet" href="../css/tema.css">
-  <script src="../js/tema.js"></script>
-
-  <style>
-    .is-hidden {
-      display: none !important;
-    }
-    .data-view-text {
-      padding: 8px 0;
-      font-weight: 500;
-      color: var(--text-main, #0f172a);
-    }
-  </style>
-</head>
-<body>
-
-  <div class="mobile-container">
-    
-    <!-- Encabezado Móvil -->
-    <header class="phone-head">
-      <div class="head-top">
-        <a href="home.html" class="icon-btn" aria-label="Volver">
-          <i data-lucide="arrow-left"></i>
-        </a>
-        <div class="brand">
-          <small>KENNEDY TECH</small>
-          <h4>Mi Perfil</h4>
-        </div>
-        <button class="icon-btn" aria-label="Ajustes">
-          <i data-lucide="settings"></i>
-        </button>
-      </div>
-    </header>
-
-    <!-- Cuerpo Principal -->
-    <main class="phone-body">
-
-      <!-- Tarjeta de Usuario -->
-      <section class="profile-card">
-        <div class="profile-avatar-wrap">
-          <div class="profile-avatar">--</div>
-          <button class="edit-avatar-btn" aria-label="Cambiar foto">
+  <body>
+    <div class="app">
+      <div class="head hero">
+        <div class="av-wrap">
+          <div class="av" id="av"></div>
+          <label class="av-cam" for="foto-input" title="Cambiar foto de perfil">
             <i data-lucide="camera"></i>
-          </button>
+          </label>
+          <input type="file" id="foto-input" accept="image/*" hidden />
         </div>
-
-        <!-- Input oculto para subir/tomar foto -->
-        <input type="file" id="input-foto-perfil" accept="image/jpeg,image/png,image/webp" style="display: none;">
-
-        <h3 class="user-name">Cargando...</h3>
-        <p class="user-email">...</p>
-        <span class="user-badge"><i data-lucide="user-check"></i> Cliente Verificado</span>
-      </section>
-
-      <!-- Navegación por Pestañas -->
-      <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchTab('tab-datos', this)">
-          <i data-lucide="user"></i> Datos
-        </button>
-        <button class="tab-btn" onclick="switchTab('tab-direcciones', this)">
-          <i data-lucide="map-pin"></i> Direcciones
-        </button>
-        <button class="tab-btn" onclick="switchTab('tab-historial', this)">
-          <i data-lucide="history"></i> Historial
-        </button>
+        <button class="av-quitar" id="quitar-foto" type="button" hidden>Quitar foto</button>
+        <h1 id="n"></h1>
+        <span class="chip" id="chip-rol"><i data-lucide="hard-hat"></i> Técnico</span>
       </div>
 
-      <!-- ================= 1. TAB DATOS PERSONALES ================= -->
-      <section id="tab-datos" class="tab-content active">
-        <div class="section-header">
-          <span class="section-title">Información Personal</span>
-          <button type="button" id="btn-editar-datos" class="btn btn-ghost btn-sm" onclick="habilitarEdicionDatos()">
-            <i data-lucide="edit-3"></i> Modificar datos
-          </button>
+      <div class="wrap">
+        <div class="card" id="vista">
+          <div class="kv">
+            <i data-lucide="briefcase"></i>
+            <div>
+              <b>Rol</b>
+              <span id="vr"></span>
+            </div>
+          </div>
+
+          <div class="kv">
+            <i data-lucide="mail"></i>
+            <div>
+              <b>Email</b>
+              <span id="ve"></span>
+            </div>
+          </div>
+
+          <div class="kv" id="fila-categoria">
+            <i data-lucide="layers"></i>
+            <div>
+              <b>Categoría</b>
+              <span id="vc"></span>
+            </div>
+          </div>
+
+          <div class="kv">
+            <i data-lucide="phone"></i>
+            <div>
+              <b>Teléfono</b>
+              <span id="vt"></span>
+            </div>
+          </div>
+
+          <div class="kv">
+            <i data-lucide="key-round"></i>
+            <div>
+              <b>Contraseña</b>
+              <span>••••••••</span>
+            </div>
+          </div>
         </div>
 
-        <form id="form-datos-usuario" class="auth-form" onsubmit="guardarDatosUsuario(event)">
-          
+        <div class="card" id="form" hidden>
           <div class="field">
-            <label>Nombre completo</label>
-            <p id="view-username" class="data-view-text">-</p>
-            <div class="input-icon-wrapper is-hidden" id="wrap-username">
-              <i data-lucide="user" class="input-icon"></i>
-              <input type="text" id="username" required disabled>
-            </div>
+            <label>Nombre real</label>
+            <input class="input" id="nombre-real" autocomplete="given-name" required />
           </div>
 
           <div class="field">
-            <label>Correo electrónico</label>
-            <p id="view-email" class="data-view-text">-</p>
-            <div class="input-icon-wrapper is-hidden" id="wrap-email">
-              <i data-lucide="mail" class="input-icon"></i>
-              <input type="email" id="email" required disabled>
-            </div>
+            <label>Apellido</label>
+            <input class="input" id="apellido" autocomplete="family-name" required />
           </div>
 
           <div class="field">
-            <label>Teléfono celular</label>
-            <p id="view-phone" class="data-view-text">-</p>
-            <div class="input-icon-wrapper is-hidden" id="wrap-phone">
-              <i data-lucide="phone" class="input-icon"></i>
-              <input type="tel" id="phone" disabled>
-            </div>
+            <label>Email</label>
+            <input class="input" id="email" type="email" autocomplete="email" required />
           </div>
 
-          <div id="actions-datos" class="form-actions is-hidden" style="display: flex; gap: 8px; margin-top: 16px;">
-            <button type="button" class="btn btn-ghost" onclick="cancelarEdicionDatos()" style="flex: 1;">Cancelar</button>
-            <button type="submit" class="btn btn-primary" style="flex: 1;"><i data-lucide="save"></i> Guardar</button>
+          <div class="field" id="campo-categoria">
+            <label>Categoría</label>
+            <input class="input" id="categoria" required />
           </div>
 
-        </form>
-      </section>
+          <div class="field">
+            <label>Teléfono</label>
+            <input class="input" id="telefono" type="tel" autocomplete="tel" />
+          </div>
 
-      <!-- ================= 2. TAB DIRECCIONES ================= -->
-      <section id="tab-direcciones" class="tab-content">
-        <div class="section-header">
-          <span class="section-title">Direcciones Guardadas</span>
-          <button class="btn btn-ghost btn-sm" onclick="abrirModalNuevaDireccion()">
-            <i data-lucide="plus"></i> Nueva
-          </button>
+          <div class="field" style="margin: 0">
+            <label>Nueva contraseña</label>
+            <input class="input" id="password" type="password" autocomplete="new-password" placeholder="Dejar en blanco para mantener la actual" />
+          </div>
         </div>
 
-        <div class="address-list"></div>
-
-        <!-- Modal Nueva Dirección -->
-        <dialog id="modal-direccion" class="custom-modal">
-          <form id="form-nueva-direccion" method="dialog" onsubmit="guardarNuevaDireccion(event)">
-            <h4>Nueva Dirección</h4>
-            
-            <div class="field" style="margin-top: 10px;">
-              <label for="dir-alias">Alias (Ej: Casa, Oficina)</label>
-              <input type="text" id="dir-alias" placeholder="Ej.: Oficina Norte" required>
+        <!-- Solo técnicos: desde acá se calculan los pedidos cercanos que le llegan -->
+        <div class="card zona" id="zona" hidden>
+          <div class="kv">
+            <i data-lucide="map-pin"></i>
+            <div>
+              <b>Mi zona de trabajo</b>
+              <span id="zona-direccion">Cargando...</span>
             </div>
+          </div>
+          <iframe class="mapa" id="zona-mapa" title="Mi zona de trabajo" loading="lazy" hidden></iframe>
+          <p class="m" id="zona-ayuda">Te llegan los pedidos de clientes que estén a 15 km o menos de este lugar.</p>
 
-            <div class="field" style="margin-top: 10px;">
-              <label for="dir-completa">Dirección completa</label>
-              <div class="input-icon-wrapper">
-                <i data-lucide="map-pin" class="input-icon"></i>
-                <input type="text" id="dir-completa" placeholder="Escribe tu calle y altura..." autocomplete="off" required>
-                <ul id="modal-address-suggestions" class="suggestions-list"></ul>
-              </div>
-            </div>
+          <div class="zona-botones">
+            <button class="btn btn-primary" id="zona-gps" type="button">
+              <i data-lucide="locate-fixed"></i> Usar mi ubicación
+            </button>
+            <button class="btn btn-ghost" id="zona-escribir" type="button">
+              <i data-lucide="pencil"></i> Escribir dirección
+            </button>
+          </div>
 
-            <div class="modal-actions" style="display: flex; gap: 8px; margin-top: 16px;">
-              <button type="button" class="btn btn-ghost" onclick="cerrarModalNuevaDireccion()" style="flex: 1;">Cancelar</button>
-              <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar</button>
-            </div>
+          <form class="zona-form" id="zona-form" hidden>
+            <input class="input" id="zona-input" maxlength="200" autocomplete="street-address"
+              placeholder="Calle, número y localidad (ej: Maipú 320, Banfield)">
+            <button class="btn btn-primary" type="submit">Guardar</button>
           </form>
-        </dialog>
-      </section>
-
-      <!-- ================= 3. TAB HISTORIAL DE SERVICIOS ================= -->
-      <section id="tab-historial" class="tab-content">
-        <span class="section-title">Últimos Servicios</span>
-        <div class="history-list">
-          <p style="color: var(--muted); font-size: 13px; text-align: center; padding: 12px 0;">Historial de servicios completados.</p>
         </div>
-      </section>
 
-      <!-- Cerrar Sesión -->
-      <button class="btn btn-danger-ghost btn-touch" style="margin-top: 12px;">
-        <i data-lucide="log-out"></i> Cerrar Sesión
-      </button>
+        <div class="btns" id="bv">
+          <button class="btn btn-ghost" id="ed">
+            <i data-lucide="pencil"></i> Editar
+          </button>
+          <button class="btn btn-danger" id="ce">
+            <i data-lucide="log-out"></i> Cerrar sesión
+          </button>
+        </div>
 
-    </main>
-
-    <!-- Navegación Inferior -->
-    <nav class="bottom-nav">
-      <a href="home.html" style="text-decoration: none; color: inherit;">
-        <div id="nav-btn-home" class="nav-item"><i data-lucide="house"></i><span>Inicio</span></div>
-      </a>
-      <a href="servicios.html" style="text-decoration: none; color: inherit;">
-        <div class="nav-item"><i data-lucide="clipboard-list"></i><span>Solicitar</span></div>
-      </a>
-      <a href="pedidos.html" style="text-decoration: none; color: inherit;">
-        <div class="nav-item"><i data-lucide="clipboard-list"></i><span>Pedidos</span></div>
-      </a>
-      <a href="mensajes.html" style="text-decoration: none; color: inherit;">
-        <div class="nav-item"><i data-lucide="message-square"></i><span>Mis Chats</span></div>
-      </a>
-      <div class="nav-item active"><i data-lucide="user"></i><span>Perfil</span></div>
-    </nav>
-
-  </div>
-
-  <!-- Modal de Alerta Personalizado -->
-  <div id="custom-alert-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999999; align-items: center; justify-content: center;">
-    <div class="modal-content" style="background: var(--bg-card, #1e1e1e); color: #fff; padding: 24px; border-radius: 14px; width: 85%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-      <h4 id="custom-alert-title" style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--primary-color, #e63946);">Notificación</h4>
-      <p id="custom-alert-message" style="margin: 0 0 20px 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;"></p>
-      <button type="button" onclick="cerrarAlertaPersonalizada()" style="background: var(--primary-color, #e63946); border: none; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;">Aceptar</button>
+        <div class="btns" id="be" hidden>
+          <button class="btn btn-primary" id="sv">
+            <i data-lucide="check"></i> Guardar cambios
+          </button>
+          <button class="btn btn-ghost" id="cn">
+            <i data-lucide="x"></i> Cancelar
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <script src="../js/datos.perfil.js"></script>
-  <script src="../js/pwa-register.js"></script>
-</body>
+    <div class="sheet" id="cf">
+      <div class="panel cf">
+        <div class="grab"></div>
+        <div class="warn"><i data-lucide="triangle-alert"></i></div>
+        <h3>¿Estás seguro?</h3>
+        <p class="m">
+          ¿Deseas cambiar estos datos? Se reemplazarán los datos actuales de tu
+          perfil.
+        </p>
+
+        <div class="btns">
+          <button class="btn btn-ghost" id="no">Cancelar</button>
+          <button class="btn btn-primary" id="ok">Sí, cambiar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/fotos.js"></script>
+    <script src="../js/perfil.js"></script>
+    <script src="../js/pwa-register.js"></script>
+  </body>
 </html>

@@ -292,3 +292,24 @@ html[data-theme="dark"] .chat-notice { color: #fcd34d; }
 
 html[data-theme="dark"] .ajustes-sheet { background: var(--surface); }
 html[data-theme="dark"] .ajustes-row { background: var(--n50); }
+
+/* ==========================================================================
+   6) AJUSTES MODO OSCURO: perfil y pedidos
+   ========================================================================== */
+
+/* Perfil > Datos: el texto de lectura y los campos deshabilitados se veían
+   oscuros sobre fondo oscuro (el color venía de una variable inexistente). */
+html[data-theme="dark"] .data-view-text,
+html[data-theme="dark"] .field input:disabled,
+html[data-theme="dark"] .field input[disabled] {
+  color: var(--n900);
+  -webkit-text-fill-color: var(--n900);
+  opacity: 1;
+}
+
+/* Etiquetas de estado de las filas de pedido */
+html[data-theme="dark"] .pedido-card.pendiente { --estado: var(--wa); }
+html[data-theme="dark"] .pedido-card.en_proceso {
+  --estado: #c4b5fd;
+  --estado-bg: rgba(167, 139, 250, 0.16);
+}

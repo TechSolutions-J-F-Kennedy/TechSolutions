@@ -11,30 +11,26 @@ let reprogHoraSeleccionada = null;
 const MESES_CORTOS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
 // -------------------------------------------------------------
-// FUNCIONES GLOBALES (MODAL ALERTA PERSONALIZADO)
+// FUNCIONES GLOBALES (MODAL ALERTA SWEETALERT2)
 // -------------------------------------------------------------
 
-window.mostrarAlerta = function(mensaje, titulo = "Notificación") {
-    const modal = document.getElementById('custom-alert-modal');
-    const msgElem = document.getElementById('custom-alert-message');
-    const titleElem = document.getElementById('custom-alert-title');
+window.mostrarAlerta = function(mensaje, titulo = "Notificación", tipo = "info") {
+    let iconType = 'info';
+    const lowerTitle = titulo.toLowerCase();
+    
+    if (lowerTitle.includes('error')) iconType = 'error';
+    else if (lowerTitle.includes('éxito') || lowerTitle.includes('enviada') || lowerTitle.includes('cancelado')) iconType = 'success';
+    else if (lowerTitle.includes('sesión')) iconType = 'warning';
 
-    if (modal && msgElem) {
-        msgElem.textContent = mensaje;
-        if (titleElem) titleElem.textContent = titulo;
-        modal.classList.add('active-modal');
-        modal.style.setProperty('display', 'flex', 'important');
-    } else {
-        console.warn("Modal de alerta no encontrado:", mensaje);
-    }
+    Swal.fire({
+        icon: iconType,
+        title: titulo,
+        text: mensaje
+    });
 };
 
 window.cerrarAlertaPersonalizada = function() {
-    const modal = document.getElementById('custom-alert-modal');
-    if (modal) {
-        modal.classList.remove('active-modal');
-        modal.style.setProperty('display', 'none', 'important');
-    }
+    Swal.close();
 };
 
 // -------------------------------------------------------------
@@ -401,13 +397,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Cerrar modales al tocar el fondo overlay
-    ['modal-resena', 'modal-reprogramar', 'custom-alert-modal'].forEach(id => {
+    ['modal-resena', 'modal-reprogramar'].forEach(id => {
         const overlay = document.getElementById(id);
         if (overlay) {
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) {
-                    if (id === 'custom-alert-modal') cerrarAlertaPersonalizada();
-                    else cerrarModal(id);
+                    cerrarModal(id);
                 }
             });
         }
@@ -560,36 +555,38 @@ function renderizarListaPedidos(pedidos) {
 function generarTarjetaPedidoHTML(pedido) {
     const estado = String(pedido.Estado || 'pendiente').toLowerCase();
 
-    const configuracionEstado = {
-        'confirmado': { label: 'Confirmado', icono: 'check-circle' },
-        'pendiente': { label: 'Pendiente', icono: 'clock' },
-        'en_proceso': { label: 'En proceso', icono: 'loader' },
-        'cancelado': { label: 'Cancelado', icono: 'x-circle' },
-        'rechazado': { label: 'Rechazado', icono: 'x-circle' },
-        'finalizado': { label: 'Finalizado', icono: 'check-check' },
-        'completado': { label: 'Completado', icono: 'check-check' }
+    const etiquetasEstado = {
+        'confirmado': 'Confirmado',
+        'pendiente': 'Pendiente',
+        'en_proceso': 'En proceso',
+        'cancelado': 'Cancelado',
+        'rechazado': 'Rechazado',
+        'finalizado': 'Finalizado',
+        'completado': 'Completado'
     };
-
-    const config = configuracionEstado[estado] || { label: estado, icono: 'info' };
+    const etiqueta = etiquetasEstado[estado] || estado;
 
     const nombreReal = pedido.tecnico_nombre || '';
     const apellido = pedido.tecnico_apellido || '';
-    const iniciales = (nombreReal && apellido)
-        ? `${nombreReal[0]}${apellido[0]}`.toUpperCase()
-        : 'TC';
-
-    const { fechaFormateada, horaFormateada } = formatearFechaHora(pedido.fecha_servicio, pedido.hora_servicio);
-    const partesFecha = obtenerPartesFecha(pedido.fecha_servicio);
-    const diaTxt = partesFecha ? partesFecha.dia : '--';
-    const mesTxt = partesFecha ? MESES_CORTOS[partesFecha.mes] : '';
-
-    const tecnicoNombre = nombreReal ? `${nombreReal} ${apellido}` : 'Técnico asignado';
+    const tecnicoNombre = nombreReal ? `${nombreReal} ${apellido}`.trim() : 'Técnico asignado';
     const idTecnico = pedido.tecnico_id || 0;
 
-    const tagTecnico = idTecnico ? 'a' : 'div';
-    const attrsTecnico = idTecnico
-        ? `href="tecnico-datos.html?id=${encodeURIComponent(idTecnico)}" aria-label="Ver perfil de ${esc(tecnicoNombre)}"`
-        : '';
+    const { horaFormateada } = formatearFechaHora(pedido.fecha_servicio, pedido.hora_servicio);
+    const partesFecha = obtenerPartesFecha(pedido.fecha_servicio);
+    const fechaTxt = partesFecha
+        ? `${partesFecha.dia} ${MESES_CORTOS[partesFecha.mes]} ${partesFecha.anio}`
+        : 'Sin fecha';
+    const cuandoTxt = horaFormateada !== '--:--' ? `${fechaTxt} · ${horaFormateada} hs` : fechaTxt;
+
+    const detalleTxt = [
+        pedido.tecnico_categoria,
+        cuandoTxt,
+        pedido.direccion || 'Dirección no especificada'
+    ].filter(Boolean).join(' · ');
+
+    const tecnicoHTML = idTecnico
+        ? `<a class="pedido-tecnico" href="tecnico-datos.html?id=${encodeURIComponent(idTecnico)}" aria-label="Ver perfil de ${esc(tecnicoNombre)}">${esc(tecnicoNombre)}</a>`
+        : esc(tecnicoNombre);
 
     const permiteResena = (estado === 'finalizado' || estado === 'completado' || estado === 'cancelado');
 
@@ -643,35 +640,15 @@ function generarTarjetaPedidoHTML(pedido) {
 
     return `
         <article class="pedido-card ${esc(estado)}">
-            <div class="pedido-head">
-                <span class="status-badge">
-                    <i data-lucide="${config.icono}"></i> ${esc(config.label)}
-                </span>
-                <span class="pedido-id">#ORD-${esc(pedido.id)}</span>
-            </div>
-
-            <div class="pedido-fecha" title="${esc(fechaFormateada)} ${esc(horaFormateada)} hs">
-                <span class="pf-dia">${diaTxt}</span>
-                <span class="pf-mes">${mesTxt}</span>
-                <span class="pf-hora">${esc(horaFormateada)}</span>
-            </div>
+            <i data-lucide="clipboard-list" class="pedido-icono" aria-hidden="true"></i>
 
             <div class="pedido-main">
-                <${tagTecnico} class="tech-info" ${attrsTecnico}>
-                    <div class="tech-avatar-box">${esc(iniciales)}</div>
-                    <div class="tech-text-info">
-                        <h4>${esc(tecnicoNombre)}</h4>
-                        <small>${esc(pedido.tecnico_categoria || 'Servicio técnico')}</small>
-                    </div>
-                </${tagTecnico}>
-
-                <p class="pedido-desc">${esc(pedido.descripcion || 'Sin descripción detallada.')}</p>
-
-                <p class="pedido-lugar">
-                    <i data-lucide="map-pin"></i>
-                    <span>${esc(pedido.direccion || 'Dirección no especificada')}</span>
-                </p>
+                <h4 class="pedido-titulo">#ORD-${esc(pedido.id)} · ${tecnicoHTML}</h4>
+                <p class="pedido-sub">${esc(detalleTxt)}</p>
+                ${pedido.descripcion ? `<p class="pedido-desc">${esc(pedido.descripcion)}</p>` : ''}
             </div>
+
+            <span class="status-badge">${esc(etiqueta)}</span>
 
             ${bloqueResena}
 
@@ -740,42 +717,39 @@ async function enviarResena(event) {
 }
 
 async function cancelarPedido(pedidoId) {
-    // Abrimos el modal personalizado directamente para confirmar la acción
-    // aprovechando que el usuario presiona Cancelar.
-    mostrarAlerta("¿Estás seguro de que deseas cancelar este pedido? Presiona 'Aceptar' para confirmar.", "Confirmar Cancelación");
-    
-    // Obtenemos el botón de aceptar del modal para asignarle la ejecución de la cancelación
-    const btnAceptarModal = document.querySelector('#custom-alert-modal button');
-    
-    if (btnAceptarModal) {
-        // Asignamos un eventListener temporal para ejecutar la petición al confirmar
-        const ejecutarCancelacion = async () => {
-            btnAceptarModal.removeEventListener('click', ejecutarCancelacion);
-            
-            try {
-                const response = await fetch(`${BASE_URL}/api/pedidos/${pedidoId}/cancelar`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' }
-                });
+    const result = await Swal.fire({
+        title: '¿Cancelar este pedido?',
+        text: 'La solicitud de servicio pasará a estado cancelado.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, cancelar pedido',
+        cancelButtonText: 'Volver'
+    });
 
-                const data = await response.json();
+    if (!result.isConfirmed) return;
 
-                if (response.ok) {
-                    const usuarioGuardado = localStorage.getItem('usuario');
-                    if (usuarioGuardado) {
-                        const usuario = JSON.parse(usuarioGuardado);
-                        await cargarPedidosUsuario(usuario.id);
-                    }
-                    mostrarAlerta("El pedido ha sido cancelado con éxito.", "Pedido Cancelado");
-                } else {
-                    mostrarAlerta(data.error || "No se pudo cancelar el pedido.", "Error");
-                }
-            } catch (error) {
-                console.error("Error al cancelar pedido:", error);
-                mostrarAlerta("Error al conectar con el servidor.", "Error de Red");
+    try {
+        const response = await fetch(`${BASE_URL}/api/pedidos/${pedidoId}/cancelar`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            const usuarioGuardado = localStorage.getItem('usuario');
+            if (usuarioGuardado) {
+                const usuario = JSON.parse(usuarioGuardado);
+                await cargarPedidosUsuario(usuario.id);
             }
-        };
-
-        btnAceptarModal.addEventListener('click', ejecutarCancelacion, { once: true });
+            mostrarAlerta("El pedido ha sido cancelado con éxito.", "Pedido Cancelado");
+        } else {
+            mostrarAlerta(data.error || "No se pudo cancelar el pedido.", "Error");
+        }
+    } catch (error) {
+        console.error("Error al cancelar pedido:", error);
+        mostrarAlerta("Error al conectar con el servidor.", "Error de Red");
     }
 }
