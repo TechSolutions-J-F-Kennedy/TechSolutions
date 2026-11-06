@@ -30,3 +30,25 @@ export const getResenaByServicioId = async (servicioId) => {
     const [rows] = await connection.query(sql, [servicioId]);
     return rows[0] || null;
 };
+
+// --- NUEVAS FUNCIONES ---
+
+// Obtener todas las reseñas hechas por un cliente
+export const getResenasPorClienteModel = async (clienteId) => {
+    const sql = `
+        SELECT r.*, u.nombre AS tecnico_nombre
+        FROM resenas r
+        LEFT JOIN Usuarios u ON r.tecnico_id = u.id
+        WHERE r.cliente_id = ?
+        ORDER BY r.fecha DESC
+    `;
+    const [rows] = await connection.query(sql, [clienteId]);
+    return rows;
+};
+
+// Eliminar reseña por ID
+export const eliminarResenaModel = async (resenaId, clienteId) => {
+    const sql = `DELETE FROM resenas WHERE id = ? AND cliente_id = ?`;
+    const [result] = await connection.query(sql, [resenaId, clienteId]);
+    return result.affectedRows > 0;
+};

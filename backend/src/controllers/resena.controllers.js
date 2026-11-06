@@ -1,4 +1,10 @@
-import { crearResenaModel, actualizarResenaModel, getResenaByServicioId } from "../models/resena.models.js";
+import { 
+    crearResenaModel, 
+    actualizarResenaModel, 
+    getResenaByServicioId,
+    getResenasPorClienteModel,
+    eliminarResenaModel
+} from "../models/resena.models.js";
 
 export const crearResena = async (req, res) => {
     try {
@@ -41,5 +47,39 @@ export const crearResena = async (req, res) => {
     } catch (error) {
         console.error("Error al procesar reseña:", error);
         return res.status(500).json({ error: "Error interno del servidor al procesar la reseña." });
+    }
+};
+
+// --- NUEVOS ENDPOINTS ---
+
+export const getResenasPorCliente = async (req, res) => {
+    try {
+        const { clienteId } = req.params;
+        const resenas = await getResenasPorClienteModel(clienteId);
+        return res.status(200).json(resenas);
+    } catch (error) {
+        console.error("Error al obtener reseñas del cliente:", error);
+        return res.status(500).json({ error: "Error al cargar las reseñas." });
+    }
+};
+
+export const eliminarResena = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { cliente_id } = req.query;
+
+        if (!cliente_id) {
+            return res.status(400).json({ error: "Falta identificar al cliente." });
+        }
+
+        const eliminado = await eliminarResenaModel(id, cliente_id);
+        if (!eliminado) {
+            return res.status(404).json({ error: "No se encontró la reseña o no tenés permiso para eliminarla." });
+        }
+
+        return res.status(200).json({ success: true, message: "Reseña eliminada correctamente." });
+    } catch (error) {
+        console.error("Error al eliminar reseña:", error);
+        return res.status(500).json({ error: "Error interno al eliminar la reseña." });
     }
 };
