@@ -13,7 +13,10 @@
       rel="stylesheet"
     >
     <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/tecnico-ui.css">
     <link rel="stylesheet" href="../css/pedido.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/tema.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- App instalable (PWA) -->
     <link rel="manifest" href="manifest.json">
@@ -25,10 +28,10 @@
   </head>
 
   <body>
-    <div class="app">
-      <div class="head">
-        <a class="back-b" href="inicio.html"><i data-lucide="arrow-left"></i> Volver</a>
-        <div class="row">
+    <div class="app technician-app">
+      <div class="technician-page-header">
+        <a class="technician-back-link" href="inicio.html"><i data-lucide="arrow-left"></i> Volver</a>
+        <div class="technician-layout-row">
           <div>
             <small>PEDIDO ACTUAL</small>
             <h1 id="titulo">Pedido</h1>
@@ -37,11 +40,11 @@
         </div>
       </div>
 
-      <div class="wrap">
-        <p class="m" id="mensaje"></p>
+      <div class="technician-page-content">
+        <p class="technician-help-text" id="mensaje"></p>
 
-        <div class="card" id="datos" hidden>
-          <div class="kv">
+        <div class="technician-card" id="datos" hidden>
+          <div class="technician-data-row">
             <i data-lucide="user-round"></i>
             <div>
               <b>Cliente</b>
@@ -49,7 +52,7 @@
             </div>
           </div>
 
-          <div class="kv">
+          <div class="technician-data-row">
             <i data-lucide="map-pin"></i>
             <div>
               <b>Ubicación</b>
@@ -57,7 +60,7 @@
             </div>
           </div>
 
-          <div class="kv">
+          <div class="technician-data-row">
             <i data-lucide="clock"></i>
             <div>
               <b>Fecha y horario</b>
@@ -65,7 +68,7 @@
             </div>
           </div>
 
-          <div class="kv">
+          <div class="technician-data-row">
             <i data-lucide="file-text"></i>
             <div>
               <b>Detalle</b>
@@ -73,7 +76,7 @@
             </div>
           </div>
 
-          <div class="acciones">
+          <div class="technician-contact-actions">
             <a class="btn btn-ghost" id="btn-chatear" href="chat.html">
               <i data-lucide="message-circle"></i> Chatear
             </a>
@@ -85,32 +88,32 @@
             </a>
           </div>
 
-          <iframe class="mapa" id="mapa-pedido" title="Mapa del pedido" loading="lazy"></iframe>
+          <iframe class="technician-order-map" id="mapa-pedido" title="Mapa del pedido" loading="lazy"></iframe>
 
-          <button class="btn btn-primary full" id="btn-estado">
+          <button class="btn btn-primary technician-full-width-button" id="btn-estado">
             <i data-lucide="refresh-cw"></i> Cambiar estado
           </button>
         </div>
 
-        <div class="card" id="trabajo" hidden>
-          <div class="row">
+        <div class="technician-card" id="trabajo" hidden>
+          <div class="technician-layout-row">
             <b>Foto del trabajo terminado</b>
-            <label class="btn btn-ghost btn-sm" for="foto-trabajo">
+            <label class="btn btn-ghost technician-compact-button" for="foto-trabajo">
               <i data-lucide="camera"></i> <span id="texto-foto">Subir foto</span>
             </label>
           </div>
           <input type="file" id="foto-trabajo" accept="image/*" hidden>
-          <p class="m" id="sin-foto">Cuando termines, sacale una foto al trabajo para que el cliente la vea.</p>
-          <img class="foto-trabajo" id="imagen-trabajo" alt="Foto del trabajo terminado" hidden>
+          <p class="technician-help-text" id="sin-foto">Cuando termines, sacale una foto al trabajo para que el cliente la vea.</p>
+          <img class="technician-completion-photo" id="imagen-trabajo" alt="Foto del trabajo terminado" hidden>
         </div>
       </div>
     </div>
 
-    <div class="sheet" id="hoja-estado">
-      <div class="panel">
-        <div class="grab"></div>
+    <div class="technician-bottom-sheet" id="hoja-estado">
+      <div class="technician-sheet-content">
+        <div class="technician-sheet-handle"></div>
         <h3>Cambiar estado</h3>
-        <div class="opts" id="opciones-estado"></div>
+        <div class="technician-status-options" id="opciones-estado"></div>
       </div>
     </div>
 

@@ -1,4 +1,4 @@
-.cnt {
+.technician-task-count {
   margin-left: auto;
   background: var(--p50);
   color: var(--p7);
@@ -8,7 +8,7 @@
   letter-spacing: 0;
 }
 
-.it {
+.technician-task-item {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -16,33 +16,33 @@
   border-bottom: 1px solid var(--n100);
 }
 
-.it:last-child {
+.technician-task-item:last-child {
   border: 0;
 }
 
-.it > svg {
+.technician-task-item > svg {
   width: 20px;
   height: 20px;
   color: var(--p6);
   flex: none;
 }
 
-.it span {
+.technician-task-item span {
   flex: 1;
   font-size: 14px;
   font-weight: 600;
 }
 
-.it .tarea-info {
+.technician-task-item .technician-task-details {
   flex: 1;
   min-width: 0;
 }
 
-.it .tarea-info > span {
+.technician-task-item .technician-task-details > span {
   display: block;
 }
 
-.it .tarea-info small {
+.technician-task-item .technician-task-details small {
   display: block;
   margin-top: 4px;
   color: var(--n500);
@@ -50,6 +50,6 @@
   font-weight: 400;
 }
 
-.it > .status {
+.technician-task-item > .status {
   flex: none;
 }

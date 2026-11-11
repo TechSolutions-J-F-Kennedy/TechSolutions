@@ -13,7 +13,10 @@
       rel="stylesheet"
     >
     <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/tecnico-ui.css">
     <link rel="stylesheet" href="../css/pendientes.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/tema.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- App instalable (PWA) -->
     <link rel="manifest" href="manifest.json">
@@ -25,33 +28,33 @@
   </head>
 
   <body>
-    <div class="app">
-      <div class="head">
+    <div class="app technician-app">
+      <div class="technician-page-header">
         <small>AGENDA</small>
         <h1>Tareas</h1>
       </div>
 
-      <div class="wrap">
-        <p class="m" id="mensaje-historial">Cargando historial...</p>
+      <div class="technician-page-content">
+        <p class="technician-help-text" id="mensaje-historial">Cargando historial...</p>
 
         <section>
-          <h2>Hoy <b class="cnt" id="cantidad-hoy">0</b></h2>
-          <div class="card" id="tareas-hoy"></div>
+          <h2>Hoy <b class="technician-task-count" id="cantidad-hoy">0</b></h2>
+          <div class="technician-card" id="tareas-hoy"></div>
         </section>
 
         <section>
-          <h2>Esta semana <b class="cnt" id="cantidad-semana">0</b></h2>
-          <div class="card" id="tareas-semana"></div>
+          <h2>Esta semana <b class="technician-task-count" id="cantidad-semana">0</b></h2>
+          <div class="technician-card" id="tareas-semana"></div>
         </section>
 
         <section>
-          <h2>Este mes <b class="cnt" id="cantidad-mes">0</b></h2>
-          <div class="card" id="tareas-mes"></div>
+          <h2>Este mes <b class="technician-task-count" id="cantidad-mes">0</b></h2>
+          <div class="technician-card" id="tareas-mes"></div>
         </section>
 
         <section>
-          <h2>Anteriores <b class="cnt" id="cantidad-anteriores">0</b></h2>
-          <div class="card" id="tareas-anteriores"></div>
+          <h2>Anteriores <b class="technician-task-count" id="cantidad-anteriores">0</b></h2>
+          <div class="technician-card" id="tareas-anteriores"></div>
         </section>
       </div>
     </div>

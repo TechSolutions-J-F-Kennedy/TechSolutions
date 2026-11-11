@@ -21,6 +21,7 @@
   --ok: #16a34a;
   --okl: #dcfce7;
   --wa: #d97706;
+  --cancelado:rgb(255, 211, 211);
   --wal: #fef3c7;
   --er: #dc2626;
   --erl: #fee2e2;
@@ -244,6 +245,11 @@ h2:before {
 .pending {
   background: var(--wal);
   color: var(--wa);
+}
+
+.cancelled {
+  background: var(--cancelado);
+  color:var(--er);
 }
 
 .progress {
