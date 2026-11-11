@@ -3,7 +3,8 @@ import express from "express";
 
 import { getServiciosPendientes, getTodosLosServicios, patchDisponibilidadTecnico, patchPerfilTecnico, getServicio, patchEstadoServicio, putFotoServicio, getSolicitudesCerca, postAceptarSolicitud, getUbicacion, putUbicacion } from "../controllers/tecnico.controllers.js";
 import { postSesion } from "../controllers/tecnico.controllers.js";
-import { getTecnicosCercanosController } from "../controllers/tecnico.controllers.js";
+import { getTecnicosCercanosController, getPerfilTecnicoController } from "../controllers/tecnico.controllers.js";
+
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.get("/:id/ubicacion", getUbicacion);
 router.put("/:id/ubicacion", putUbicacion);
 router.patch("/:id/perfil", patchPerfilTecnico);
 router.get("/cercanos/:usuarioId", getTecnicosCercanosController);
+router.get("/perfil/:id", getPerfilTecnicoController);
 
 
 

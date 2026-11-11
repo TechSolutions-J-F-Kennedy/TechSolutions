@@ -566,3 +566,78 @@
 .time-block.disabled { color: var(--n400); background: var(--n100); text-decoration: line-through; pointer-events: none; }
 
 .modal-footer { padding: 14px 20px calc(14px + var(--safe-bottom)); border-top: 1px solid var(--n100); }
+
+#user-location-display {
+  display: block;
+  max-width: 180px; /* O el porcentaje/ancho disponible */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Contenedor del selector de precio */
+.filtro-precio-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin: 10px 0 14px 0;
+}
+
+/* Iconos de Lucide dentro del selector */
+.filtro-precio-wrapper .icono-filtro {
+  position: absolute;
+  left: 14px;
+  width: 16px;
+  height: 16px;
+  color: var(--muted, #94a3b8);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.filtro-precio-wrapper .flecha-filtro {
+  position: absolute;
+  right: 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--muted, #94a3b8);
+  pointer-events: none;
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+/* Select con diseño acorde al tema oscuro de TechSolutions */
+.select-filtro-precio {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: var(--card-bg, #1e293b);
+  color: var(--text-color, #f8fafc);
+  border: 1px solid var(--border-color, #334155);
+  border-radius: 12px;
+  padding: 10px 38px 10px 38px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Efectos al pasar el cursor o hacer foco */
+.select-filtro-precio:hover {
+  border-color: var(--primary, #3b82f6);
+  background-color: #24334a;
+}
+
+.select-filtro-precio:focus {
+  border-color: var(--primary, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Opciones del menú desplegable */
+.select-filtro-precio option {
+  background-color: #1e293b;
+  color: #f8fafc;
+  padding: 10px;
+}

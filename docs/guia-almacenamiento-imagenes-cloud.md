@@ -121,3 +121,4 @@ Podrás considerar completada la tarea cuando:
 2. Al consultar la tabla `Solicitudes` en Aiven, la columna `foto` contenga un enlace que empiece con `https://res.cloudinary.com/...`.
 3. Al abrir ese enlace en una pestaña nueva del navegador, la imagen se visualice con su certificado SSL válido.
 4. No exista ningún archivo nuevo creado en el disco local dentro de `backend/uploads/`.
+=======

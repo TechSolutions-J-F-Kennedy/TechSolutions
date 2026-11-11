@@ -1,9 +1,8 @@
-
-
 const BASE_URL = (window.location.protocol === 'file:' || window.location.port === '5500')
   ? 'http://localhost:3000'
   : '';
-lucide.createIcons();
+
+if (window.lucide) lucide.createIcons();
 
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
@@ -31,126 +30,141 @@ if (goToLogin) {
   });
 }
 
-// Variable global para almacenar el objeto de la dirección seleccionada
-
+// Autocompletado de dirección con Nominatim
 let direccionSeleccionadaObj = null;
-
 const inputAddress = document.getElementById('reg-address');
 const suggestionsList = document.getElementById('address-suggestions');
 
 if (inputAddress && suggestionsList) {
-    let timeoutTimer;
+  let timeoutTimer;
 
-    inputAddress.addEventListener('input', () => {
-        clearTimeout(timeoutTimer);
-        const query = inputAddress.value.trim();
+  inputAddress.addEventListener('input', () => {
+    clearTimeout(timeoutTimer);
+    const query = inputAddress.value.trim();
 
-        if (query.length < 4) {
+    if (query.length < 4) {
+      suggestionsList.innerHTML = '';
+      direccionSeleccionadaObj = null;
+      return;
+    }
+
+    timeoutTimer = setTimeout(async () => {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=ar&addressdetails=1&limit=5`;
+
+      try {
+        const res = await fetch(url, {
+          headers: { 'User-Agent': 'KennedyTechSolutions/1.0' }
+        });
+        const data = await res.json();
+
+        suggestionsList.innerHTML = '';
+
+        data.forEach(place => {
+          const li = document.createElement('li');
+          li.className = 'suggestion-item';
+
+          const nombreCalle = place.address.road || place.name || 'Dirección';
+          const localidadProvincia = [
+            place.address.city || place.address.town || place.address.suburb || place.address.city_district,
+            place.address.state || 'Buenos Aires'
+          ].filter(Boolean).join(', ');
+
+          li.innerHTML = `
+            <div class="suggestion-icon"><i data-lucide="map-pin"></i></div>
+            <div class="suggestion-text">
+              <span class="street-name">${nombreCalle}</span>
+              <span class="location-name">${localidadProvincia}</span>
+            </div>
+          `;
+
+          li.onclick = () => {
+            inputAddress.value = place.display_name;
             suggestionsList.innerHTML = '';
-            direccionSeleccionadaObj = null;
-            return;
-        }
 
-        timeoutTimer = setTimeout(async () => {
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=ar&addressdetails=1&limit=5`;
+            direccionSeleccionadaObj = {
+              direccion_completa: place.display_name,
+              latitud: place.lat,
+              longitud: place.lon
+            };
+          };
 
-            try {
-                const res = await fetch(url, {
-                    headers: { 'User-Agent': 'KennedyTechSolutions/1.0' }
-                });
-                const data = await res.json();
+          suggestionsList.appendChild(li);
+        });
 
-                suggestionsList.innerHTML = '';
+        if (window.lucide) lucide.createIcons();
 
-                data.forEach(place => {
-                    const li = document.createElement('li');
-                    li.className = 'suggestion-item';
-
-                    const nombreCalle = place.address.road || place.name || 'Dirección';
-                    const localidadProvincia = [
-                        place.address.city || place.address.town || place.address.suburb || place.address.city_district,
-                        place.address.state || 'Buenos Aires'
-                    ].filter(Boolean).join(', ');
-
-                    li.innerHTML = `
-                        <div class="suggestion-icon"><i data-lucide="map-pin"></i></div>
-                        <div class="suggestion-text">
-                            <span class="street-name">${nombreCalle}</span>
-                            <span class="location-name">${localidadProvincia}</span>
-                        </div>
-                    `;
-
-                    li.onclick = () => {
-                        inputAddress.value = place.display_name;
-                        suggestionsList.innerHTML = '';
-
-                        // Guardamos el objeto completo para el Submit
-                        direccionSeleccionadaObj = {
-                            direccion_completa: place.display_name,
-                            latitud: place.lat,
-                            longitud: place.lon
-                        };
-                    };
-
-                    suggestionsList.appendChild(li);
-                });
-
-                if (window.lucide) lucide.createIcons();
-
-            } catch (error) {
-                console.error("Error al buscar direcciones:", error);
-            }
-        }, 400);
-    });
+      } catch (error) {
+        console.error("Error al buscar direcciones:", error);
+      }
+    }, 400);
+  });
 }
 
-// En el evento Submit del registro:
+// Registro
 if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        const nombre = document.getElementById('reg-username').value;
-        const email = document.getElementById('reg-email').value;
-        const password = document.getElementById('reg-password').value;
-        const confirmPassword = document.getElementById('reg-confirm-password').value;
-        const telefono = document.getElementById('reg-phone') ? document.getElementById('reg-phone').value : '';
+    const nombre = document.getElementById('reg-username').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    const confirmPassword = document.getElementById('reg-confirm-password').value;
+    const telefono = document.getElementById('reg-phone') ? document.getElementById('reg-phone').value : '';
 
-        if (password !== confirmPassword) {
-            alert('Las contraseñas no coinciden.');
-            return;
-        }
+    if (password !== confirmPassword) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Contraseñas distintas',
+        text: 'Las contraseñas ingresadas no coinciden.'
+      });
+      return;
+    }
 
-        // Si escribió algo pero no eligió de la lista, tomamos el texto directo
-        const direccionFinal = direccionSeleccionadaObj || {
-            direccion_completa: inputAddress ? inputAddress.value.trim() : ''
-        };
+    const direccionFinal = direccionSeleccionadaObj || {
+      direccion_completa: inputAddress ? inputAddress.value.trim() : ''
+    };
 
-        try {
-            const response = await fetch(`${BASE_URL}/api/usuarios/registro`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    nombre, 
-                    email, 
-                    password, 
-                    telefono,
-                    direccion: direccionFinal 
-                })
-            });
+    try {
+      const response = await fetch(`${BASE_URL}/api/usuarios/registro`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          nombre, 
+          email, 
+          password, 
+          telefono,
+          direccion: direccionFinal 
+        })
+      });
 
-            const data = await response.json();
+      const data = await response.json();
 
-            if (response.ok) {
-                
-                if (goToLogin) goToLogin.click();
-            } else {
-                alert('Error: ' + (data.error || 'No se pudo crear la cuenta'));
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('No se pudo conectar con el servidor.');
-        }
-    });
+      if (response.ok) {
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Cuenta creada!',
+          text: 'Tu registro se completó correctamente.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+
+        if (goToLogin) goToLogin.click();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de registro',
+          text: data.error || 'No se pudo crear la cuenta'
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'No se pudo conectar con el servidor.'
+      });
+    }
+  });
 }
 
 // Login
@@ -171,24 +185,37 @@ if (loginForm) {
       const data = await response.json();
 
       if (response.ok) {
-        alert('¡Bienvenido, ' + data.usuario.nombre + '!');
         localStorage.setItem('usuario', JSON.stringify(data.usuario));
 
-        // Redirecciones según el Rol
+        await Swal.fire({
+          icon: 'success',
+          title: `¡Bienvenido, ${data.usuario.nombre}!`,
+          text: 'Redirigiendo a tu panel...',
+          timer: 1500,
+          showConfirmButton: false
+        });
+
         if (data.usuario.rol === "usuario") {
-          window.location.href = 'home.html';
+          window.location.href = 'html/home.html';
         } else if (data.usuario.rol === "tecnico") {
-          window.location.href = 'inicio.html';
-        } else if (data.usuario.rol === "deposito") {
-          window.location.href = 'inventario.html';
+          window.location.href = 'html/inicio.html';
+        } else if (data.usuario.rol === "insumos" || data.usuario.rol === "deposito") {
+          window.location.href = 'html/inventario.html';
         }
       } else {
-        alert('Error: ' + (data.error || 'Credenciales inválidas'));
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al iniciar sesión',
+          text: data.error || 'Credenciales inválidas'
+        });
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('No se pudo conectar con el servidor.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'No se pudo conectar con el servidor.'
+      });
     }
   });
 }
-

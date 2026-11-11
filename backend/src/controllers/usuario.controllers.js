@@ -1,28 +1,55 @@
-import { crearUsuario, inicioSesion, actualizarUsuario, getFotoPerfil, actualizarFotoPerfil } from "../models/usuario.models.js";
+import { 
+    crearUsuario, 
+    inicioSesion, 
+    actualizarUsuario, 
+    getFotoPerfil, 
+    actualizarFotoPerfil 
+} from "../models/usuario.models.js";
 import { 
     crearDireccion, 
     obtenerDireccionesPorUsuario, 
     marcarDireccionPrincipal 
 } from "../models/direccion.models.js";
 
+// Helper de validación de formato Email
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const postUsuario = async (req, res) => {
     try {
-        const { nombre, email, password, telefono, direccion } = req.body;
+        let { nombre, email, password, telefono, direccion } = req.body;
 
+        // Sanitización (trim)
+        nombre = nombre?.trim();
+        email = email?.trim().toLowerCase();
+        telefono = telefono?.trim() || '';
 
+        // 1. Validar campos obligatorios
         if (!nombre || !email || !password) {
-            return res.status(400).json({ error: "Faltan datos obligatorios" });
+            return res.status(400).json({ error: "Faltan datos obligatorios (nombre, email y contraseña)" });
         }
-        // 1. Crear el usuario
-        const usuarioId = await crearUsuario({ nombre, email, password, telefono: telefono || '' });
 
-        // 2. Si se envió una dirección seleccionada, guardarla como la principal
+        // 2. Validar longitud del nombre
+        if (nombre.length < 2) {
+            return res.status(400).json({ error: "El nombre debe tener al menos 2 caracteres" });
+        }
+
+        // 3. Validar formato de email
+        if (!EMAIL_REGEX.test(email)) {
+            return res.status(400).json({ error: "El formato de correo electrónico no es válido" });
+        }
+
+        // 4. Validar fortaleza/longitud de contraseña
+        if (password.length < 3) {
+            return res.status(400).json({ error: "La contraseña debe tener al menos 6 caracteres" });
+        }
+
+        const usuarioId = await crearUsuario({ nombre, email, password, telefono });
+
         if (direccion && direccion.direccion_completa) {
             await crearDireccion({
                 usuario_id: usuarioId,
                 alias: 'Casa',
-                direccion_completa: direccion.direccion_completa,
+                direccion_completa: direccion.direccion_completa.trim(),
                 latitud: direccion.latitud,
                 longitud: direccion.longitud,
                 es_principal: 1
@@ -42,22 +69,22 @@ export const postUsuario = async (req, res) => {
 
 export const postSesion = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
 
+        email = email?.trim().toLowerCase();
+
+        // 1. Validar presencia de credenciales
         if (!email || !password) {
-            return res.status(400).json({ error: "Faltan datos obligatorios" });
+            return res.status(400).json({ error: "Email y contraseña son requeridos" });
         }
 
-        // Buscar el usuario en la BD
 
         const usuarioEncontrado = await inicioSesion({ email, password });
 
-        // Si no se encontró ningún registro
         if (!usuarioEncontrado) {
             return res.status(401).json({ error: "Credenciales inválidas" });
         }
 
-        // Si existe, devolver mensaje Y los datos del usuario para el frontend
         return res.status(200).json({
             mensaje: "Inicio de sesión exitoso",
             usuario: usuarioEncontrado
@@ -68,14 +95,27 @@ export const postSesion = async (req, res) => {
     }
 };
 
-// --- AGREGADA: Actualizar datos de usuario (PUT /api/usuarios/:usuarioId) ---
 export const putUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
-        const { nombre, email, telefono } = req.body;
+        let { nombre, email, telefono } = req.body;
 
+        nombre = nombre?.trim();
+        email = email?.trim().toLowerCase();
+        telefono = telefono?.trim() || '';
+
+        // 1. Campos obligatorios
         if (!nombre || !email) {
             return res.status(400).json({ error: "Nombre y email son obligatorios" });
+        }
+
+        // 2. Validaciones de formato
+        if (nombre.length < 2) {
+            return res.status(400).json({ error: "El nombre debe tener al menos 2 caracteres" });
+        }
+
+        if (!EMAIL_REGEX.test(email)) {
+            return res.status(400).json({ error: "El formato de correo electrónico no es válido" });
         }
 
         const actualizado = await actualizarUsuario(usuarioId, { nombre, email, telefono });
@@ -90,7 +130,8 @@ export const putUsuario = async (req, res) => {
         return res.status(500).json({ error: "Error al actualizar perfil" });
     }
 };
-//Máximo ~375 KB de imagen (el frontend la achica antes de mandarla)
+
+// Máximo ~375 KB de imagen Base64
 const MAX_FOTO = 500000;
 const FORMATO_FOTO = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
 
@@ -111,7 +152,6 @@ export const putFoto = async (req, res) => {
     try {
         const { foto } = req.body;
 
-        //foto = null sirve para quitar la foto
         if (foto !== null && (typeof foto !== "string" || foto.length > MAX_FOTO || !FORMATO_FOTO.test(foto))) {
             return res.status(400).json({ error: "La foto tiene que ser una imagen JPG, PNG o WEBP de menos de 375 KB" });
         }
@@ -127,7 +167,6 @@ export const putFoto = async (req, res) => {
     }
 };
 
-//Devolver la foto como una imagen común, para usarla en <img src="..."> (chat, listas)
 export const enviarImagenBase64 = (res, foto) => {
     const partes = /^data:(image\/[a-z]+);base64,(.+)$/.exec(foto || "");
     if (!partes) return res.status(404).end();
@@ -145,8 +184,6 @@ export const getFotoImagen = async (req, res) => {
     }
 };
 
-
-
 export const getDireccionesUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
@@ -158,11 +195,12 @@ export const getDireccionesUsuario = async (req, res) => {
     }
 };
 
-// --- AGREGADA: Crear nueva dirección (POST /api/usuarios/:usuarioId/direcciones) ---
 export const postDireccionUsuario = async (req, res) => {
     try {
         const { usuarioId } = req.params;
-        const { alias, direccion_completa, latitud, longitud } = req.body;
+        let { alias, direccion_completa, latitud, longitud } = req.body;
+
+        direccion_completa = direccion_completa?.trim();
 
         if (!direccion_completa) {
             return res.status(400).json({ error: "La dirección completa es requerida" });
@@ -170,7 +208,7 @@ export const postDireccionUsuario = async (req, res) => {
 
         const id = await crearDireccion({
             usuario_id: usuarioId,
-            alias: alias || 'Otra',
+            alias: alias ? alias.trim() : 'Otra',
             direccion_completa,
             latitud,
             longitud,

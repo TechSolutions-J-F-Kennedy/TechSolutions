@@ -1,13 +1,38 @@
-const BASE_URL = (window.location.protocol === 'file:' || window.location.port === '5500')
+const BASE_URL = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501')
   ? 'http://localhost:3000'
   : '';
 
-// Variables globales para el modal de reserva
+// Variables globales
 let idTecnicoSeleccionado = null;
 let fechaSeleccionada = null;
 let horaSeleccionada = null;
+let listaTecnicosOriginal = []; // Almacena la lista de técnicos recuperada del backend
+let ordenPrecioActual = 'ninguno'; // 'menor', 'mayor' o 'ninguno'
 
-document.addEventListener('DOMContentLoaded', () => {
+// -------------------------------------------------------------
+// FUNCIONES GLOBALES (MODAL ALERTA SWEETALERT2)
+// -------------------------------------------------------------
+
+window.mostrarAlerta = function(mensaje, titulo = "Notificación", tipo = "info") {
+  let iconType = 'info';
+  const lowerTitle = titulo.toLowerCase();
+  
+  if (lowerTitle.includes('error')) iconType = 'error';
+  else if (lowerTitle.includes('éxito') || lowerTitle.includes('enviada')) iconType = 'success';
+  else if (lowerTitle.includes('sesión') || lowerTitle.includes('requerida')) iconType = 'warning';
+
+  Swal.fire({
+    icon: iconType,
+    title: titulo,
+    text: mensaje
+  });
+};
+
+window.cerrarAlertaPersonalizada = function() {
+  Swal.close();
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
 
   // 1. Obtener datos del usuario autenticado
   const usuarioGuardado = localStorage.getItem('usuario');
@@ -18,16 +43,41 @@ document.addEventListener('DOMContentLoaded', () => {
       usuario = JSON.parse(usuarioGuardado);
 
       const displayName = document.getElementById('user-display-name');
-      if (displayName) displayName.textContent = usuario.nombre || 'Usuario';
+      if (displayName) displayName.textContent = usuario.nombre || usuario.nombre_real || 'Usuario';
 
       const drawerName = document.getElementById('drawer-user-name');
       const drawerEmail = document.getElementById('drawer-user-email');
       
-      if (drawerName) drawerName.textContent = usuario.nombre || 'Usuario';
+      if (drawerName) drawerName.textContent = usuario.nombre || usuario.nombre_real || 'Usuario';
       if (drawerEmail) drawerEmail.textContent = usuario.email || '';
+
+      await cargarDireccionRealUsuario(usuario);
+
     } catch (e) {
       console.error('Error al parsear el usuario de localStorage:', e);
     }
+  }
+
+  // 2. Redirección al tocar "Cambiar" dirección
+  const btnChangeLocation = document.getElementById('btn-change-location');
+  if (btnChangeLocation) {
+    btnChangeLocation.addEventListener('click', () => {
+      window.location.href = 'cliente-perfil.html#direcciones';
+    });
+  }
+
+  // 3. Funcionalidad del buscador principal (`#global-search`)
+  const globalSearchInput = document.getElementById('global-search');
+  if (globalSearchInput) {
+    globalSearchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+
+      if (query.length > 0 && viewWelcome && viewWelcome.classList.contains('active')) {
+        showTechListView('Todos');
+      }
+
+      filtrarTecnicosEnPantalla(query);
+    });
   }
 
   // Inicializar íconos de Lucide
@@ -35,23 +85,24 @@ document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
   }
 
- // Menú Drawer Lateral
-const menuBtn = document.getElementById('menu-btn');
-const sideDrawer = document.getElementById('side-drawer');
-const drawerOverlay = document.getElementById('drawer-overlay');
+  // Menú Drawer Lateral
+  const menuBtn = document.getElementById('menu-btn');
+  const sideDrawer = document.getElementById('side-drawer');
+  const drawerOverlay = document.getElementById('drawer-overlay');
 
-function openMenu() {
-  if (sideDrawer) sideDrawer.classList.add('active'); // Reemplazado 'open' por 'active'
-  if (drawerOverlay) drawerOverlay.classList.add('active');
-}
+  function openMenu() {
+    if (sideDrawer) sideDrawer.classList.add('active');
+    if (drawerOverlay) drawerOverlay.classList.add('active');
+  }
 
-function closeMenu() {
-  if (sideDrawer) sideDrawer.classList.remove('active'); // Reemplazado 'open' por 'active'
-  if (drawerOverlay) drawerOverlay.classList.remove('active');
-}
+  function closeMenu() {
+    if (sideDrawer) sideDrawer.classList.remove('active');
+    if (drawerOverlay) drawerOverlay.classList.remove('active');
+  }
 
-if (menuBtn) menuBtn.addEventListener('click', openMenu);
-if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
+  if (menuBtn) menuBtn.addEventListener('click', openMenu);
+  if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
+
   // Vistas principales
   const viewWelcome = document.getElementById('view-welcome');
   const viewTechList = document.getElementById('view-tech-list');
@@ -64,9 +115,20 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
   const contenedor = document.getElementById('tech-list-container');
   const techCount = document.getElementById('tech-count');
 
+  // Selector de filtro por precio (si existe en tu HTML un <select id="select-filtro-precio">)
+  const selectFiltroPrecio = document.getElementById('select-filtro-precio');
+  if (selectFiltroPrecio) {
+    selectFiltroPrecio.addEventListener('change', (e) => {
+      ordenPrecioActual = e.target.value;
+      const currentQuery = globalSearchInput ? globalSearchInput.value.toLowerCase().trim() : '';
+      filtrarTecnicosEnPantalla(currentQuery);
+    });
+  }
+
   function showWelcomeView() {
     if (viewWelcome) viewWelcome.classList.add('active');
     if (viewTechList) viewTechList.classList.remove('active');
+    if (globalSearchInput) globalSearchInput.value = '';
     window.scrollTo(0, 0);
   }
 
@@ -115,13 +177,12 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
           : `Categoría: ${filter}`;
       }
 
+      if (globalSearchInput) globalSearchInput.value = '';
       obtenerTecnicosPorCercania(filter);
     });
   });
 
-  // Renderizado dinámico de la tarjeta del técnico
- // Renderizado dinámico de la tarjeta del técnico en home.js
- // Renderizado dinámico de la tarjeta del técnico en home.js
+  // Renderizado dinámico de la tarjeta del técnico (con FOTO/INICIALES y PRECIO)
   function agregarTarjetaTecnico(tecnico) {
     const nombreReal = tecnico.nombre || tecnico.nombre_real || 'Técnico';
     const apellido = tecnico.apellido || '';
@@ -130,8 +191,14 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
       ? `${nombreReal[0]}${apellido[0]}`.toUpperCase() 
       : nombreReal.slice(0, 2).toUpperCase();
 
+    // Imagen de Perfil vs Iniciales
+    const avatarHTML = tecnico.foto 
+      ? `<img src="${tecnico.foto}" alt="${nombreReal}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
+      : iniciales;
+
     const categoriasLegibles = {
       'reparacion-pc': 'Reparación PC',
+      'reparación-pc': 'Reparación PC',
       'redes': 'Redes / Wi-Fi',
       'software': 'Software / Antivirus',
       'electricidad': 'Electricista',
@@ -146,40 +213,117 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
       ? `<span class="distance-chip"><i data-lucide="navigation"></i> a ${tecnico.distancia_km} km</span>` 
       : '';
 
+    const promedioReal = (tecnico.reputacion_promedio && parseFloat(tecnico.reputacion_promedio) > 0)
+      ? parseFloat(tecnico.reputacion_promedio).toFixed(1)
+      : '5.0';
+
+    // Formatear precio
+    const precioNumerico = parseFloat(tecnico.precio) || 0;
+    const textoPrecio = precioNumerico > 0 
+      ? `$${precioNumerico.toLocaleString('es-AR')}` 
+      : 'A convenir';
+
     contenedor.innerHTML += `
-      <div class="tech-card tech-item-card" data-category="${tecnico.categoria || 'general'}">
-        <div class="tech-header">
-          <div class="tech-avatar">${iniciales}</div>
-          <div class="tech-details">
-            <h4>${nombreReal} ${apellido}</h4>
-            <div class="rating">
-              <span class="stars">★ ${tecnico.reputacion_promedio || '5.0'}</span>
-              <small>(${categoriaNombre})</small>
+      <a href="tecnico-datos.html?id=${tecnico.id}" style="text-decoration: none; color: inherit; display: block;">
+        <div class="tech-card tech-item-card" data-category="${tecnico.categoria || 'general'}" style="cursor: pointer;">
+          <div class="tech-header">
+            <div class="tech-avatar">${avatarHTML}</div>
+            <div class="tech-details">
+              <h4>${nombreReal} ${apellido}</h4>
+              <div class="rating">
+                <span class="stars">★ ${promedioReal}</span>
+                <small>(${categoriaNombre})</small>
+              </div>
+            </div>
+            
+            <div class="tech-header-actions">
+              <span class="status-badge available">Disponible</span>
+              <button class="btn-chat-inline" onclick="event.preventDefault(); event.stopPropagation(); abrirChatConTecnico('${tecnico.id}', '${nombreReal} ${apellido}')" title="Enviar mensaje">
+                <i data-lucide="message-square"></i>
+              </button>
             </div>
           </div>
-          
-          <!-- Contenedor alineado para estado y botón de chat -->
-          <div class="tech-header-actions">
-            <span class="status-badge available">Disponible</span>
-            <button class="btn-chat-inline" onclick="abrirChatConTecnico('${tecnico.id}', '${nombreReal} ${apellido}')" title="Enviar mensaje">
-              <i data-lucide="message-square"></i>
-            </button>
+
+          <p class="tech-spec">${descripcionTecnico}</p>
+
+          <div class="tech-meta" style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+            <span style="font-weight: 700; color: #16a34a; font-size: 14px;">
+              <i data-lucide="tag"></i> ${textoPrecio}
+            </span>
+            ${textoDistancia}
           </div>
+
+          <button class="btn btn-primary btn-touch-sm btn-solicitar" 
+                  onclick="event.preventDefault(); event.stopPropagation(); abrirModalReserva('${tecnico.id || 1}', '${nombreReal} ${apellido}', '${iniciales}', '${categoriaNombre}')">
+            <i data-lucide="plus"></i> Solicitar servicio
+          </button>
         </div>
-
-        <p class="tech-spec">${descripcionTecnico}</p>
-
-        <div class="tech-meta" style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
-          <span><i data-lucide="clock"></i> Disponible hoy</span>
-          ${textoDistancia}
-        </div>
-
-        <button class="btn btn-primary btn-touch-sm btn-solicitar" 
-                onclick="abrirModalReserva('${tecnico.id || 1}', '${nombreReal} ${apellido}', '${iniciales}', '${categoriaNombre}')">
-          <i data-lucide="plus"></i> Solicitar servicio
-        </button>
-      </div>
+      </a>
     `;
+  }
+
+  // Función auxiliar para quitar tildes y caracteres especiales
+  function quitarTildes(texto) {
+    if (!texto) return '';
+    return texto
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  // Filtrado dinámico por búsqueda + orden de PRECIO
+  function filtrarTecnicosEnPantalla(query) {
+    if (!contenedor) return;
+
+    const queryLimpia = quitarTildes(query).trim();
+
+    let filtrados = [...listaTecnicosOriginal];
+
+    if (queryLimpia) {
+      filtrados = filtrados.filter(t => {
+        const nombre = quitarTildes(t.nombre || t.nombre_real || '');
+        const apellido = quitarTildes(t.apellido || '');
+        const nombreCompleto = `${nombre} ${apellido}`.trim();
+        
+        const username = quitarTildes(t.username || t.nombre_usuario || t.usuario || '');
+        const categoria = quitarTildes(t.categoria || '');
+        const descripcion = quitarTildes(t.descripcion || '');
+
+        return nombreCompleto.includes(queryLimpia) || 
+               nombre.includes(queryLimpia) || 
+               apellido.includes(queryLimpia) || 
+               username.includes(queryLimpia) || 
+               categoria.includes(queryLimpia) || 
+               descripcion.includes(queryLimpia);
+      });
+    }
+
+    // Ordenamiento por precio si está seleccionado
+    if (ordenPrecioActual === 'menor') {
+      filtrados.sort((a, b) => (parseFloat(a.precio) || 0) - (parseFloat(b.precio) || 0));
+    } else if (ordenPrecioActual === 'mayor') {
+      filtrados.sort((a, b) => (parseFloat(b.precio) || 0) - (parseFloat(a.precio) || 0));
+    }
+
+    renderizarListaTecnicos(filtrados);
+  }
+
+  function renderizarListaTecnicos(lista) {
+    contenedor.innerHTML = '';
+
+    if (lista.length === 0) {
+      contenedor.innerHTML = `
+        <div style="text-align: center; padding: 30px 10px; color: var(--muted);">
+          <i data-lucide="user-x" style="width: 32px; height: 32px; margin-bottom: 8px;"></i>
+          <p>No se encontraron técnicos para tu búsqueda.</p>
+        </div>
+      `;
+    } else {
+      lista.forEach(tecnico => agregarTarjetaTecnico(tecnico));
+    }
+
+    if (window.lucide) lucide.createIcons();
+    if (techCount) techCount.textContent = `${lista.length} disponibles`;
   }
 
   // Consulta al Endpoint con cálculo de cercanía por Usuario ID
@@ -192,7 +336,6 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
 
       let url = `${BASE_URL}/api/tecnicos/verTodosLosTecnicos`;
 
-      // Si el usuario tiene sesión, usamos la ruta de cálculo de distancia
       if (usuarioId) {
         url = `${BASE_URL}/api/tecnicos/cercanos/${usuarioId}`;
         if (catNormalizada !== "todos") {
@@ -204,32 +347,12 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
       const data = await response.json();
 
       if (response.ok) {
-        contenedor.innerHTML = '';
-        const listaTecnicos = data.tecnicos || data.payload || [];
-
-        if (listaTecnicos.length === 0) {
-          contenedor.innerHTML = `
-            <div style="text-align: center; padding: 30px 10px; color: var(--muted);">
-              <i data-lucide="user-x" style="width: 32px; height: 32px; margin-bottom: 8px;"></i>
-              <p>No se encontraron técnicos disponibles para esta categoría.</p>
-            </div>
-          `;
-        } else {
-          listaTecnicos.forEach(tecnico => {
-            agregarTarjetaTecnico(tecnico);
-          });
-        }
-
-        if (window.lucide) {
-          lucide.createIcons();
-        }
-
-        if (techCount) {
-          techCount.textContent = `${listaTecnicos.length} disponibles`;
-        }
-
+        listaTecnicosOriginal = data.tecnicos || data.payload || [];
+        
+        const currentQuery = globalSearchInput ? globalSearchInput.value.toLowerCase().trim() : '';
+        filtrarTecnicosEnPantalla(currentQuery);
       } else {
-        alert('Error: ' + (data.error || 'No se pudieron consultar los técnicos.'));
+        mostrarAlerta(data.error || 'No se pudieron consultar los técnicos.', 'Error');
       }
     } catch (error) {
       console.error('Error al conectar con la API:', error);
@@ -237,6 +360,47 @@ if (drawerOverlay) drawerOverlay.addEventListener('click', closeMenu);
     }
   }
 });
+
+// Función para cortar direcciones largas
+function acortarTexto(texto, limite = 22) {
+  if (!texto) return '';
+  return texto.length > limite ? texto.substring(0, limite) + '...' : texto;
+}
+
+// Carga de dirección en el banner superior
+async function cargarDireccionRealUsuario(usuario) {
+  const locationDisplay = document.getElementById('user-location-display');
+  if (!locationDisplay) return;
+
+  if (usuario.direccion) {
+    locationDisplay.textContent = acortarTexto(usuario.direccion, 22);
+    locationDisplay.title = usuario.direccion;
+    return;
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/api/direcciones/principal/${usuario.id}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.payload && data.payload.direccion_completa) {
+        const dir = data.payload.direccion_completa;
+        locationDisplay.textContent = acortarTexto(dir, 22);
+        locationDisplay.title = dir;
+
+        usuario.direccion = dir;
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+      } else {
+        locationDisplay.textContent = 'Sin dirección';
+      }
+    } else {
+      locationDisplay.textContent = 'Sin dirección';
+    }
+  } catch (error) {
+    console.error("Error al obtener la dirección real:", error);
+    locationDisplay.textContent = 'Dirección no disponible';
+  }
+}
 
 // ==========================================
 // LÓGICA DEL MODAL DE RESERVA / DISPONIBILIDAD
@@ -249,25 +413,20 @@ function abrirModalReserva(id, nombre, iniciales, categoria) {
   document.getElementById('modal-tech-avatar').textContent = iniciales;
   document.getElementById('modal-tech-cat').textContent = categoria;
 
-  // Cargar carrusel de días partiendo de hoy
   generarDiasCarrusel();
   
-  // Mostrar modal
   const modal = document.getElementById('modal-agendar');
   if (modal) modal.classList.add('active');
   
   if (window.lucide) lucide.createIcons();
 }
 
-
 function abrirChatConTecnico(tecnicoId, nombreCompleto) {
   localStorage.setItem('chatActivo_tecnicoId', tecnicoId);
   localStorage.setItem('chatActivo_nombreTecnico', nombreCompleto);
-  window.location.href = '../html/chat.html';
+  window.location.href = '../html/chat-usuario.html';
 }
 
-
-// Evento para cerrar modal
 const btnCloseModal = document.getElementById('btn-close-modal');
 if (btnCloseModal) {
   btnCloseModal.addEventListener('click', () => {
@@ -290,7 +449,6 @@ function generarDiasCarrusel() {
     const diaNombre = diasSemana[fecha.getDay()];
     const diaNum = fecha.getDate();
     
-    // Generar formato ISO YYYY-MM-DD
     const anio = fecha.getFullYear();
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
     const dia = String(fecha.getDate()).padStart(2, '0');
@@ -313,7 +471,6 @@ function generarDiasCarrusel() {
     container.appendChild(dayCard);
   }
 
-  // Seleccionar hoy por defecto
   const anio = hoy.getFullYear();
   const mes = String(hoy.getMonth() + 1).padStart(2, '0');
   const dia = String(hoy.getDate()).padStart(2, '0');
@@ -322,7 +479,6 @@ function generarDiasCarrusel() {
   cargarHorariosBackend(fechaSeleccionada);
 }
 
-// Consultar franjas horarias reales en el backend
 async function cargarHorariosBackend(fecha) {
   const grid = document.getElementById('time-grid');
   if (!grid) return;
@@ -384,7 +540,7 @@ if (btnConfirmBooking) {
   btnConfirmBooking.addEventListener('click', async () => {
     const usuarioStorage = localStorage.getItem('usuario');
     if (!usuarioStorage) {
-      alert('Debes iniciar sesión para solicitar un servicio.');
+      mostrarAlerta('Debes iniciar sesión para solicitar un servicio.', 'Sesión requerida');
       return;
     }
 
@@ -410,16 +566,16 @@ if (btnConfirmBooking) {
       const data = await res.json();
 
       if (res.ok) {
-        
         const modal = document.getElementById('modal-agendar');
         if (modal) modal.classList.remove('active');
         if (descripcionInput) descripcionInput.value = '';
+        mostrarAlerta('¡Solicitud de servicio enviada con éxito!', 'Éxito');
       } else {
-        alert('Error: ' + (data.error || 'No se pudo enviar la solicitud.'));
+        mostrarAlerta(data.error || 'No se pudo enviar la solicitud.', 'Error');
       }
     } catch (error) {
       console.error('Error al enviar la solicitud:', error);
-      alert('Error de conexión con el servidor.');
+      mostrarAlerta('Error de conexión con el servidor.', 'Error de Red');
     }
   });
 }

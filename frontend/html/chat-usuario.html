@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chat con Técnico — Kennedy Tech Solutions</title>
+
+  <link rel="manifest" href="../manifest.json">
+
+<!-- Meta etiquetas y favicons -->
+<meta name="theme-color" content="#172554">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+<link rel="apple-touch-icon" href="../img/icono-192.png">
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="../css/base-dos.css">
+<link rel="stylesheet" href="../css/chat-styles.css">
+<link rel="stylesheet" href="../css/tema.css">
+<script src="../js/tema.js"></script>
+</head>
+<body>
+
+  <div class="mobile-container">
+
+    <!-- Encabezado del Chat -->
+    <header class="phone-head chat-phone-head">
+      <div class="head-top">
+        <button id="btn-back-chat" class="icon-btn" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <div class="chat-tech-header-info">
+          <div class="tech-avatar sm" id="chat-tech-avatar">TM</div>
+          <div>
+            <h4 id="chat-tech-name">Técnico</h4>
+            <span class="chat-status-indicator">
+              <span class="status-dot"></span> Mensajes temporales
+            </span>
+          </div>
+        </div>
+        <button class="icon-btn" aria-label="Opciones">
+          <i data-lucide="more-vertical"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Cuerpo del Chat (Mensajes) -->
+    <main class="phone-body chat-body">
+      <div class="chat-notice">
+        <i data-lucide="shield-alert"></i>
+        <p>Los mensajes de este chat no se almacenan permanentemente para proteger tu privacidad.</p>
+      </div>
+
+      <div class="chat-messages-container" id="chat-messages-container">
+        <!-- Los mensajes se inyectan dinámicamente aquí -->
+      </div>
+    </main>
+
+    <!-- Barra Inferior de Entrada de Texto -->
+    <div class="chat-input-bar">
+      <input type="text" id="mensaje-input" placeholder="Escribe tu mensaje..." autocomplete="off">
+      <button id="btn-enviar-mensaje" class="btn-send-msg" aria-label="Enviar mensaje">
+        <i data-lucide="send"></i>
+      </button>
+    </div>
+
+  </div>
+
+
+  <!-- Modal de Alerta Personalizado (Sustituto de alert) -->
+<div id="custom-alert-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999999; align-items: center; justify-content: center;">
+  <div class="modal-content" style="background: var(--bg-card, #1e1e1e); color: #fff; padding: 24px; border-radius: 14px; width: 85%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    <h4 id="custom-alert-title" style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--primary-color, #e63946);">Notificación</h4>
+    <p id="custom-alert-message" style="margin: 0 0 20px 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;"></p>
+    <button type="button" onclick="cerrarAlertaPersonalizada()" style="background: var(--primary-color, #e63946); border: none; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;">Aceptar</button>
+  </div>
+</div>
+
+  <!-- Cliente de Socket.io -->
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="../js/chat-usuario.js"></script>
+  <script src="../js/pwa-register.js"></script>
+</body>
+</html>
