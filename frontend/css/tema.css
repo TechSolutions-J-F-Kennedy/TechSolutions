@@ -294,11 +294,10 @@ html[data-theme="dark"] .ajustes-sheet { background: var(--surface); }
 html[data-theme="dark"] .ajustes-row { background: var(--n50); }
 
 /* ==========================================================================
-   6) AJUSTES MODO OSCURO: perfil y pedidos
+   6) AJUSTES MODO CLARO Y OSCURO: perfil, contraseña, direcciones y pedidos
    ========================================================================== */
 
-/* Perfil > Datos: el texto de lectura y los campos deshabilitados se veían
-   oscuros sobre fondo oscuro (el color venía de una variable inexistente). */
+/* Perfil > Datos: texto legible en ambos temas */
 html[data-theme="dark"] .data-view-text,
 html[data-theme="dark"] .field input:disabled,
 html[data-theme="dark"] .field input[disabled] {
@@ -307,9 +306,119 @@ html[data-theme="dark"] .field input[disabled] {
   opacity: 1;
 }
 
+/* Desplegable de Seguridad y Contraseña (adaptado a tema claro y oscuro) */
+.security-toggle-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--n200);
+  padding: 14px 16px;
+  border-radius: 12px;
+  color: var(--n900);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 24px;
+  box-shadow: var(--sh-sm);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.security-toggle-btn:hover {
+  background: var(--n50);
+  border-color: var(--p200);
+}
+
+.security-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.security-toggle-left svg {
+  color: var(--p6);
+}
+
+.security-card-body {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--n200);
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 10px;
+  box-shadow: var(--sh-sm);
+}
+
+html[data-theme="dark"] .security-toggle-btn,
+html[data-theme="dark"] .security-card-body {
+  background: var(--surface);
+  border-color: var(--n200);
+  color: var(--n900);
+}
+
+html[data-theme="dark"] .security-toggle-btn:hover {
+  background: var(--surface-2);
+}
+
+/* Tarjeta de dirección activa en modo oscuro (evita fondo verde claro brillante) */
+html[data-theme="dark"] .address-card.active {
+  background: rgba(74, 222, 128, 0.08);
+  border-color: var(--ok);
+}
+
 /* Etiquetas de estado de las filas de pedido */
 html[data-theme="dark"] .pedido-card.pendiente { --estado: var(--wa); }
 html[data-theme="dark"] .pedido-card.en_proceso {
   --estado: #c4b5fd;
   --estado-bg: rgba(167, 139, 250, 0.16);
+}
+/* ==========================================================================
+   7) BARRA DE NAVEGACIÓN INFERIOR UNIFORME (.bottom-nav)
+   Iguala el ancho de los 5 ítems y centra perfectamente la línea indicadora
+   ========================================================================== */
+.bottom-nav {
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: space-between !important;
+  padding-top: 0 !important;
+}
+
+/* Tanto los enlaces <a> como los <div class="nav-item"> ocupan 1/5 exacto */
+.bottom-nav > a,
+.bottom-nav > .nav-item {
+  flex: 1 1 0% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.bottom-nav .nav-item,
+.bottom-nav .nav-item.active {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 10px 4px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  position: relative !important;
+}
+
+/* Línea indicadora centrada en el 50% exacto de cada celda */
+.bottom-nav .nav-item.active::before,
+.bottom-nav .nav-item.active::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 28px !important;
+  height: 3px !important;
+  margin: 0 !important;
+  border-radius: 0 0 4px 4px !important;
+  transform: translateX(-50%) !important;
 }

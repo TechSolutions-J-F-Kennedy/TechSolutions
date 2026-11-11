@@ -1,19 +1,25 @@
 const CACHE_NAME = 'kennedy-tech-v1';
 
-// Archivos básicos de la app para guardar en caché
+// Rutas directas basadas en el Service Worker ubicado en la raíz del proyecto
 const APP_SHELL = [
-  '/',
-  '/index.html',
-  '/css/styles.css', // Tu CSS principal
-  '/js/app.js',
-  '/img/icono-192.png',
-  '/img/icono-512.png'
+  './',
+  './frontend/css/base-dos.css',
+  './frontend/css/mensajes-styles.css',
+  './frontend/css/tema.css',
+  './frontend/js/tema.js',
+  './frontend/img/icono-192.png',
+  './frontend/img/icono-512.png'
 ];
 
 self.addEventListener('install', (evento) => {
   evento.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_SHELL))
+      .then((cache) => {
+        // Intenta precargar cada recurso sin bloquear el registro si alguno cambia de nombre o falta
+        return Promise.allSettled(
+          APP_SHELL.map(url => cache.add(url).catch(err => console.warn(`[SW] No se pudo precargar: ${url}`, err)))
+        );
+      })
       .then(() => self.skipWaiting())
   );
 });
@@ -36,14 +42,16 @@ self.addEventListener('fetch', (evento) => {
   const pedido = evento.request;
   const url = new URL(pedido.url);
 
-  // Excluir peticiones de API o métodos que no sean GET
+  // Excluir API o métodos distintos a GET
   if (pedido.method !== 'GET' || url.origin !== location.origin || url.pathname.startsWith('/api/')) return;
 
   evento.respondWith(
     fetch(pedido)
       .then((respuesta) => {
-        const copia = respuesta.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(pedido, copia));
+        if (respuesta.status === 200) {
+          const copia = respuesta.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(pedido, copia));
+        }
         return respuesta;
       })
       .catch(() => caches.match(pedido))
