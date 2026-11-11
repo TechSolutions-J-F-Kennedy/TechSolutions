@@ -2,6 +2,8 @@ const BASE_URL = (window.location.protocol === 'file:' || window.location.port =
   ? 'http://localhost:3000'
   : '';
 
+let pedidosActuales = [];
+
 document.addEventListener('DOMContentLoaded', async () => {
     const contenedor = document.getElementById("contenedor-pedidos");
     const usuarioGuardado = localStorage.getItem('usuario');
@@ -35,6 +37,7 @@ async function cargarPedidosUsuario(clienteId) {
         }
 
         const pedidos = data.payload || data || [];
+        pedidosActuales = pedidos;
 
         if (pedidos.length === 0) {
             contenedor.innerHTML = `
@@ -155,6 +158,15 @@ function generarTarjetaPedidoHTML(pedido) {
                         </button>
                     ` : ''}
 
+                    ${(estado === 'finalizado' || estado === 'completado') ? `
+                        <button class="btn-action primary" onclick="abrirModalComprobante(${pedido.id})" style="background:#16a34a; border-color:#16a34a; color:#fff;">
+                            <i data-lucide="receipt"></i> Recibo
+                        </button>
+                        <button class="btn-action secondary" onclick="abrirModalResena(${pedido.id})">
+                            <i data-lucide="star"></i> Calificar
+                        </button>
+                    ` : ''}
+
                     ${estado === 'confirmado' ? `
                         <button class="btn-action primary" onclick="verDetalles(${pedido.id})">
                             <i data-lucide="eye"></i> Detalle
@@ -193,4 +205,106 @@ async function cancelarPedido(pedidoId) {
         console.error("Error al cancelar pedido:", error);
         alert("Error al conectar con el servidor.");
     }
+}
+
+// ================= MODAL CALIFICACIÓN / RESEÑA =================
+function abrirModalResena(pedidoId) {
+    const modal = document.getElementById('modal-resena');
+    if (!modal) return;
+    document.getElementById('resena-pedido-id').value = pedidoId;
+    document.getElementById('resena-comentario').value = '';
+    seleccionarEstrellas(5);
+    modal.style.display = 'flex';
+    if (window.lucide) lucide.createIcons();
+}
+
+function cerrarModalResena() {
+    const modal = document.getElementById('modal-resena');
+    if (modal) modal.style.display = 'none';
+}
+
+function seleccionarEstrellas(n) {
+    document.getElementById('resena-estrella').value = n;
+    const estrellas = document.querySelectorAll('#estrellas-selector span');
+    estrellas.forEach((span, i) => {
+        span.style.opacity = i < n ? '1' : '0.25';
+    });
+}
+
+document.addEventListener('click', (e) => {
+    const span = e.target.closest('#estrellas-selector span');
+    if (span) {
+        seleccionarEstrellas(Number(span.dataset.star));
+    }
+});
+
+async function enviarResena(e) {
+    e.preventDefault();
+    const pedidoId = document.getElementById('resena-pedido-id').value;
+    const estrella = Number(document.getElementById('resena-estrella').value);
+    const comentario = document.getElementById('resena-comentario').value.trim();
+
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    if (!usuario.id) {
+        alert('Tenés que iniciar sesión.');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${BASE_URL}/api/clientes/${usuario.id}/resenas`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                servicio_id: Number(pedidoId),
+                estrella,
+                comentario
+            })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            alert('¡Gracias por calificar el servicio!');
+            cerrarModalResena();
+            await cargarPedidosUsuario(usuario.id);
+        } else {
+            alert(data.error || 'No se pudo enviar la calificación.');
+        }
+    } catch (err) {
+        console.error('Error al enviar reseña:', err);
+        alert('Error de conexión al enviar la calificación.');
+    }
+}
+
+// ================= MODAL COMPROBANTE SIMULADO =================
+function abrirModalComprobante(pedidoId) {
+    const pedido = pedidosActuales.find((p) => Number(p.id) === Number(pedidoId));
+    const modal = document.getElementById('modal-comprobante');
+    if (!modal) return;
+
+    const nombreReal = pedido?.tecnico_nombre || '';
+    const apellido = pedido?.tecnico_apellido || '';
+    const tecnicoNombre = nombreReal ? `${nombreReal} ${apellido}` : 'Técnico Asignado';
+
+    let fechaFormateada = 'Hoy';
+    if (pedido?.fecha_servicio) {
+        const partes = String(pedido.fecha_servicio).split('T')[0].split('-');
+        if (partes.length === 3) fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+    document.getElementById('comprobante-id').textContent = `#ORD-${pedidoId}`;
+    document.getElementById('comprobante-tecnico').textContent = tecnicoNombre;
+    document.getElementById('comprobante-fecha').textContent = fechaFormateada;
+    document.getElementById('comprobante-desc').textContent = pedido?.descripcion || 'Servicio de asistencia técnica';
+    
+    // Costo simulado
+    const costoSimulado = pedido?.costo_total ? `$${Number(pedido.costo_total).toLocaleString('es-AR')}` : '$18.500';
+    document.getElementById('comprobante-monto').textContent = costoSimulado;
+
+    modal.style.display = 'flex';
+    if (window.lucide) lucide.createIcons();
+}
+
+function cerrarModalComprobante() {
+    const modal = document.getElementById('modal-comprobante');
+    if (modal) modal.style.display = 'none';
 }

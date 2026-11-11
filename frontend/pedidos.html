@@ -75,6 +75,72 @@
     </nav>
   </div>
 
+  <!-- Modal Calificación y Reseña -->
+  <div id="modal-resena" style="display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,0.6); align-items:flex-end;">
+    <div style="background:#fff; width:100%; max-width:480px; margin:0 auto; border-radius:20px 20px 0 0; padding:24px; box-sizing:border-box;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="margin:0; font-size:1.15rem;">Calificar Servicio</h3>
+        <button type="button" class="icon-btn" onclick="cerrarModalResena()" style="background:none; border:none; cursor:pointer;">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <p style="font-size:0.9rem; color:#64748b; margin-top:0;">Contanos qué tal fue la atención del técnico:</p>
+      <form id="form-resena" onsubmit="enviarResena(event)">
+        <input type="hidden" id="resena-pedido-id" value="">
+        <div style="display:flex; justify-content:center; gap:8px; margin:16px 0; font-size:2rem; cursor:pointer; color:#f59e0b;" id="estrellas-selector">
+          <span data-star="1">★</span>
+          <span data-star="2">★</span>
+          <span data-star="3">★</span>
+          <span data-star="4">★</span>
+          <span data-star="5">★</span>
+        </div>
+        <input type="hidden" id="resena-estrella" value="5">
+        <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:6px;">Comentario (opcional):</label>
+        <textarea id="resena-comentario" rows="3" style="width:100%; border:1px solid #cbd5e1; border-radius:8px; padding:10px; box-sizing:border-box; font-family:inherit;" placeholder="Ej. El técnico llegó puntual y solucionó todo rápido."></textarea>
+        <button type="submit" class="btn-action primary" style="width:100%; margin-top:16px; padding:12px; justify-content:center; display:flex; align-items:center; gap:8px;">
+          <i data-lucide="send"></i> Enviar Calificación
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Comprobante Simulado -->
+  <div id="modal-comprobante" style="display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#fff; width:100%; max-width:400px; border-radius:16px; padding:24px; box-sizing:border-box; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+      <div style="text-align:center; margin-bottom:16px;">
+        <div style="display:inline-flex; padding:10px; border-radius:50%; background:#dcfce7; color:#16a34a; margin-bottom:8px;">
+          <i data-lucide="check-circle" style="width:32px; height:32px;"></i>
+        </div>
+        <h3 style="margin:0; font-size:1.2rem;">Comprobante de Servicio</h3>
+        <small style="color:#64748b;" id="comprobante-id">#ORD-00</small>
+      </div>
+      <div style="border-top:1px dashed #cbd5e1; border-bottom:1px dashed #cbd5e1; padding:16px 0; margin-bottom:16px; font-size:0.9rem;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span style="color:#64748b;">Técnico:</span>
+          <strong id="comprobante-tecnico">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span style="color:#64748b;">Fecha:</span>
+          <span id="comprobante-fecha">-</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span style="color:#64748b;">Servicio:</span>
+          <span id="comprobante-desc" style="max-width:180px; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">-</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:1.1rem; font-weight:700;">
+          <span>Total Cobrado:</span>
+          <span style="color:#16a34a;" id="comprobante-monto">$18.500</span>
+        </div>
+      </div>
+      <div style="background:#f1f5f9; padding:10px; border-radius:8px; text-align:center; font-size:0.8rem; color:#475569; margin-bottom:16px;">
+        <span>✓ Pago simulado en destino · Sin costo real</span>
+      </div>
+      <button type="button" class="btn-action primary" onclick="cerrarModalComprobante()" style="width:100%; padding:12px; justify-content:center; display:flex; align-items:center; gap:8px;">
+        <i data-lucide="check"></i> Listo
+      </button>
+    </div>
+  </div>
+
   <script src="js/pedidos.js"></script>
 
 </body>

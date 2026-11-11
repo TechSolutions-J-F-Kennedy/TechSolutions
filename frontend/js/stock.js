@@ -89,6 +89,7 @@ const renderProductos = (productos) => {
     const acciones = document.createElement('td');
     acciones.className = 'acciones';
     acciones.append(
+      crearBoton('-1 Descontar', 'descontar', 'boton-secundario'),
       crearBoton('Modificar', 'editar'),
       crearBoton('Eliminar', 'eliminar', 'boton-peligro')
     );
@@ -262,6 +263,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const fila = boton.closest('tr');
     const producto = productosActuales.find((item) => String(item.id) === fila.dataset.id);
     if (!producto) return;
+
+    if (boton.dataset.action === 'descontar') {
+      const stockActual = Number(producto.stock_actual);
+      if (stockActual <= 0) {
+        mostrarError(`No hay stock disponible de "${producto.nombre}" para descontar.`);
+        return;
+      }
+      try {
+        limpiarError();
+        const datos = {
+          codigo_sku: String(producto.codigo_sku),
+          codigo_qr: producto.codigo_qr ? String(producto.codigo_qr) : null,
+          nombre: String(producto.nombre),
+          descripcion: String(producto.descripcion || ''),
+          stock_actual: stockActual - 1,
+          stock_minimo: Number(producto.stock_minimo || 0)
+        };
+        await obtenerRespuesta(await fetch(`${API_URL}/${encodeURIComponent(producto.id)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos)
+        }));
+        await cargarProductos(`Se descontó 1 unidad de "${producto.nombre}". Nuevo stock: ${stockActual - 1}.`);
+      } catch (error) {
+        console.error('Error al descontar stock:', error);
+        mostrarError(error.message);
+      }
+      return;
+    }
 
     if (boton.dataset.action === 'editar') {
       iniciarEdicion(fila, producto);
