@@ -1,30 +1,112 @@
-.g {
+.technician-tools-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 16px;
 }
 
-.g .card {
-  text-align: center;
-  margin: 0;
-  color: var(--n500);
-  padding: 20px 12px;
+.technician-page-header {
+  position: relative;
 }
 
-.g svg {
-  width: 28px;
-  height: 28px;
-  color: var(--p6);
-  margin-bottom: 8px;
+.technician-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 700;
 }
 
-.g b {
-  display: block;
+.technician-tools-form {
+  display: grid;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.technician-tools-form label {
   font-size: 13px;
+  font-weight: 700;
+  color: var(--n700);
+}
+
+.technician-tools-form select,
+.technician-tools-form input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--n200);
+  border-radius: 10px;
+  background: #fff;
   color: var(--n900);
+  font: inherit;
 }
 
-.g small {
-  font-size: 11px;
+.technician-tools-layout-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
 }
 
+.technician-tools-qr-panel {
+  text-align: center;
+}
+
+.technician-tools-qr {
+  display: grid;
+  min-height: 230px;
+  place-items: center;
+  margin: 16px 0;
+  overflow: auto;
+}
+
+.technician-tools-qr img,
+.technician-tools-qr canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+.technician-tools-message {
+  margin: 12px 0 0;
+  color: var(--er);
+  font-weight: 700;
+}
+
+.technician-tools-message.is-success {
+  color: var(--s6);
+}
+
+.technician-tools-request {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--n100);
+}
+
+.technician-tools-request:last-child {
+  border-bottom: 0;
+}
+
+.technician-tools-request-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.technician-tools-request-state {
+  color: var(--n500);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+html[data-theme="dark"] .technician-tools-form label,
+html[data-theme="dark"] .technician-tools-request {
+  color: var(--dark-text, #e5e7eb);
+}
+
+html[data-theme="dark"] .technician-tools-form select,
+html[data-theme="dark"] .technician-tools-form input {
+  border-color: var(--dark-border, #334155);
+  background: var(--surface, #111827);
+  color: var(--n900, #e5e7eb);
+}
