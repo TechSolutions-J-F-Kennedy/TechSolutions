@@ -68,9 +68,9 @@ if (!yo) {
 
         $('#ls').innerHTML = a.length
             ? a
-                  .map((c) => {
-                      const mio = esMio(c.ultimo_remitente);
-                      return `
+                .map((c) => {
+                    const mio = esMio(c.ultimo_remitente);
+                    return `
                         <div class="row2" data-id="${c.id}">
                           <div class="av">${avatarDe(c)}</div>
                           <div class="mid">
@@ -85,8 +85,8 @@ if (!yo) {
                           </div>
                         </div>
                       `;
-                  })
-                  .join('')
+                })
+                .join('')
             : '<p class="m" style="text-align:center;margin-top:30px">No hay chats</p>';
 
         lucide.createIcons();

@@ -293,5 +293,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  const params = new URLSearchParams(window.location.search);
+  const codigoUrl = params.get('codigo');
+  if (codigoUrl) {
+    const inputCodigo = document.querySelector('input[name="codigo"]');
+    if (inputCodigo) {
+      inputCodigo.value = codigoUrl;
+    }
+  }
+
   cargarProductos();
 });
