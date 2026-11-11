@@ -13,8 +13,11 @@
       rel="stylesheet"
     >
     <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/tecnico-ui.css">
     <link rel="stylesheet" href="../css/pendientes.css">
     <link rel="stylesheet" href="../css/inicio.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/tema.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- App instalable (PWA) -->
     <link rel="manifest" href="manifest.json">
@@ -26,17 +29,17 @@
   </head>
 
   <body>
-    <div class="app">
-      <div class="head">
-        <div class="row">
+    <div class="app technician-app">
+      <div class="technician-page-header">
+        <div class="technician-layout-row">
           <div>
             <small>PANEL TÉCNICO</small>
             <h1 id="saludo"></h1>
           </div>
 
-          <div class="sw">
+          <div class="technician-availability-controls">
             <span id="switch-texto"></span>
-            <label class="switch">
+            <label class="technician-availability-toggle">
               <input type="checkbox" id="switch-disponible">
               <i></i>
             </label>
@@ -56,29 +59,27 @@
         </nav>
       </div>
 
-      <div class="wrap">
-        <h2>Pedidos cerca tuyo</h2>
-        <p class="m" id="mensaje-cerca">Buscando pedidos cerca...</p>
-        <!-- Acá el JS agrega los pedidos nuevos de clientes cercanos (se actualiza solo) -->
-        <div id="lista-cerca"></div>
-
-        <h2>Servicios Pendientes</h2>
+      <div class="technician-page-content">
+        <a class="btn btn-ghost technician-full-width-button technician-tools-launch" href="herramientas.html">
+          <i data-lucide="wrench"></i> Herramientas e insumos
+        </a>
+        <h2>Mis servicios</h2>
         <p id="mensaje-lista"></p>
 
-        <!-- Acá el JS agrega una tarjeta por cada servicio pendiente -->
+        <!-- Acá el JS agrega una tarjeta por cada pedido no finalizado -->
         <div id="lista-pedidos"></div>
       </div>
     </div>
 
     <!-- Molde de tarjeta: se clona una vez por servicio -->
     <template id="template-pedido">
-      <div class="card pedido">
-        <div class="row">
+      <div class="technician-card technician-order-card">
+        <div class="technician-layout-row">
           <b data-campo="servicio"></b>
           <span data-campo="estado"></span>
         </div>
 
-        <div class="kv">
+        <div class="technician-data-row">
           <i data-lucide="user-round"></i>
           <div>
             <b>Cliente</b>
@@ -86,7 +87,7 @@
           </div>
         </div>
 
-        <div class="kv">
+        <div class="technician-data-row">
           <i data-lucide="map-pin"></i>
           <div>
             <b>Ubicación</b>
@@ -94,25 +95,25 @@
           </div>
         </div>
 
-        <button class="btn btn-primary full" data-accion="ver" style="margin-top: 8px">
+        <button class="btn btn-primary technician-full-width-button" data-accion="ver" style="margin-top: 8px">
           <i data-lucide="eye"></i> Ver
         </button>
       </div>
     </template>
 
     <!-- Detalle del pedido (bottom sheet) -->
-    <div class="sheet" id="detalle-pedido">
-      <div class="panel">
-        <div class="grab"></div>
+    <div class="technician-bottom-sheet" id="detalle-pedido">
+      <div class="technician-sheet-content">
+        <div class="technician-sheet-handle"></div>
 
-        <div class="row">
+        <div class="technician-layout-row">
           <h3 data-campo="numero"></h3>
           <span data-campo="estado"></span>
         </div>
 
-        <p class="m" data-campo="servicio"></p>
+        <p class="technician-help-text" data-campo="servicio"></p>
 
-        <div class="kv">
+        <div class="technician-data-row">
           <i data-lucide="user-round"></i>
           <div>
             <b>Cliente</b>
@@ -120,7 +121,7 @@
           </div>
         </div>
 
-        <div class="kv">
+        <div class="technician-data-row">
           <i data-lucide="phone"></i>
           <div>
             <b>Teléfono</b>
@@ -128,7 +129,7 @@
           </div>
         </div>
 
-        <div class="kv">
+        <div class="technician-data-row">
           <i data-lucide="map-pin"></i>
           <div>
             <b>Ubicación</b>
@@ -136,7 +137,7 @@
           </div>
         </div>
 
-        <div class="kv">
+        <div class="technician-data-row">
           <i data-lucide="clock"></i>
           <div>
             <b>Horario</b>
@@ -144,7 +145,7 @@
           </div>
         </div>
 
-        <div class="kv">
+        <div class="technician-data-row">
           <i data-lucide="package"></i>
           <div>
             <b>Materiales</b>
@@ -152,7 +153,7 @@
           </div>
         </div>
 
-        <div class="kv">
+        <div class="technician-data-row">
           <i data-lucide="file-text"></i>
           <div>
             <b>Detalle</b>
@@ -160,7 +161,7 @@
           </div>
         </div>
 
-        <div class="acciones">
+        <div class="technician-contact-actions">
           <a class="btn btn-ghost" id="btn-chatear" href="chat.html">
             <i data-lucide="message-circle"></i> Chatear
           </a>
@@ -172,15 +173,34 @@
           </a>
         </div>
 
-        <iframe class="mapa" id="mapa-pedido" title="Mapa del pedido" loading="lazy"></iframe>
+        <iframe class="technician-order-map" id="mapa-pedido" title="Mapa del pedido" loading="lazy"></iframe>
 
-        <a class="btn btn-primary full" id="btn-atender" href="pedido_actual.html" style="margin-top: 6px">
+        <a class="btn btn-primary technician-full-width-button" id="btn-atender" href="pedido_actual.html" style="margin-top: 6px">
           <i data-lucide="play"></i> Atender pedido
         </a>
+        <p class="technician-help-text technician-active-service-notice" id="aviso-servicio-en-curso" hidden>
+          Ya tenés otro servicio en curso. Finalizalo antes de iniciar uno nuevo.
+        </p>
 
-        <button class="btn btn-ghost full" id="btn-cerrar-detalle" style="margin-top: 6px">
+        <button class="btn btn-danger technician-full-width-button" id="btn-cancelar-servicio" style="margin-top: 6px">
+          <i data-lucide="ban"></i> Cancelar servicio
+        </button>
+
+        <button class="btn btn-ghost technician-full-width-button" id="btn-cerrar-detalle" style="margin-top: 6px">
           <i data-lucide="x"></i> Cerrar
         </button>
+      </div>
+    </div>
+
+    <div class="technician-bottom-sheet" id="confirmacion-cancelacion">
+      <div class="technician-sheet-content">
+        <div class="technician-sheet-handle"></div>
+        <h3>¿Cancelar este servicio?</h3>
+        <p class="technician-help-text" id="error-cancelacion" role="alert" hidden></p>
+        <div class="technician-layout-row technician-cancellation-actions">
+          <button class="btn btn-ghost" id="btn-volver-cancelacion">Volver</button>
+          <button class="btn btn-danger" id="btn-confirmar-cancelacion">Sí, cancelar</button>
+        </div>
       </div>
     </div>
 
@@ -190,4 +210,3 @@
     <script src="../js/pwa-register.js"></script>
   </body>
 </html>
-

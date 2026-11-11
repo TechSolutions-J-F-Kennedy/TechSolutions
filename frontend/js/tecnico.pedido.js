@@ -29,12 +29,14 @@ if (!tecnico) {
     const campo = (id) => document.getElementById(id);
     const hoja = campo('hoja-estado');
     const urlServicio = `${API_URL}/api/tecnicos/${encodeURIComponent(tecnico.id)}/servicios/${encodeURIComponent(servicioId)}`;
+    let hayOtroServicioEnCurso = false;
 
     function mostrarEstado(estado) {
         const valor = String(estado || '').trim().toLowerCase();
         const datos = ESTADOS_SERVICIO.find((e) => e.valor === valor);
         const insignia = document.createElement('span');
-        insignia.className = `status ${datos?.clase || 'pending'}`;
+        const clase = valor.includes('cancel') ? 'cancelled' : datos?.clase || 'pending';
+        insignia.className = `status ${clase}`;
         insignia.textContent = datos?.texto || estado || 'Sin estado';
         campo('estado').replaceChildren(insignia);
     }
@@ -67,7 +69,11 @@ if (!tecnico) {
         });
         campo('datos').hidden = false;
         campo('trabajo').hidden = false;
-        campo('mensaje').textContent = '';
+        hayOtroServicioEnCurso = Boolean(Number(servicio.otro_servicio_en_curso));
+        campo('btn-estado').disabled = hayOtroServicioEnCurso;
+        campo('mensaje').textContent = hayOtroServicioEnCurso
+            ? 'Ya tenés otro servicio en curso. Finalizalo antes de iniciar uno nuevo.'
+            : '';
     }
 
     async function cargarServicio() {
@@ -86,6 +92,7 @@ if (!tecnico) {
     }
 
     async function cambiarEstado(estado, boton) {
+        if (hayOtroServicioEnCurso && ['yendo', 'en proceso'].includes(estado)) return;
         boton.disabled = true;
         try {
             const respuesta = await fetch(`${urlServicio}/estado`, {
@@ -95,13 +102,19 @@ if (!tecnico) {
             });
             const datos = await respuesta.json();
             if (!respuesta.ok) {
-                throw new Error(datos.error || 'No se pudo actualizar el estado.');
+                const error = new Error(datos.error || 'No se pudo actualizar el estado.');
+                error.status = respuesta.status;
+                throw error;
             }
             mostrarEstado(datos.estado);
-            hoja.classList.remove('on');
+            hoja.classList.remove('is-open');
         } catch (error) {
             console.error('Error al actualizar el estado:', error);
-            window.alert(error.message || 'No se pudo actualizar el estado.');
+            campo('mensaje').textContent = error.message || 'No se pudo actualizar el estado.';
+            if (error.status === 409) {
+                hayOtroServicioEnCurso = true;
+                campo('btn-estado').disabled = true;
+            }
         } finally {
             boton.disabled = false;
         }
@@ -115,9 +128,9 @@ if (!tecnico) {
         campo('opciones-estado').append(boton);
     });
 
-    campo('btn-estado').addEventListener('click', () => hoja.classList.add('on'));
+    campo('btn-estado').addEventListener('click', () => hoja.classList.add('is-open'));
     hoja.addEventListener('click', (evento) => {
-        if (evento.target === hoja) hoja.classList.remove('on');
+        if (evento.target === hoja) hoja.classList.remove('is-open');
     });
 
     // Foto del trabajo terminado
