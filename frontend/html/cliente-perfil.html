@@ -9,7 +9,7 @@
 
   <!-- Meta etiquetas y favicons -->
   <meta name="theme-color" content="#172554">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
   <link rel="apple-touch-icon" href="../img/icono-192.png">
@@ -36,6 +36,13 @@
       padding: 8px 0;
       font-weight: 500;
       color: var(--n900);
+    }
+    .address-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
     }
   </style>
 </head>
@@ -71,7 +78,6 @@
           </button>
         </div>
 
-        <!-- Input oculto para subir/tomar foto -->
         <input type="file" id="input-foto-perfil" accept="image/jpeg,image/png,image/webp" style="display: none;">
 
         <h3 class="user-name">Cargando...</h3>
@@ -92,7 +98,7 @@
         </button>
       </div>
 
-      <!-- ================= 1. TAB DATOS PERSONALES ================= -->
+      <!-- ================= 1. TAB DATOS PERSONALES Y SEGURIDAD ================= -->
       <section id="tab-datos" class="tab-content active">
         <div class="section-header">
           <span class="section-title">Información Personal</span>
@@ -104,7 +110,7 @@
         <form id="form-datos-usuario" class="auth-form" onsubmit="guardarDatosUsuario(event)">
           
           <div class="field">
-            <label>Nombre completo</label>
+            <label>Nombre completo / usuario</label>
             <p id="view-username" class="data-view-text">-</p>
             <div class="input-icon-wrapper is-hidden" id="wrap-username">
               <i data-lucide="user" class="input-icon"></i>
@@ -122,11 +128,11 @@
           </div>
 
           <div class="field">
-            <label>Teléfono celular</label>
+            <label>Teléfono celular (10 dígitos)</label>
             <p id="view-phone" class="data-view-text">-</p>
             <div class="input-icon-wrapper is-hidden" id="wrap-phone">
               <i data-lucide="phone" class="input-icon"></i>
-              <input type="tel" id="phone" disabled>
+              <input type="tel" id="phone" placeholder="Ej: 1112345678" disabled>
             </div>
           </div>
 
@@ -136,23 +142,65 @@
           </div>
 
         </form>
+
+        <!-- BOTÓN DESPLEGABLE DE SEGURIDAD Y CONTRASEÑA -->
+        <button type="button" class="security-toggle-btn" onclick="toggleSeccionPassword()">
+          <span class="security-toggle-left">
+            <i data-lucide="shield-alert"></i>
+            <span>Seguridad y Contraseña</span>
+          </span>
+          <i data-lucide="chevron-down" id="icon-chevron-password"></i>
+        </button>
+
+        <!-- FORMULARIO COLAPSABLE -->
+        <form id="form-cambiar-password" class="auth-form security-card-body is-hidden" onsubmit="guardarNuevaPassword(event)">
+          <div class="field">
+            <label for="pass-actual">Contraseña actual (requerida por seguridad)</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input type="password" id="pass-actual" placeholder="••••••••" required>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 10px;">
+            <label for="pass-nueva">Nueva contraseña (mínimo 4 caracteres)</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="key" class="input-icon"></i>
+              <input type="password" id="pass-nueva" placeholder="••••••••" required>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 10px;">
+            <label for="pass-confirmar">Confirmar nueva contraseña</label>
+            <div class="input-icon-wrapper">
+              <i data-lucide="key-round" class="input-icon"></i>
+              <input type="password" id="pass-confirmar" placeholder="••••••••" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top: 16px; width: 100%;">
+            <i data-lucide="shield-check"></i> Actualizar contraseña
+          </button>
+        </form>
+
       </section>
 
       <!-- ================= 2. TAB DIRECCIONES ================= -->
       <section id="tab-direcciones" class="tab-content">
         <div class="section-header">
           <span class="section-title">Direcciones Guardadas</span>
-          <button class="btn btn-ghost btn-sm" onclick="abrirModalNuevaDireccion()">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="abrirModalNuevaDireccion()">
             <i data-lucide="plus"></i> Nueva
           </button>
         </div>
 
         <div class="address-list"></div>
 
-        <!-- Modal Nueva Dirección -->
+        <!-- Modal Nueva/Editar Dirección -->
         <dialog id="modal-direccion" class="custom-modal">
-          <form id="form-nueva-direccion" method="dialog" onsubmit="guardarNuevaDireccion(event)">
-            <h4>Nueva Dirección</h4>
+          <form id="form-nueva-direccion" method="dialog" onsubmit="guardarDireccionModal(event)">
+            <h4 id="modal-direccion-titulo">Nueva Dirección</h4>
+            <input type="hidden" id="dir-edit-id">
             
             <div class="field" style="margin-top: 10px;">
               <label for="dir-alias">Alias (Ej: Casa, Oficina)</label>
@@ -185,7 +233,7 @@
       </section>
 
       <!-- Cerrar Sesión -->
-      <button class="btn btn-danger-ghost btn-touch" style="margin-top: 12px;">
+      <button type="button" id="btn-cerrar-sesion" class="btn btn-danger-ghost btn-touch" style="margin-top: 16px;">
         <i data-lucide="log-out"></i> Cerrar Sesión
       </button>
 
@@ -210,43 +258,34 @@
 
   </div>
 
-  <!-- Modal de Alerta Personalizado -->
-  <div id="custom-alert-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999999; align-items: center; justify-content: center;">
-    <div class="modal-content" style="background: var(--bg-card, #1e1e1e); color: #fff; padding: 24px; border-radius: 14px; width: 85%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-      <h4 id="custom-alert-title" style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--primary-color, #e63946);">Notificación</h4>
-      <p id="custom-alert-message" style="margin: 0 0 20px 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;"></p>
-      <button type="button" onclick="cerrarAlertaPersonalizada()" style="background: var(--primary-color, #e63946); border: none; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;">Aceptar</button>
-    </div>
-  </div>
-
   <!-- Modal Edición de Reseña -->
-<dialog id="modal-editar-resena" class="custom-modal">
-  <form id="form-editar-resena" method="dialog" onsubmit="guardarEdicionResena(event)">
-    <h4>Editar Reseña</h4>
-    <input type="hidden" id="edit-resena-servicio-id">
-    
-    <div class="field" style="margin-top: 10px;">
-      <label>Calificación (Estrellas)</label>
-      <select id="edit-resena-estrella" class="input-icon-wrapper" style="width: 100%; padding: 8px;" required>
-        <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-        <option value="4">⭐⭐⭐⭐ (4/5)</option>
-        <option value="3">⭐⭐⭐ (3/5)</option>
-        <option value="2">⭐⭐ (2/5)</option>
-        <option value="1">⭐ (1/5)</option>
-      </select>
-    </div>
+  <dialog id="modal-editar-resena" class="custom-modal">
+    <form id="form-editar-resena" method="dialog" onsubmit="guardarEdicionResena(event)">
+      <h4>Editar Reseña</h4>
+      <input type="hidden" id="edit-resena-servicio-id">
+      
+      <div class="field" style="margin-top: 10px;">
+        <label>Calificación (Estrellas)</label>
+        <select id="edit-resena-estrella" class="input-icon-wrapper" style="width: 100%; padding: 8px;" required>
+          <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+          <option value="4">⭐⭐⭐⭐ (4/5)</option>
+          <option value="3">⭐⭐⭐ (3/5)</option>
+          <option value="2">⭐⭐ (2/5)</option>
+          <option value="1">⭐ (1/5)</option>
+        </select>
+      </div>
 
-    <div class="field" style="margin-top: 10px;">
-      <label for="edit-resena-comentario">Comentario</label>
-      <textarea id="edit-resena-comentario" rows="3" style="width: 100%; border-radius: 8px; padding: 8px;" placeholder="Escribe tu opinión..."></textarea>
-    </div>
+      <div class="field" style="margin-top: 10px;">
+        <label for="edit-resena-comentario">Comentario</label>
+        <textarea id="edit-resena-comentario" rows="3" style="width: 100%; border-radius: 8px; padding: 8px;" placeholder="Escribe tu opinión..."></textarea>
+      </div>
 
-    <div class="modal-actions" style="display: flex; gap: 8px; margin-top: 16px;">
-      <button type="button" class="btn btn-ghost" onclick="cerrarModalEditarResena()" style="flex: 1;">Cancelar</button>
-      <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar Cambios</button>
-    </div>
-  </form>
-</dialog>
+      <div class="modal-actions" style="display: flex; gap: 8px; margin-top: 16px;">
+        <button type="button" class="btn btn-ghost" onclick="cerrarModalEditarResena()" style="flex: 1;">Cancelar</button>
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar Cambios</button>
+      </div>
+    </form>
+  </dialog>
 
   <script src="../js/datos_perfil.js"></script>
   <script src="../js/pwa-register.js"></script>
