@@ -100,28 +100,70 @@ if (inputAddress && suggestionsList) {
   });
 }
 
-// Registro
+// =============================================================
+// FORMULARIO DE REGISTRO CON VALIDACIONES COMPLETAS (FRONTEND)
+// =============================================================
 if (registerForm) {
   registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const nombre = document.getElementById('reg-username').value;
-    const email = document.getElementById('reg-email').value;
+    const nombre = document.getElementById('reg-username').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
     const password = document.getElementById('reg-password').value;
     const confirmPassword = document.getElementById('reg-confirm-password').value;
-    const telefono = document.getElementById('reg-phone') ? document.getElementById('reg-phone').value : '';
+    const telefonoRaw = document.getElementById('reg-phone') ? document.getElementById('reg-phone').value.trim() : '';
 
+    // Sanitización: Dejar únicamente dígitos numéricos
+    const telefono = telefonoRaw.replace(/\D/g, '');
+
+    // 1. Validar nombre de usuario (mínimo 4 caracteres)
+    if (nombre.length < 4) {
+      return Swal.fire({
+        icon: 'warning',
+        title: 'Usuario muy corto',
+        text: 'El nombre de usuario debe tener al menos 4 caracteres.'
+      });
+    }
+
+    // 2. Validar teléfono (exactamente 10 dígitos)
+    if (telefono.length !== 10) {
+      return Swal.fire({
+        icon: 'warning',
+        title: 'Teléfono inválido',
+        text: 'El número de teléfono debe contener exactamente 10 dígitos (ejemplo: 1112345678).'
+      });
+    }
+
+    // 3. Validar contraseña (mínimo 4 caracteres)
+    if (password.length < 4) {
+      return Swal.fire({
+        icon: 'warning',
+        title: 'Contraseña muy corta',
+        text: 'La contraseña debe tener al menos 4 caracteres.'
+      });
+    }
+
+    // 4. Validar coincidencia de contraseñas
     if (password !== confirmPassword) {
-      Swal.fire({
+      return Swal.fire({
         icon: 'warning',
         title: 'Contraseñas distintas',
         text: 'Las contraseñas ingresadas no coinciden.'
       });
-      return;
+    }
+
+    // 5. Validar dirección (mínimo 5 caracteres)
+    const direccionTexto = inputAddress ? inputAddress.value.trim() : '';
+    if (!direccionTexto || direccionTexto.length < 5) {
+      return Swal.fire({
+        icon: 'warning',
+        title: 'Dirección inválida',
+        text: 'Ingresá tu calle y altura completa (ejemplo: San Martín 1500).'
+      });
     }
 
     const direccionFinal = direccionSeleccionadaObj || {
-      direccion_completa: inputAddress ? inputAddress.value.trim() : ''
+      direccion_completa: direccionTexto
     };
 
     try {
@@ -148,6 +190,9 @@ if (registerForm) {
           showConfirmButton: false
         });
 
+        // Limpieza del formulario y switch a Login
+        registerForm.reset();
+        direccionSeleccionadaObj = null;
         if (goToLogin) goToLogin.click();
       } else {
         Swal.fire({
@@ -167,12 +212,14 @@ if (registerForm) {
   });
 }
 
-// Login
+// =============================================================
+// FORMULARIO DE INICIO DE SESIÓN
+// =============================================================
 if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById('login-user').value;
+    const email = document.getElementById('login-user').value.trim();
     const password = document.getElementById('login-password').value;
 
     try {

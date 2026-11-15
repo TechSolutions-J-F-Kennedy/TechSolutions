@@ -1,17 +1,140 @@
-import { getTodosLosServiciosByTecnico, getServiciosPendientesByTecnico, actualizarDisponibilidadTecnico, actualizarPerfilTecnico, getServicioDeTecnico, actualizarEstadoServicio, actualizarFotoServicio, getUbicacionTecnico, guardarUbicacionTecnico } from "../models/tecnico.models.js";
+import {
+    actualizarDisponibilidadTecnico,
+    actualizarEstadoServicio,
+    actualizarFotoServicio,
+    actualizarPerfilTecnico,
+    confirmarEntregaInsumo,
+    crearSolicitudInsumoTecnico,
+    getProductosDisponiblesParaTecnicos,
+    getServicioDeTecnico,
+    getServiciosNoFinalizadosByTecnico,
+    getSolicitudesInsumosTecnico,
+    getTodosLosServiciosByTecnico,
+    getUbicacionTecnico,
+    guardarUbicacionTecnico,
+    verificarPasswordActualTecnico
+} from "../models/tecnico.models.js";
 import connection from "../database/db.js";
 import { getSolicitudesCercanas, aceptarSolicitud, getTecnicosCercanosDeSolicitud } from "../models/solicitud.models.js";
 import { enviarEvento } from "../utils/tiempoReal.js";
 import { geocodificar, direccionDesdeCoordenadas, coordenadasValidas } from "../utils/geo.js";
+import { createHash, randomBytes } from "node:crypto";
+
+const esIdValido = (id) => /^\d+$/.test(String(id)) && Number(id) > 0;
+
+export const getProductosInsumosTecnico = async (req, res) => {
+    try {
+        const productos = await getProductosDisponiblesParaTecnicos();
+        return res.status(200).json({ payload: productos });
+    } catch (error) {
+        console.error("Error al consultar insumos para técnicos:", error);
+        return res.status(500).json({ error: "No se pudo consultar el inventario" });
+    }
+};
+
+export const postSolicitudInsumoTecnico = async (req, res) => {
+    const { id } = req.params;
+    const { productoId, cantidad = 1 } = req.body || {};
+    if (
+        !esIdValido(id) ||
+        !Number.isInteger(Number(productoId)) ||
+        Number(productoId) < 1 ||
+        !Number.isInteger(cantidad) ||
+        cantidad < 1 ||
+        cantidad > 99
+    ) {
+        return res.status(400).json({ error: "El producto o la cantidad no son válidos" });
+    }
+
+    try {
+        const token = randomBytes(32).toString("base64url");
+        const tokenHash = createHash("sha256").update(token).digest("hex");
+        const solicitud = await crearSolicitudInsumoTecnico({
+            tecnicoId: Number(id),
+            productoId: Number(productoId),
+            cantidad,
+            tokenHash
+        });
+
+        if (solicitud.estado === "tecnico_no_encontrado") {
+            return res.status(404).json({ error: "No se encontró el técnico" });
+        }
+        if (solicitud.estado === "producto_no_encontrado") {
+            return res.status(404).json({ error: "El producto ya no está disponible" });
+        }
+        if (solicitud.estado === "stock_insuficiente") {
+            return res.status(409).json({ error: "No hay suficiente stock para esa cantidad" });
+        }
+
+        return res.status(201).json({
+            solicitudId: solicitud.id,
+            token,
+            producto: solicitud.producto.nombre,
+            cantidad
+        });
+    } catch (error) {
+        console.error("Error al crear solicitud de insumo:", error);
+        return res.status(500).json({ error: "No se pudo crear la solicitud de insumo" });
+    }
+};
+
+export const getSolicitudesInsumosTecnicoController = async (req, res) => {
+    const { id } = req.params;
+    if (!esIdValido(id)) {
+        return res.status(400).json({ error: "El ID del técnico no es válido" });
+    }
+
+    try {
+        const solicitudes = await getSolicitudesInsumosTecnico(Number(id));
+        return res.status(200).json({ payload: solicitudes });
+    } catch (error) {
+        console.error("Error al consultar solicitudes de insumos:", error);
+        return res.status(500).json({ error: "No se pudieron consultar las solicitudes" });
+    }
+};
+
+export const postConfirmarEntregaInsumo = async (req, res) => {
+    const { token } = req.body || {};
+    if (typeof token !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(token)) {
+        return res.status(400).json({ error: "El código de entrega no es válido" });
+    }
+
+    try {
+        const tokenHash = createHash("sha256").update(token).digest("hex");
+        const resultado = await confirmarEntregaInsumo(tokenHash);
+        if (resultado.estado === "no_encontrada") {
+            return res.status(404).json({ error: "La solicitud no existe o ya no está disponible" });
+        }
+        if (resultado.estado === "vencida") {
+            return res.status(410).json({ error: "El código venció. El técnico debe generar uno nuevo." });
+        }
+        if (resultado.estado === "sin_stock") {
+            return res.status(409).json({ error: "No hay stock suficiente para entregar este producto" });
+        }
+        if (resultado.estado !== "entregado") {
+            return res.status(409).json({ error: "Esta solicitud ya fue procesada" });
+        }
+
+        return res.status(200).json({
+            ok: true,
+            solicitudId: resultado.solicitudId,
+            producto: resultado.producto,
+            cantidad: resultado.cantidad
+        });
+    } catch (error) {
+        console.error("Error al confirmar entrega de insumo:", error);
+        return res.status(500).json({ error: "No se pudo confirmar la entrega" });
+    }
+};
 
 export const getServiciosPendientes = async (req, res) => {
     try {
         const { id } = req.params;
-        const servicios = await getServiciosPendientesByTecnico(id);
+        const servicios = await getServiciosNoFinalizadosByTecnico(id);
         return res.json({ payload: servicios });
     } catch (error) {
-        console.error("Error al obtener servicios pendientes:", error);
-        return res.status(500).json({ error: "Error al consultar los servicios pendientes" });
+        console.error("Error al obtener pedidos del técnico:", error);
+        return res.status(500).json({ error: "Error al consultar los pedidos del técnico" });
     }
 };
 
@@ -53,22 +176,24 @@ export const patchDisponibilidadTecnico = async (req, res) => {
 export const patchPerfilTecnico = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre_real, apellido, email, telefono, categoria, password } = req.body;
+        const { email, telefono, categoria, password, passwordActual } = req.body;
 
         if (
-            typeof nombre_real !== "string" || !nombre_real.trim() ||
-            typeof apellido !== "string" || !apellido.trim() ||
             typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) ||
             typeof telefono !== "string" ||
             typeof categoria !== "string" || !categoria.trim() ||
-            (password !== undefined && typeof password !== "string")
+            (password !== undefined && typeof password !== "string") ||
+            (passwordActual !== undefined && typeof passwordActual !== "string") ||
+            (password && !passwordActual)
         ) {
-            return res.status(400).json({ error: "Revisá el nombre, apellido, email, teléfono y categoría" });
+            return res.status(400).json({ error: "Revisá el email, teléfono y categoría. Para cambiar la contraseña, ingresá la actual." });
+        }
+
+        if (password && !(await verificarPasswordActualTecnico(id, passwordActual))) {
+            return res.status(401).json({ error: "La contraseña actual no es correcta" });
         }
 
         const usuario = await actualizarPerfilTecnico(id, {
-            nombre_real: nombre_real.trim(),
-            apellido: apellido.trim(),
             email: email.trim(),
             telefono: telefono.trim(),
             categoria: categoria.trim(),
@@ -106,16 +231,21 @@ export const patchEstadoServicio = async (req, res) => {
     try {
         const { id, servicioId } = req.params;
         const { estado } = req.body;
-        const valoresPermitidos = ["pendiente", "yendo", "en proceso", "finalizado"];
+        const valoresPermitidos = ["pendiente", "yendo", "en proceso", "finalizado", "cancelado"];
 
         if (!valoresPermitidos.includes(estado)) {
             return res.status(400).json({
-                error: "El estado debe ser 'pendiente', 'yendo', 'en proceso' o 'finalizado'"
+                error: "El estado debe ser 'pendiente', 'yendo', 'en proceso', 'finalizado' o 'cancelado'"
             });
         }
 
-        const actualizado = await actualizarEstadoServicio(id, servicioId, estado);
-        if (!actualizado) {
+        const resultado = await actualizarEstadoServicio(id, servicioId, estado);
+        if (resultado === "in_progress_exists") {
+            return res.status(409).json({
+                error: "Ya tenés otro servicio en curso. Finalizalo antes de iniciar uno nuevo."
+            });
+        }
+        if (resultado === "not_found") {
             return res.status(404).json({ error: "No se encontró el servicio" });
         }
 

@@ -15,6 +15,9 @@
     />
     <link rel="stylesheet" href="../css/base.css" />
     <link rel="stylesheet" href="../css/perfil.css" />
+    <link rel="stylesheet" href="../css/tema.css" />
+    <link rel="stylesheet" href="../css/tecnico-ui.css" />
+    <script src="../js/tema.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- App instalable (PWA) -->
     <link rel="manifest" href="manifest.json">
@@ -28,6 +31,9 @@
   <body>
     <div class="app">
       <div class="head hero">
+        <button class="technician-profile-settings" id="ajustes-tecnico" type="button" aria-label="Ajustes" hidden>
+          <i data-lucide="settings"></i>
+        </button>
         <div class="av-wrap">
           <div class="av" id="av"></div>
           <label class="av-cam" for="foto-input" title="Cambiar foto de perfil">
@@ -84,12 +90,12 @@
         </div>
 
         <div class="card" id="form" hidden>
-          <div class="field">
+          <div class="field" id="campo-nombre-real">
             <label>Nombre real</label>
             <input class="input" id="nombre-real" autocomplete="given-name" required />
           </div>
 
-          <div class="field">
+          <div class="field" id="campo-apellido">
             <label>Apellido</label>
             <input class="input" id="apellido" autocomplete="family-name" required />
           </div>
@@ -109,10 +115,16 @@
             <input class="input" id="telefono" type="tel" autocomplete="tel" />
           </div>
 
-          <div class="field" style="margin: 0">
+          <div class="field" id="campo-password-actual" style="margin: 0">
+            <label>Contraseña actual</label>
+            <input class="input" id="password-actual" type="password" autocomplete="current-password" placeholder="Ingresá tu contraseña actual" />
+          </div>
+
+          <div class="field" id="campo-password-nueva" style="margin: 0">
             <label>Nueva contraseña</label>
             <input class="input" id="password" type="password" autocomplete="new-password" placeholder="Dejar en blanco para mantener la actual" />
           </div>
+          <p class="mensaje-error-perfil" id="mensaje-error-perfil" role="alert" aria-live="polite" hidden></p>
         </div>
 
         <!-- Solo técnicos: desde acá se calculan los pedidos cercanos que le llegan -->

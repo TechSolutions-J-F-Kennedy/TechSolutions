@@ -40,22 +40,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         chats.forEach(chat => {
           const nombreTecnico = chat.nombre_tecnico || 'Técnico';
+          const idTecnico = chat.tecnico_id;
           const iniciales = nombreTecnico.split(' ').filter(Boolean).map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'TC';
           
-          // Evaluar si viene la foto de perfil en el objeto del chat o usar iniciales
           const fotoTecnico = chat.foto_tecnico || chat.foto;
           const avatarHTML = fotoTecnico
             ? `<img src="${fotoTecnico}" alt="${escapeHTML(nombreTecnico)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
-            : iniciales;
+            : `<div style="width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; background: var(--border, #334155); color: #fff;">${escapeHTML(iniciales)}</div>`;
 
           const card = document.createElement('div');
           card.className = 'tech-card';
           card.style.cursor = 'pointer';
+          
           card.innerHTML = `
             <div class="tech-header">
-              <div class="tech-avatar">${avatarHTML}</div>
+              <div class="tech-avatar">
+                <a href="tecnico-datos.html?id=${encodeURIComponent(idTecnico)}" class="link-tecnico-perfil" title="Ver perfil" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
+                  ${avatarHTML}
+                </a>
+              </div>
               <div class="tech-details">
-                <h4>${escapeHTML(nombreTecnico)}</h4>
+                <h4>
+                  <a href="tecnico-datos.html?id=${encodeURIComponent(idTecnico)}" class="link-tecnico-perfil" style="text-decoration: none; color: inherit;" title="Ver perfil">
+                    ${escapeHTML(nombreTecnico)}
+                  </a>
+                </h4>
                 <p class="tech-spec" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">
                   ${escapeHTML(chat.ultimo_mensaje || 'Abrir conversación...')}
                 </p>
@@ -66,11 +75,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
           `;
 
+          // Clic en la tarjeta abre la conversación
           card.onclick = () => {
             localStorage.setItem('chatActivo_tecnicoId', chat.tecnico_id);
             localStorage.setItem('chatActivo_nombreTecnico', nombreTecnico);
             window.location.href = 'chat-usuario.html';
           };
+
+          // Evita que la redirección al perfil abra también el chat
+          const enlacesPerfil = card.querySelectorAll('.link-tecnico-perfil');
+          enlacesPerfil.forEach(enlace => {
+            enlace.onclick = (e) => {
+              e.stopPropagation();
+            };
+          });
 
           contenedorChats.appendChild(card);
         });

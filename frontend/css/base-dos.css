@@ -772,3 +772,23 @@ textarea::placeholder { color: var(--n400); }
     scroll-behavior: auto !important;
   }
 }
+/* ==========================================================================
+   7) FIX BARRA DE NAVEGACIÓN INFERIOR (.bottom-nav .nav-item.active)
+   Evita que el ítem activo cambie a disposición horizontal o desplace el texto
+   ========================================================================== */
+.bottom-nav .nav-item,
+.bottom-nav .nav-item.active {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  position: relative !important;
+}
+
+.bottom-nav .nav-item.active::before,
+.bottom-nav .nav-item.active::after {
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
