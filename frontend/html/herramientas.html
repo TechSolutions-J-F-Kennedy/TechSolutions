@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Herramientas · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <link rel="stylesheet" href="../css/tecnico-ui.css">
+    <link rel="stylesheet" href="../css/herramientas.css">
+    <script src="../js/tema.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  </head>
+
+  <body>
+    <div class="app technician-app">
+      <div class="technician-page-header">
+        <button class="technician-profile-settings" type="button" aria-label="Ajustes">
+          <i data-lucide="settings"></i>
+        </button>
+        <small>PANEL TÉCNICO</small>
+        <h1>Herramientas e insumos</h1>
+      </div>
+
+      <main class="technician-page-content technician-tools-content">
+        <section class="technician-card" aria-labelledby="insumos-titulo">
+          <h2 id="insumos-titulo">Solicitar un insumo</h2>
+          <p class="technician-help-text">Elegí un producto disponible. El stock se descuenta cuando el encargado escanea el código de entrega.</p>
+          <form id="form-solicitud-insumo" class="technician-tools-form">
+            <label for="producto-insumo">Producto</label>
+            <select id="producto-insumo" required>
+              <option value="">Cargando productos...</option>
+            </select>
+            <div class="technician-tools-layout-row">
+              <label for="cantidad-insumo">Cantidad</label>
+              <input id="cantidad-insumo" type="number" min="1" max="99" value="1" required>
+            </div>
+            <p id="stock-insumo" class="technician-help-text" aria-live="polite"></p>
+            <button id="solicitar-insumo" class="btn btn-primary technician-full-width-button" type="submit">
+              <i data-lucide="qr-code"></i> Generar código de entrega
+            </button>
+          </form>
+          <p id="mensaje-insumo" class="technician-tools-message" role="status" aria-live="polite" hidden></p>
+        </section>
+
+        <section id="codigo-insumo-panel" class="technician-card technician-tools-qr-panel" aria-labelledby="codigo-insumo-titulo" hidden>
+          <h2 id="codigo-insumo-titulo">Código para el encargado</h2>
+          <p id="detalle-codigo-insumo" class="technician-help-text"></p>
+          <div id="codigo-insumo-qr" class="technician-tools-qr" aria-label="Código QR de entrega"></div>
+          <p class="technician-help-text">El código vence en 30 minutos y solo puede usarse una vez.</p>
+        </section>
+
+        <section class="technician-card" aria-labelledby="historial-insumos-titulo">
+          <h2 id="historial-insumos-titulo">Mis solicitudes</h2>
+          <p id="estado-solicitudes-insumo" class="technician-help-text" role="status" aria-live="polite">Cargando solicitudes...</p>
+          <div id="lista-solicitudes-insumo" class="technician-tools-requests"></div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      if (window.lucide) lucide.createIcons();
+    </script>
+    <script src="../js/app.js"></script>
+    <script src="../js/tecnico.herramientas.js"></script>
+    <script src="../js/pwa-register.js"></script>
+  </body>
+</html>

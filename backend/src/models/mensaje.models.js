@@ -29,6 +29,7 @@ export const obtenerChatsPorUsuario = async (usuario_id) => {
         SELECT 
             m.tecnico_id,
             u.nombre AS nombre_tecnico, 
+            u.foto_perfil AS foto,
             m.mensaje AS ultimo_mensaje,
             m.created_at
         FROM Mensajes m

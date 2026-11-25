@@ -18,19 +18,39 @@ if (!tecnico) {
     const listaPedidos = document.getElementById('lista-pedidos');
     const mensajeLista = document.getElementById('mensaje-lista');
     const panelDetalle = document.getElementById('detalle-pedido');
+    const confirmacionCancelacion = document.getElementById('confirmacion-cancelacion');
+    const botonConfirmarCancelacion = document.getElementById('btn-confirmar-cancelacion');
     const switchDisponible = document.getElementById('switch-disponible');
     const textoDisponibilidad = document.getElementById('switch-texto');
+    let servicioSeleccionado = null;
+    let servicioEnCursoId = null;
 
     document.getElementById('saludo').innerHTML = `Hola ${tecnico.nombre}`;
 
     function obtenerClaseEstado(estado) {
         const estadoNormalizado = String(estado || '').trim().toLowerCase();
+        if (estadoNormalizado.includes('cancel')) return 'cancelled';
         if (estadoNormalizado.includes('final')) return 'success';
         if (estadoNormalizado.includes('proceso') || estadoNormalizado.includes('yendo')) return 'progress';
         return 'pending';
     }
 
+    function esServicioIniciado(estado) {
+        return ['en proceso', 'yendo'].includes(String(estado || '').trim().toLowerCase());
+    }
+
+    function formatearFechaHoraServicio(servicio) {
+        const fechaCruda = String(servicio.fecha_servicio || '').slice(0, 10);
+        const partesFecha = fechaCruda.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        const fecha = partesFecha
+            ? `${partesFecha[3]}/${partesFecha[2]}/${partesFecha[1]}`
+            : '';
+        const hora = String(servicio.hora_servicio || '').slice(0, 5);
+        return [fecha, hora].filter(Boolean).join(' · ') || 'A coordinar';
+    }
+
     function abrirDetalle(servicio) {
+        servicioSeleccionado = servicio;
         panelDetalle.querySelector('[data-campo="numero"]').innerHTML = `Pedido #${servicio.id}`;
         const estado = servicio.Estado || 'No disponible';
         panelDetalle.querySelector('[data-campo="estado"]').innerHTML =
@@ -39,42 +59,61 @@ if (!tecnico) {
         panelDetalle.querySelector('[data-campo="cliente"]').innerHTML = servicio.cliente || 'No disponible';
         panelDetalle.querySelector('[data-campo="telefono"]').innerHTML = servicio.telefono || 'No disponible';
         panelDetalle.querySelector('[data-campo="ubicacion"]').innerHTML = servicio.direccion || 'No disponible';
-        panelDetalle.querySelector('[data-campo="horario"]').innerHTML = servicio.fecha_creacion || 'No disponible';
+        panelDetalle.querySelector('[data-campo="horario"]').textContent = formatearFechaHoraServicio(servicio);
         panelDetalle.querySelector('[data-campo="materiales"]').innerHTML = servicio.materiales || 'No disponible';
         panelDetalle.querySelector('[data-campo="descripcion"]').innerHTML = servicio.descripcion || 'No disponible';
-        document.getElementById('btn-atender')
-            .setAttribute('href', `pedido_actual.html?id=${encodeURIComponent(servicio.id)}`);
+        const botonAtender = document.getElementById('btn-atender');
+        const avisoServicioEnCurso = document.getElementById('aviso-servicio-en-curso');
+        const otroServicioEnCurso = servicioEnCursoId !== null &&
+            String(servicioEnCursoId) !== String(servicio.id);
+        botonAtender.href = `pedido_actual.html?id=${encodeURIComponent(servicio.id)}`;
+        botonAtender.setAttribute('aria-disabled', String(otroServicioEnCurso));
+        botonAtender.classList.toggle('technician-disabled-action', otroServicioEnCurso);
+        botonAtender.innerHTML = esServicioIniciado(servicio.Estado)
+            ? '<i data-lucide="play"></i> Continuar servicio'
+            : '<i data-lucide="play"></i> Atender pedido';
+        avisoServicioEnCurso.hidden = !otroServicioEnCurso;
+        lucide.createIcons();
         prepararAccionesPedido(servicio, {
             chat: 'btn-chatear', llegar: 'btn-llegar', llamar: 'btn-llamar', mapa: 'mapa-pedido'
         });
-        panelDetalle.classList.add('on');
+        panelDetalle.classList.add('is-open');
     }
 
     function crearTarjeta(servicio) {
         const tarjeta = document.createElement('div');
-        tarjeta.className = 'card pedido';
+        const iniciado = esServicioIniciado(servicio.Estado);
+        tarjeta.className = `technician-card technician-order-card${iniciado ? ' is-in-progress' : ''}`;
         const nombreServicio = servicio.servicio ?? servicio.nombre_servicio ?? 'Servicio';
         const estado = servicio.Estado || 'No disponible';
         tarjeta.innerHTML = `
-            <div class="row">
+            ${iniciado ? '<div class="technician-active-order-label"><i data-lucide="zap"></i> Servicio en curso</div>' : ''}
+            <div class="technician-layout-row">
                 <b>${nombreServicio} #${servicio.id}</b>
                 <span class="status ${obtenerClaseEstado(estado)}">${estado}</span>
             </div>
-            <div class="kv">
+            <div class="technician-data-row">
                 <i data-lucide="user-round"></i>
                 <div>
                     <b>Cliente</b>
                     <span>${servicio.cliente || 'No disponible'}</span>
                 </div>
             </div>
-            <div class="kv">
+            <div class="technician-data-row">
+                <i data-lucide="calendar-clock"></i>
+                <div>
+                    <b>Fecha y hora</b>
+                    <span>${formatearFechaHoraServicio(servicio)}</span>
+                </div>
+            </div>
+            <div class="technician-data-row">
                 <i data-lucide="map-pin"></i>
                 <div>
                     <b>Ubicación</b>
                     <span>${servicio.direccion || 'No disponible'}</span>
                 </div>
             </div>
-            <button class="btn btn-primary full" data-accion="ver" style="margin-top: 8px">
+            <button class="btn btn-primary technician-full-width-button" data-accion="ver" style="margin-top: 8px">
                 <i data-lucide="eye"></i> Ver
             </button>`;
         tarjeta.querySelector('[data-accion="ver"]')
@@ -82,8 +121,8 @@ if (!tecnico) {
         return tarjeta;
     }
 
-    async function cargarServiciosPendientes() {
-        mensajeLista.innerHTML = 'Cargando servicios pendientes...';
+    async function cargarPedidosTecnico() {
+        mensajeLista.innerHTML = 'Cargando pedidos...';
         listaPedidos.replaceChildren();
 
         try {
@@ -100,28 +139,90 @@ if (!tecnico) {
             }
 
             if (datos.payload.length === 0) {
-                mensajeLista.innerHTML = 'No tenés servicios pendientes.';
+                servicioEnCursoId = null;
+                mensajeLista.innerHTML = 'No tenés pedidos para mostrar.';
                 return;
             }
 
+            const servicioEnCurso = datos.payload.find((servicio) => esServicioIniciado(servicio.Estado));
+            servicioEnCursoId = servicioEnCurso?.id ?? null;
             mensajeLista.innerHTML = '';
             datos.payload.forEach((servicio) => {
                 listaPedidos.append(crearTarjeta(servicio));
             });
             lucide.createIcons();
         } catch (error) {
-            console.error('Error al cargar los servicios pendientes:', error);
-            mensajeLista.innerHTML = 'No se pudieron cargar los servicios pendientes.';
+            console.error('Error al cargar los pedidos:', error);
+            mensajeLista.innerHTML = 'No se pudieron cargar los pedidos.';
         }
     }
 
     document.getElementById('btn-cerrar-detalle').addEventListener('click', () => {
-        panelDetalle.classList.remove('on');
+        panelDetalle.classList.remove('is-open');
+    });
+
+    document.getElementById('btn-atender').addEventListener('click', (evento) => {
+        const botonAtender = evento.currentTarget;
+        if (botonAtender.getAttribute('aria-disabled') === 'true') {
+            evento.preventDefault();
+            return;
+        }
+        evento.preventDefault();
+        window.location.href = botonAtender.href;
+    });
+
+    document.getElementById('btn-cancelar-servicio').addEventListener('click', () => {
+        if (!servicioSeleccionado) return;
+        document.getElementById('error-cancelacion').hidden = true;
+        confirmacionCancelacion.classList.add('is-open');
+    });
+
+    document.getElementById('btn-volver-cancelacion').addEventListener('click', () => {
+        confirmacionCancelacion.classList.remove('is-open');
+    });
+
+    confirmacionCancelacion.addEventListener('click', (evento) => {
+        if (evento.target === confirmacionCancelacion) {
+            confirmacionCancelacion.classList.remove('is-open');
+        }
+    });
+
+    botonConfirmarCancelacion.addEventListener('click', async () => {
+        if (!servicioSeleccionado) return;
+
+        botonConfirmarCancelacion.disabled = true;
+        try {
+            const respuesta = await fetch(
+                `${API_URL}/api/tecnicos/${encodeURIComponent(tecnico.id)}/servicios/${encodeURIComponent(servicioSeleccionado.id)}/estado`,
+                {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: 'cancelado' })
+                }
+            );
+            const datos = await respuesta.json();
+            if (!respuesta.ok) {
+                throw new Error(datos.error || 'No se pudo cancelar el servicio.');
+            }
+
+            confirmacionCancelacion.classList.remove('is-open');
+            panelDetalle.classList.remove('is-open');
+            servicioSeleccionado = null;
+            await cargarPedidosTecnico();
+        } catch (error) {
+            console.error('Error al cancelar el servicio:', error);
+            const mensajeError = document.getElementById('error-cancelacion');
+            mensajeError.textContent = error.message || 'No se pudo cancelar el servicio.';
+            mensajeError.classList.add('technician-cancellation-error');
+            mensajeError.hidden = false;
+        } finally {
+            botonConfirmarCancelacion.disabled = false;
+        }
     });
 
     panelDetalle.addEventListener('click', (evento) => {
         if (evento.target === panelDetalle) {
-            panelDetalle.classList.remove('on');
+            panelDetalle.classList.remove('is-open');
         }
     });
 
@@ -164,80 +265,5 @@ if (!tecnico) {
         }
     });
 
-    /* ===== Pedidos nuevos de clientes cercanos ===== */
-    const listaCerca = document.getElementById('lista-cerca');
-    const mensajeCerca = document.getElementById('mensaje-cerca');
-    const esc = (s) =>
-        String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-    function hace(fecha) {
-        const minutos = Math.max(0, Math.round((Date.now() - fecha) / 60000));
-        if (minutos < 1) return 'recién';
-        if (minutos < 60) return `hace ${minutos} min`;
-        const horas = Math.round(minutos / 60);
-        return horas < 24 ? `hace ${horas} h` : new Date(fecha).toLocaleDateString('es-AR');
-    }
-
-    async function cargarPedidosCerca() {
-        try {
-            const respuesta = await fetch(`${API_URL}/api/tecnicos/${encodeURIComponent(tecnico.id)}/solicitudes-cercanas`);
-            const datos = await respuesta.json();
-            if (!respuesta.ok) throw new Error(datos.error || 'No se pudieron cargar los pedidos cercanos.');
-
-            mensajeCerca.textContent = datos.payload.length ? '' : 'No hay pedidos nuevos cerca tuyo.';
-            listaCerca.innerHTML = datos.payload.map((s) => `
-                <div class="card pedido">
-                  <div class="row">
-                    <b>${esc(s.cliente || s.cliente_usuario || 'Cliente')}</b>
-                    <span class="status progress">a ${Number(s.distancia_km).toLocaleString('es-AR')} km</span>
-                  </div>
-                  <p class="m" style="margin: 8px 0">${esc(s.descripcion)}</p>
-                  <div class="kv">
-                    <i data-lucide="map-pin"></i>
-                    <div>
-                      <b>Ubicación · ${hace(s.fecha)}</b>
-                      <span>${esc(s.direccion)}</span>
-                    </div>
-                  </div>
-                  <button class="btn btn-primary full" data-aceptar="${s.id}" style="margin-top: 8px">
-                    <i data-lucide="check"></i> Aceptar pedido
-                  </button>
-                </div>`).join('');
-            lucide.createIcons();
-        } catch (error) {
-            console.error('Error al cargar los pedidos cercanos:', error);
-            mensajeCerca.textContent = 'No se pudieron cargar los pedidos cercanos.';
-        }
-    }
-
-    listaCerca.addEventListener('click', async (evento) => {
-        const boton = evento.target.closest('[data-aceptar]');
-        if (!boton) return;
-        if (!window.confirm('¿Aceptás este pedido? Vas a quedar asignado como su técnico.')) return;
-
-        boton.disabled = true;
-        try {
-            const respuesta = await fetch(
-                `${API_URL}/api/tecnicos/${encodeURIComponent(tecnico.id)}/solicitudes/${encodeURIComponent(boton.dataset.aceptar)}/aceptar`,
-                { method: 'POST' }
-            );
-            const datos = await respuesta.json();
-            if (!respuesta.ok) throw new Error(datos.error || 'No se pudo aceptar el pedido.');
-            window.location.href = `pedido_actual.html?id=${encodeURIComponent(datos.servicio_id)}`;
-        } catch (error) {
-            console.error('Error al aceptar el pedido:', error);
-            window.alert(error.message || 'No se pudo aceptar el pedido.');
-            cargarPedidosCerca();
-        }
-    });
-
-    // Tiempo real: cuando entra un pedido cerca, o cuando otro técnico lo toma, se actualiza la lista
-    if (!EMB) {
-        const avisos = new EventSource(`${API_URL}/api/chat/${encodeURIComponent(tecnico.id)}/tiempo-real`);
-        avisos.addEventListener('solicitud-nueva', cargarPedidosCerca);
-        avisos.addEventListener('solicitud-tomada', cargarPedidosCerca);
-    }
-
-    cargarPedidosCerca();
-    cargarServiciosPendientes();
+    cargarPedidosTecnico();
 }

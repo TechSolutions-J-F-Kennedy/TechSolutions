@@ -23,9 +23,9 @@ if (!tecnico) {
         { id: 'anteriores', listaId: 'tareas-anteriores', cantidadId: 'cantidad-anteriores' }
     ];
 
-    function obtenerFecha(fechaCreacion) {
-        if (!fechaCreacion) return null;
-        const partes = String(fechaCreacion).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    function obtenerFecha(fechaValor) {
+        if (!fechaValor) return null;
+        const partes = String(fechaValor).match(/^(\d{4})-(\d{2})-(\d{2})/);
         if (!partes) return null;
         const [anio, mes, dia] = partes.slice(1).map(Number);
         const fecha = new Date(anio, mes - 1, dia);
@@ -36,7 +36,7 @@ if (!tecnico) {
     }
 
     function clasificarTarea(tarea, limites) {
-        const fecha = obtenerFecha(tarea.fecha_creacion);
+        const fecha = obtenerFecha(tarea.fecha_servicio || tarea.fecha_creacion);
         if (!fecha) return 'anteriores';
 
         const tiempo = fecha.getTime();
@@ -50,22 +50,27 @@ if (!tecnico) {
         return 'anteriores';
     }
 
-    function formatoFecha(fechaCreacion) {
-        const fecha = obtenerFecha(fechaCreacion);
-        return fecha
+    function formatoFechaHora(tarea) {
+        const fecha = obtenerFecha(tarea.fecha_servicio || tarea.fecha_creacion);
+        const fechaTexto = fecha
             ? new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short', year: 'numeric' }).format(fecha)
             : 'Fecha no disponible';
+        const hora = String(tarea.hora_servicio || '').slice(0, 5);
+        return [fechaTexto, hora].filter(Boolean).join(' · ');
     }
 
     function crearBloqueTarea(tarea) {
+        console.log(tarea);
         const elemento = document.createElement('div');
-        elemento.className = 'it';
+        elemento.className = 'technician-task-item';
         const nombreServicio = tarea.servicio ?? tarea.nombre_servicio ?? `Tarea #${tarea.id}`;
         const cliente = tarea.cliente || 'Cliente no disponible';
         const estado = tarea.Estado ?? tarea.estado ?? 'Estado no disponible';
         const ubicacion = tarea.direccion || 'Ubicación no disponible';
         const estadoNormalizado = String(estado).toLowerCase();
-        const claseEstado = estadoNormalizado.includes('final')
+        const claseEstado = estadoNormalizado.includes('cancel')
+            ? 'cancelled'
+            : estadoNormalizado.includes('final')
             ? 'success'
             : estadoNormalizado.includes('proceso') || estadoNormalizado.includes('yendo')
                 ? 'progress'
@@ -73,9 +78,9 @@ if (!tecnico) {
 
         elemento.innerHTML = `
             <i data-lucide="clipboard-list"></i>
-            <div class="tarea-info">
+            <div class="technician-task-details">
                 <span>${nombreServicio} · ${cliente}</span>
-                <small>${formatoFecha(tarea.fecha_creacion)} · ${ubicacion}</small>
+                <small>${formatoFechaHora(tarea)} · ${ubicacion}</small>
             </div>
             <span class="status ${claseEstado}">${estado}</span>`;
         return elemento;
@@ -87,7 +92,7 @@ if (!tecnico) {
 
         contador.innerHTML = tareas.length;
         if (tareas.length === 0) {
-            lista.innerHTML = '<p class="m">Sin tareas</p>';
+            lista.innerHTML = '<p class="technician-help-text">Sin tareas</p>';
             return;
         }
 

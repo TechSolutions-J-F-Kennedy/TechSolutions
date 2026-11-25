@@ -1,4 +1,4 @@
-.sw {
+.technician-availability-controls {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -6,17 +6,17 @@
   font-weight: 700;
 }
 
-.switch {
+.technician-availability-toggle {
   position: relative;
   width: 50px;
   height: 28px;
 }
 
-.switch input {
+.technician-availability-toggle input {
   display: none;
 }
 
-.switch i {
+.technician-availability-toggle i {
   position: absolute;
   inset: 0;
   background: rgba(255, 255, 255, 0.3);
@@ -24,7 +24,7 @@
   transition: 0.2s;
 }
 
-.switch i:before {
+.technician-availability-toggle i:before {
   content: '';
   position: absolute;
   width: 22px;
@@ -36,42 +36,41 @@
   transition: 0.2s;
 }
 
-.switch input:checked + i {
+.technician-availability-toggle input:checked + i {
   background: var(--s4);
 }
 
-.switch input:checked + i:before {
+.technician-availability-toggle input:checked + i:before {
   transform: translateX(22px);
 }
 
-.pedido .row b {
+.technician-order-card .technician-layout-row b {
   font-family: 'Space Grotesk';
   font-size: 17px;
 }
 
-.pedido .kv:first-of-type {
+.technician-order-card .technician-data-row:first-of-type {
   margin-top: 8px;
 }
 
-.panel h3 {
+.technician-sheet-content h3 {
   font-size: 20px;
 }
 
-.panel .row {
+.technician-sheet-content .technician-layout-row {
   margin-bottom: 6px;
 }
 
-.panel .map {
+.technician-sheet-content .technician-order-map {
   margin: 14px 0;
 }
 
-.acts {
+.technician-order-actions {
   display: flex;
   gap: 10px;
   margin-top: 6px;
 }
 
-.acts .btn {
+.technician-order-actions .btn {
   flex: 1;
 }
-

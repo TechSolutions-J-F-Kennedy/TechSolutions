@@ -36,6 +36,12 @@ if (!tecnico || !['tecnico', 'usuario'].includes(tecnico.rol) || !tecnico.id) {
         campo('chip-rol').innerHTML = '<i data-lucide="user-round"></i> Cliente';
         campo('fila-categoria').hidden = true;
         campo('campo-categoria').hidden = true;
+        campo('campo-password-actual').hidden = true;
+    } else {
+        campo('ajustes-tecnico').hidden = false;
+        document.querySelector('.app').classList.add('technician-profile-page');
+        campo('campo-nombre-real').hidden = true;
+        campo('campo-apellido').hidden = true;
     }
 
     function mostrarPerfil() {
@@ -58,23 +64,40 @@ if (!tecnico || !['tecnico', 'usuario'].includes(tecnico.rol) || !tecnico.id) {
         campo('be').hidden = !activo;
     }
 
+    function limpiarErrorPerfil() {
+        const mensajeError = campo('mensaje-error-perfil');
+        mensajeError.textContent = '';
+        mensajeError.hidden = true;
+    }
+
     campo('ed').addEventListener('click', () => {
+        limpiarErrorPerfil();
         campo('nombre-real').value = tecnico.nombre_real || '';
         campo('apellido').value = tecnico.apellido || '';
         campo('email').value = tecnico.email || '';
         campo('categoria').value = tecnico.categoria || '';
         campo('telefono').value = tecnico.telefono || '';
         campo('password').value = '';
+        campo('password-actual').value = '';
         mostrarEdicion(true);
     });
 
-    campo('cn').addEventListener('click', () => mostrarEdicion(false));
+    campo('cn').addEventListener('click', () => {
+        limpiarErrorPerfil();
+        campo('password').value = '';
+        campo('password-actual').value = '';
+        mostrarEdicion(false);
+    });
+    ['password-actual', 'password'].forEach((id) => {
+        campo(id).addEventListener('input', limpiarErrorPerfil);
+    });
     campo('sv').addEventListener('click', () => {
-        if (!campo('nombre-real').value.trim()) {
+        limpiarErrorPerfil();
+        if (!esTecnico && !campo('nombre-real').value.trim()) {
             campo('nombre-real').focus();
             return;
         }
-        if (!campo('apellido').value.trim()) {
+        if (!esTecnico && !campo('apellido').value.trim()) {
             campo('apellido').focus();
             return;
         }
@@ -84,6 +107,10 @@ if (!tecnico || !['tecnico', 'usuario'].includes(tecnico.rol) || !tecnico.id) {
         }
         if (esTecnico && !campo('categoria').value.trim()) {
             campo('categoria').focus();
+            return;
+        }
+        if (esTecnico && campo('password').value && !campo('password-actual').value) {
+            campo('password-actual').focus();
             return;
         }
         confirmacion.classList.add('on');
@@ -97,13 +124,18 @@ if (!tecnico || !['tecnico', 'usuario'].includes(tecnico.rol) || !tecnico.id) {
     botonConfirmar.addEventListener('click', async () => {
         botonConfirmar.disabled = true;
         const cambios = {
-            nombre_real: campo('nombre-real').value.trim(),
-            apellido: campo('apellido').value.trim(),
             email: campo('email').value.trim(),
             telefono: campo('telefono').value.trim()
         };
+        if (!esTecnico) {
+            cambios.nombre_real = campo('nombre-real').value.trim();
+            cambios.apellido = campo('apellido').value.trim();
+        }
         if (esTecnico) cambios.categoria = campo('categoria').value.trim();
-        if (campo('password').value) cambios.password = campo('password').value;
+        if (campo('password').value) {
+            cambios.password = campo('password').value;
+            if (esTecnico) cambios.passwordActual = campo('password-actual').value;
+        }
 
         try {
             const respuesta = await fetch(
@@ -124,12 +156,19 @@ if (!tecnico || !['tecnico', 'usuario'].includes(tecnico.rol) || !tecnico.id) {
             delete tecnico.password;
             localStorage.setItem('usuario', JSON.stringify(tecnico));
             campo('password').value = '';
+            campo('password-actual').value = '';
             mostrarPerfil();
             mostrarEdicion(false);
             confirmacion.classList.remove('on');
         } catch (error) {
             console.error('Error al guardar el perfil:', error);
-            window.alert(error.message || 'No se pudo guardar el perfil.');
+            confirmacion.classList.remove('on');
+            const mensajeError = campo('mensaje-error-perfil');
+            mensajeError.textContent = error.message || 'No se pudo guardar el perfil.';
+            mensajeError.hidden = false;
+            if (error.message === 'La contraseña actual no es correcta') {
+                campo('password-actual').focus();
+            }
         } finally {
             botonConfirmar.disabled = false;
         }

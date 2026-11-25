@@ -1,0 +1,289 @@
+.technician-page-header {
+  background: linear-gradient(135deg, var(--p9), var(--p7));
+  color: #fff;
+  padding: 28px 20px 30px;
+  border-radius: 0 0 26px 26px;
+  border-bottom: 4px solid var(--s4);
+}
+
+.technician-page-header small {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: var(--p100);
+}
+
+.technician-page-header h1 {
+  font-size: 25px;
+  margin-top: 4px;
+}
+
+.technician-page-content {
+  padding: 18px;
+}
+
+.technician-help-text {
+  color: var(--n500);
+  font-size: 13px;
+}
+
+.technician-card {
+  background: #fff;
+  border: 1px solid var(--n200);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--sh);
+  margin-bottom: 14px;
+}
+
+.technician-order-card.is-in-progress {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--s5);
+  background: linear-gradient(120deg, #e8fff6 0%, #fff 75%);
+  box-shadow: 0 8px 26px rgba(15, 167, 122, 0.2);
+}
+
+.technician-order-card.is-in-progress::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--s5);
+  content: '';
+}
+
+.technician-active-order-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin-bottom: 12px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--s5);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.technician-active-order-label svg {
+  width: 14px;
+  height: 14px;
+}
+
+.technician-layout-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.technician-data-row {
+  display: flex;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--n100);
+}
+
+.technician-data-row:last-child {
+  border: 0;
+}
+
+.technician-data-row svg {
+  width: 18px;
+  height: 18px;
+  color: var(--p6);
+  flex: none;
+  margin-top: 2px;
+}
+
+.technician-data-row b {
+  display: block;
+  font-size: 10.5px;
+  color: var(--n500);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.technician-data-row span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.technician-full-width-button {
+  width: 100%;
+}
+
+.technician-tools-launch {
+  margin-bottom: 16px;
+}
+
+.technician-disabled-action {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.technician-active-service-notice {
+  margin: 8px 0 0;
+  color: var(--wa);
+  font-weight: 700;
+}
+
+.technician-cancellation-actions {
+  margin-top: 16px;
+}
+
+.technician-cancellation-actions .btn {
+  flex: 1;
+}
+
+.technician-cancellation-error {
+  color: var(--er);
+  margin-top: 12px;
+}
+
+.technician-bottom-sheet {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.38);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 50;
+}
+
+.technician-bottom-sheet.is-open {
+  display: flex;
+}
+
+.technician-sheet-content {
+  background: #fff;
+  width: 100%;
+  max-width: 430px;
+  border-radius: 24px 24px 0 0;
+  padding: 10px 20px 24px;
+  max-height: 88vh;
+  overflow: auto;
+  animation: technician-sheet-enter 0.3s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+@keyframes technician-sheet-enter {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.technician-sheet-handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 9px;
+  background: var(--n200);
+  margin: 0 auto 14px;
+}
+
+.technician-contact-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.technician-contact-actions .btn {
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 4px;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.technician-contact-actions .btn.off {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.technician-order-map {
+  width: 100%;
+  height: 170px;
+  border: 0;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: var(--p50);
+}
+
+.technician-compact-button {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.technician-profile-page .hero {
+  position: relative;
+}
+
+.technician-profile-settings {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+}
+
+.technician-profile-settings svg {
+  width: 19px;
+  height: 19px;
+}
+
+html[data-theme="dark"] .technician-app,
+html[data-theme="dark"] .technician-profile-page {
+  color: var(--n900);
+}
+
+html[data-theme="dark"] .technician-page-header {
+  background: linear-gradient(135deg, #101b35, #172b50);
+}
+
+html[data-theme="dark"] .technician-card,
+html[data-theme="dark"] .technician-sheet-content {
+  background: var(--surface);
+  border-color: var(--n200);
+  color: var(--n900);
+}
+
+html[data-theme="dark"] .technician-order-card.is-in-progress {
+  border-color: var(--s5);
+  background: linear-gradient(120deg, rgba(32, 201, 151, 0.18), var(--surface) 78%);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .technician-order-card.is-in-progress::before {
+  background: var(--s4);
+}
+
+html[data-theme="dark"] .technician-active-order-label {
+  background: #087f5b;
+  color: #fff;
+}
+
+html[data-theme="dark"] .technician-order-map {
+  background: var(--n100);
+}
+
+html[data-theme="dark"] .technician-profile-settings {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .ajustes-sheet {
+  max-width: 430px;
+  padding: 10px 20px 24px;
+  border-radius: 24px 24px 0 0;
+}

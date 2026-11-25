@@ -186,3 +186,4 @@ Para que el proyecto no vuelva a sufrir problemas de ramas desordenadas:
 4. **Prohibido subir `node_modules` o archivos de prueba sueltos:**
    * Revisar siempre con `git status` antes de hacer `git add`.
    * Los archivos `.env` con credenciales de base de datos **NUNCA** se suben a GitHub.
+=======

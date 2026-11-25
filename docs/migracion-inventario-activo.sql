@@ -1,0 +1,2 @@
+ALTER TABLE Productos_stock
+ADD COLUMN activo TINYINT(1) NOT NULL DEFAULT 1;

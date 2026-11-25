@@ -27,12 +27,8 @@ async function crearSolicitud(datos) {
 
     const [resultado] = await db.execute(sql, valores);
 
-    return {
         id: resultado.insertId,
-        estado: "Solicitado"
-    };
-}
 
 module.exports = {
     crearSolicitud
-};
+}}

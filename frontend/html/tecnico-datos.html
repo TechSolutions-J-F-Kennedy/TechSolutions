@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Perfil Profesional — Kennedy Tech Solutions</title>
+
+  <link rel="manifest" href="../manifest.json">
+
+<!-- Meta etiquetas y favicons -->
+<meta name="theme-color" content="#172554">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+<link rel="apple-touch-icon" href="../img/icono-192.png">
+  <!-- Google Fonts: Space Grotesk + Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="../css/base-dos.css">
+  <link rel="stylesheet" href="../css/servicios-styles.css">
+  <link rel="stylesheet" href="../css/tema.css">
+  <script src="../js/tema.js"></script>
+</head>
+<body>
+
+  <div class="mobile-container">
+    
+    <!-- Encabezado de la App -->
+    <header class="phone-head">
+      <div class="head-top">
+        <a href="javascript:history.back()" class="icon-btn" aria-label="Volver">
+          <i data-lucide="arrow-left"></i>
+        </a>
+        <div class="brand">
+          <small>KENNEDY TECH</small>
+          <h4>Perfil del Técnico</h4>
+        </div>
+      </div>
+    </header>
+
+    <main class="phone-body">
+      <!-- Tarjeta Principal del Perfil -->
+      <div id="tech-profile-card" class="tecnico-perfil">
+        <p class="mensaje-lista">Cargando perfil...</p>
+      </div>
+
+      <!-- Sección de Calificaciones y Reseñas -->
+      <div class="section-header tecnico-resenas-head">
+        <h4 class="section-title">Reseñas de clientes</h4>
+        <span class="conteo-pill" id="reviews-count">0</span>
+      </div>
+      <div id="reviews-container" class="reviews-list"></div>
+    </main>
+
+  </div>
+
+  <!-- Modal de Alerta Personalizado (Sustituto de alert) -->
+<div id="custom-alert-modal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 999999; align-items: center; justify-content: center;">
+  <div class="modal-content" style="background: var(--bg-card, #1e1e1e); color: #fff; padding: 24px; border-radius: 14px; width: 85%; max-width: 360px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    <h4 id="custom-alert-title" style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--primary-color, #e63946);">Notificación</h4>
+    <p id="custom-alert-message" style="margin: 0 0 20px 0; font-size: 0.9rem; color: #ccc; line-height: 1.4;"></p>
+    <button type="button" onclick="cerrarAlertaPersonalizada()" style="background: var(--primary-color, #e63946); border: none; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%;">Aceptar</button>
+  </div>
+</div>
+
+  <script src="../js/tecnico-datos.js"></script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 const solicitudesModel = require("../models/solicitudes.model");
 const cloudinary = require("../config/cloudinary");
+import solicitudesModel from "../models/solicitudes.model.js";
+import cloudinary from "../config/cloudinary.js";
 
 function subirImagen(buffer) {
     const variablesFaltantes = [

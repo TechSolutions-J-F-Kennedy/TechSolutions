@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    >
+    <title>Inicio · Kennedy Tech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/tecnico-ui.css">
+    <link rel="stylesheet" href="../css/pendientes.css">
+    <link rel="stylesheet" href="../css/inicio.css">
+    <link rel="stylesheet" href="../css/tema.css">
+    <script src="../js/tema.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#172554">
+    <link rel="icon" type="image/png" href="img/icono-192.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Kennedy Tech">
+  </head>
+
+  <body>
+    <div class="app technician-app">
+      <div class="technician-page-header">
+        <div class="technician-layout-row">
+          <div>
+            <small>PANEL TÉCNICO</small>
+            <h1 id="saludo"></h1>
+          </div>
+
+          <div class="technician-availability-controls">
+            <span id="switch-texto"></span>
+            <label class="technician-availability-toggle">
+              <input type="checkbox" id="switch-disponible">
+              <i></i>
+            </label>
+          </div>
+        </div>
+
+        <nav class="quick-nav" style="display:flex; gap:8px; margin-top:12px;">
+          <a href="tareas.html" class="btn btn-ghost btn-sm" style="flex:1; justify-content:center; text-decoration:none;">
+            <i data-lucide="calendar"></i> Tareas
+          </a>
+          <a href="qr.html" class="btn btn-ghost btn-sm" style="flex:1; justify-content:center; text-decoration:none;">
+            <i data-lucide="qr-code"></i> Insumos QR
+          </a>
+          <a href="chat.html" class="btn btn-ghost btn-sm" style="flex:1; justify-content:center; text-decoration:none;">
+            <i data-lucide="message-square"></i> Chats
+          </a>
+        </nav>
+      </div>
+
+      <div class="technician-page-content">
+        <a class="btn btn-ghost technician-full-width-button technician-tools-launch" href="herramientas.html">
+          <i data-lucide="wrench"></i> Herramientas e insumos
+        </a>
+        <h2>Mis servicios</h2>
+        <p id="mensaje-lista"></p>
+
+        <!-- Acá el JS agrega una tarjeta por cada pedido no finalizado -->
+        <div id="lista-pedidos"></div>
+      </div>
+    </div>
+
+    <!-- Molde de tarjeta: se clona una vez por servicio -->
+    <template id="template-pedido">
+      <div class="technician-card technician-order-card">
+        <div class="technician-layout-row">
+          <b data-campo="servicio"></b>
+          <span data-campo="estado"></span>
+        </div>
+
+        <div class="technician-data-row">
+          <i data-lucide="user-round"></i>
+          <div>
+            <b>Cliente</b>
+            <span data-campo="cliente"></span>
+          </div>
+        </div>
+
+        <div class="technician-data-row">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <b>Ubicación</b>
+            <span data-campo="ubicacion"></span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary technician-full-width-button" data-accion="ver" style="margin-top: 8px">
+          <i data-lucide="eye"></i> Ver
+        </button>
+      </div>
+    </template>
+
+    <!-- Detalle del pedido (bottom sheet) -->
+    <div class="technician-bottom-sheet" id="detalle-pedido">
+      <div class="technician-sheet-content">
+        <div class="technician-sheet-handle"></div>
+
+        <div class="technician-layout-row">
+          <h3 data-campo="numero"></h3>
+          <span data-campo="estado"></span>
+        </div>
+
+        <p class="technician-help-text" data-campo="servicio"></p>
+
+        <div class="technician-data-row">
+          <i data-lucide="user-round"></i>
+          <div>
+            <b>Cliente</b>
+            <span data-campo="cliente"></span>
+          </div>
+        </div>
+
+        <div class="technician-data-row">
+          <i data-lucide="phone"></i>
+          <div>
+            <b>Teléfono</b>
+            <span data-campo="telefono"></span>
+          </div>
+        </div>
+
+        <div class="technician-data-row">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <b>Ubicación</b>
+            <span data-campo="ubicacion"></span>
+          </div>
+        </div>
+
+        <div class="technician-data-row">
+          <i data-lucide="clock"></i>
+          <div>
+            <b>Horario</b>
+            <span data-campo="horario"></span>
+          </div>
+        </div>
+
+        <div class="technician-data-row">
+          <i data-lucide="package"></i>
+          <div>
+            <b>Materiales</b>
+            <span data-campo="materiales"></span>
+          </div>
+        </div>
+
+        <div class="technician-data-row">
+          <i data-lucide="file-text"></i>
+          <div>
+            <b>Detalle</b>
+            <span data-campo="descripcion"></span>
+          </div>
+        </div>
+
+        <div class="technician-contact-actions">
+          <a class="btn btn-ghost" id="btn-chatear" href="chat.html">
+            <i data-lucide="message-circle"></i> Chatear
+          </a>
+          <a class="btn btn-ghost" id="btn-llegar" href="#" target="_blank" rel="noopener">
+            <i data-lucide="navigation"></i> Cómo llegar
+          </a>
+          <a class="btn btn-ghost" id="btn-llamar" href="#">
+            <i data-lucide="phone"></i> Llamar
+          </a>
+        </div>
+
+        <iframe class="technician-order-map" id="mapa-pedido" title="Mapa del pedido" loading="lazy"></iframe>
+
+        <a class="btn btn-primary technician-full-width-button" id="btn-atender" href="pedido_actual.html" style="margin-top: 6px">
+          <i data-lucide="play"></i> Atender pedido
+        </a>
+        <p class="technician-help-text technician-active-service-notice" id="aviso-servicio-en-curso" hidden>
+          Ya tenés otro servicio en curso. Finalizalo antes de iniciar uno nuevo.
+        </p>
+
+        <button class="btn btn-danger technician-full-width-button" id="btn-cancelar-servicio" style="margin-top: 6px">
+          <i data-lucide="ban"></i> Cancelar servicio
+        </button>
+
+        <button class="btn btn-ghost technician-full-width-button" id="btn-cerrar-detalle" style="margin-top: 6px">
+          <i data-lucide="x"></i> Cerrar
+        </button>
+      </div>
+    </div>
+
+    <div class="technician-bottom-sheet" id="confirmacion-cancelacion">
+      <div class="technician-sheet-content">
+        <div class="technician-sheet-handle"></div>
+        <h3>¿Cancelar este servicio?</h3>
+        <p class="technician-help-text" id="error-cancelacion" role="alert" hidden></p>
+        <div class="technician-layout-row technician-cancellation-actions">
+          <button class="btn btn-ghost" id="btn-volver-cancelacion">Volver</button>
+          <button class="btn btn-danger" id="btn-confirmar-cancelacion">Sí, cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>lucide.createIcons();</script>
+    <script src="../js/app.js"></script>
+    <script src="../js/tecnico.inicio.js"></script>
+    <script src="../js/pwa-register.js"></script>
+  </body>
+</html>

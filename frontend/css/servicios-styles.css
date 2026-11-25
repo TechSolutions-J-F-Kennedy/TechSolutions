@@ -291,6 +291,7 @@ button, input, select, textarea {
   gap: 14px;
 }
 
+
 .receipt-header { display: flex; align-items: center; gap: 10px; color: var(--secondary-600); }
 .receipt-header h4 { font-size: 15px; color: var(--text); }
 .receipt-header small { color: var(--muted); font-size: 11px; }
@@ -356,7 +357,6 @@ button, input, select, textarea {
 
 /* Navegación Inferior */
 .bottom-nav {
-  position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 60px;
   background: white;
@@ -373,3 +373,69 @@ button, input, select, textarea {
 
 .nav-item i { width: 18px; height: 18px; }
 .nav-item.active { color: var(--primary-600); }
+
+/* Con pedidos, las filas se agrupan en una sola tarjeta, como una lista de tareas.
+   Si no hay pedidos (mensaje o estado vacío) el contenedor queda sin tarjeta. */
+.contenedor-pedidos:has(> .pedido-card) {
+  gap: 0;
+  padding: 0 16px;
+  overflow: hidden;
+  background: var(--surface, #fff);
+  border: 1px solid var(--n200);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+}
+
+.mensaje-lista {
+  padding: 24px 12px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--n500);
+}
+
+.mensaje-lista.error { color: var(--er); }
+
+/* ---------- Estado vacío ---------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 24px;
+  background: #fff;
+  border: 2px dashed var(--n200);
+  border-radius: var(--r-lg);
+  color: var(--n500);
+}
+
+.empty-state svg {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 12px;
+  color: var(--n400);
+}
+
+.empty-state p {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--n500);
+}
+
+/* ---------- Fila de pedido ----------
+   icono | título + detalle | estado
+   Cada estado define --estado y --estado-bg, que colorean la etiqueta. */
+.pedido-card {
+  --estado: var(--n500);
+  --estado-bg: var(--n100);
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.pedido-card + .pedido-card { border-top: 1px solid var(--n100); }
+
