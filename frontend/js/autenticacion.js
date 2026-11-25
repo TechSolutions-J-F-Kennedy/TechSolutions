@@ -35,12 +35,6 @@ function limpiarMensaje() {
 if (goToRegister && registerForm && loginForm) {
   goToRegister.addEventListener("click", (e) => {
     e.preventDefault();
-    limpiarMensaje();
-    loginForm.classList.add("hidden");
-    registerForm.classList.remove("hidden");
-    if (formSubtitle) formSubtitle.textContent = "Completá tus datos para crear una cuenta.";
-  });
-}
 
 if (goToLogin && registerForm && loginForm) {
   goToLogin.addEventListener("click", (e) => {
@@ -172,4 +166,5 @@ if (registerForm) {
       }
     }
   });
-}
+}},
+  )}

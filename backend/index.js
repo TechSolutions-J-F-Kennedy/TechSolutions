@@ -4,9 +4,6 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.join(__dirname, ".env") });
-
 import chatRoutes from "./src/routes/chat.routes.js";
 import clientesRoutes from "./src/routes/cliente.routes.js";
 import usuariosRoutes from "./src/routes/usuario.routes.js";
@@ -19,6 +16,7 @@ import stockRoutes from "./src/routes/stock.routes.js";
 import resenasRouter from "./src/routes/resena.routes.js";
 import direccionesRouter from "./src/routes/direccion.routes.js";
 
+dotenv.config();
 const app = express();
 
 app.use(cors());
@@ -40,6 +38,7 @@ app.use("/api/direcciones", direccionesRouter);
 
 // 2. Servir archivos estáticos del frontend
 const carpetaFrontend = path.join(__dirname, "../frontend");
+
 app.use(express.static(carpetaFrontend));
 
 app.get("/", (req, res) => {
